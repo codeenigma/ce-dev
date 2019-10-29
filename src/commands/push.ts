@@ -15,8 +15,17 @@ export default class BuildCmd extends BaseCmd {
       char: 't',
       description: 'Path to a docker-compose template file, relative to the project root. WARNING: this must match the original one the project was constructed with.',
       default: 'ce-dev.compose.prebuilt.yml'
+    }),
+    username: flags.string({
+      char: 'u',
+      description: 'Username to use to login against the Docker registry. For repository that do not require auth, you can enter anything as username/pwd',
+    }),
+    password: flags.string({
+      char: 'p',
+      description: 'Password to use to login against the Docker registry. Warning, this will appear in your shell history in clear text.',
     })
   }
+
   /**
    * @var
    * Absolute path to the Compose file template.
@@ -30,6 +39,18 @@ export default class BuildCmd extends BaseCmd {
   private readonly composeConfig: ComposeConfig
 
   /**
+   * @var
+   * Docker repository username.
+   */
+  private readonly dockerUsername: string = ''
+
+  /**
+   * @var
+   * Docker repository password.
+   */
+  private readonly dockerPassword: string = ''
+
+  /**
    * @inheritdoc
    */
   public constructor(argv: string[], config: any) {
@@ -37,13 +58,35 @@ export default class BuildCmd extends BaseCmd {
     const {flags} = this.parse(BuildCmd)
     this.composeTemplate = this.getPathFromRelative(flags.template)
     this.composeConfig = this.LoadComposeConfig(this.composeTemplate)
+    if (flags.username) {
+      this.dockerUsername = flags.username
+    }
+    if (flags.password) {
+      this.dockerPassword = flags.password
+    }
   }
+
   /**
    * @inheritdoc
    */
   async run() {
+    this.login()
     this.push()
+  }
 
+  /**
+   * Login to Docker repository.
+   */
+  private login() {
+    this.log('Login to repository ' + this.dockerRepository + '.')
+    let cmd = this.dockerBin + ' login ' + this.dockerRepository
+    if (this.dockerUsername.length > 0) {
+      cmd += ' -u ' + this.dockerUsername
+    }
+    if (this.dockerPassword.length > 0) {
+      cmd += ' -p ' + this.dockerPassword
+    }
+    execSync(cmd, {stdio: 'inherit'})
   }
 
   /**
