@@ -152,8 +152,14 @@ USAGE
 OPTIONS
   -h, --help               show CLI help
 
+  -p, --password=password  Password to use to login against the Docker registry. Warning, this will appear in your shell
+                           history in clear text.
+
   -t, --template=template  [default: ce-dev.compose.prebuilt.yml] Path to a docker-compose template file, relative to
                            the project root. WARNING: this must match the original one the project was constructed with.
+
+  -u, --username=username  Username to use to login against the Docker registry. For repository that do not require
+                           auth, you can enter anything as username/pwd
 
 EXAMPLE
   $ ce-dev push --template example.compose.yml
