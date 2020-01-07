@@ -1,0 +1,20 @@
+language: node_js
+node_js:
+- 10
+install:
+- npm install
+script:
+- oclif-dev pack
+deploy:
+  provider: releases
+  api_key:
+    secure: vjPijJYVAmXPsgI3jPwdYG7YCpnF/Md5Y0rrQhGzmQB87zvOa2qybKXQ38x7haWS16xwl0qEezF7tVQgtUkLS9sdO1FuuunEALqfVwE9sRbn+qFZleBy+vzTe5Lq+KygNW6ux8qeFvO+pEz/F5C4mdl++3MmaHQyuCiXqw+BanOPSJ0DQKqdc6SoY8LqdtSxfgpj/zDtAuqlcXUXqvfTTeX3L5QTFaxJZi6dgSIcd0TV6ZVHwxvELQEiBIH7qhLex5EIbXBV+PVqCG04cUJf2x5R7tIbjO6W0Xzs0WQC2ssvdGuYyQWvN/fsraeOM6zJ739KGuDruWU2JD3nbnGl3JMdr+0r68OqFDITUjDwYdMOX7mXjylBlYtkL3GM+rhDCZZQeDCTaNtIIr66PyJ034M6Sk2CIf5rp9jEpeA06dDCX7+27RWu+U+36wUrcaFiXgtV7l7epkydHtu2f0dmGKMivqu/a3sMz51Q81iaz4dc/6dATOFgNZyBSSGqQY1McL59D/OBdmPJSISYv3FVH5k+HmtalnbFU4iReMnJlpE1WHcMmBtIE3G0ZLzeZoiCUgScxw4rJU67JrkPFEvxi5E/3pj7I/C9vsgaKET1aTtUB7YYtpJXhFOthIPyqze1caAKxOuKFc8J9hYlY2fGt6sMT5dmszlWgRhwaLumlCs=
+  file: dist/**
+  on:
+    repo: codeenigma/ce-dev
+    branch: 1.x
+  edge: true
+  file_glob: true
+  overwrite: true
+  cleanup: false
+  draft: true
