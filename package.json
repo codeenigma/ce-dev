@@ -35,7 +35,7 @@
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json"
   ],
-  "homepage": "https://github.com/codeenigma/ce-dev",
+  "repository": "https://github.com/codeenigma/ce-dev",
   "keywords": [
     "oclif"
   ],
@@ -48,7 +48,6 @@
       "@oclif/plugin-help"
     ]
   },
-  "repository": "codeenigma/ce-dev",
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
     "posttest": "tslint -p . -t stylish",
