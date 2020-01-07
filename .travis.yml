@@ -10,15 +10,9 @@ install:
 script:
 - oclif-dev pack
 deploy:
-  edge: true
   provider: releases
-  file: dist/**/**
-  file_glob: true
-  overwrite: true
-  cleanup: false
   api_key:
-    secure: AAuerjQVILKsuN93FrcbbzcxsmOxPKgZNEnb5EQo1b4wzxM4s+Q9Jb7FnFRTnAT9VjyhGTIxV9NKT7PWts4zI1LEDjnWcu3Uv+YlW92RVnlh0OeGV2J0QA4UkhkBSajIJtVZnpx21BtNxdGtKD4kBdRKwjQHENBWzakl6CJNLzQtbpQJlT1viam6Fx6DTgwfj95rDJGYv6qxCuAKCo1o+4yj8oNzVdunZZYw8e+uQiaghVIjdxtVKigaxmyXHQ6A+T4lYqoz9QdyJbw0lLjcXHBzWO+9VJ/qXoPo0HpbImV5ak6Y5xFGxV9UinCPvgPPN6BwhsHPxk0tU/wy8wwo4FNl9GEYouBLoZBxjwa+MpWzW+7O9y/ibR5DqZ2DjMV4HITWr7NfrKACorR2gtxxTLG+Th+jiEBuiskh7m/0Ykzm1o3v34RNT91XHp/jGVjvNSDtteW/Aqm0SV3YNOvEzo8RzQosjxM3P3AbaBMfk2Zm5IbuKNQ66wbGCT+vuL5a00/FvpLLEvl2LcXENpXjuNumPG1r8tzyGXx/G8oq+CPexCrOuuWm06og1R/pp4xkMVunV/4ohB4cIgGRUwEEDIqkAq2ICd+iFH5wAYzXSsZFSe65T6d7R7FX/xDAaT3XKuFiW82UKQkaBE97VS9H1gkn1SSaKfd9B+GR89/UkiI=
+    secure: h7sPZ2NJWlJPR4XDZ/b880L3jLyK3AK1wUayyTpzfvzIR/xkhL1PpfuH3r3ICc4TY0CQkcd8I7pNwZBrqAVHT8PuxyA8naIuZlikycUWw0CPNODfOvLXX6Bs4MytnEPW8NLSCFVYd2e4COrrxYLUyaXwPOnEO1cQEZ5b6LbQaJFdenypSZsiUZW/5YtjUBRXsSX5XfgQEtOqjM4tBnZau6SwI36+ef4n+AOZun4RkxWVaOsqpENXjjIZezNRYCoC0TKgOTJBuTDhCRE1ZS7jjz+VhoBlCErr5fPeilEq37ABTPZplrmuVm1Y0Nf3A0Tup4v4HKK9zXZvMlGogswSZxQ68UVWWfThadyehipXLOYj97gj+rVWZa+mBMWW2y5tjxkt9L4lt4GtgLDgxpC0dQBSPiSC2nOxwADw9OsyPTkQXNw/smnppEqvnvzPRzx6QOAGGJ4V5aIesAY9WItt0aYLsnjyOfC+gGnfYOxEZ9x8IQfZJwsp0PAXsSVU/n7DYKrIYHpaTLdvMOpqvmLRnvZdlwz7H8nP3+RITO0r4UV8ouzyFI9fbNZF+BGpHzG0UEj7rnwvNzkp6y+n78jQ+RLdzYU8z4faGR2CbcemayKl1/ta5T10AE66H6P2SYxjrQxPy+Hj36s2kslLA75AhHMCwnEIn9F7wCSCwnOd6Os=
+  file: dist/**/**
   on:
-    repo: codeenigma/ce-dev
     branch: 1.x
-  draft: true
