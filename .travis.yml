@@ -21,3 +21,4 @@ deploy:
   on:
     repo: codeenigma/ce-dev
     branch: 1.x
+  draft: true
