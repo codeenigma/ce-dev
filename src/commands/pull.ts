@@ -5,7 +5,7 @@ import BaseCmd from '../base-cmd-abstract'
 import ComposeConfig from '../compose-config-interface'
 
 export default class BuildCmd extends BaseCmd {
-  static description = 'Push images referenced in a compose file from a remote repository.'
+  static description = 'Pull images referenced in a compose file from a remote repository.'
   static examples = [
     '$ ce-dev pull --template example.compose.yml',
   ]

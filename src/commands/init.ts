@@ -112,7 +112,7 @@ export default class InitCmd extends BaseCmd {
       let exists = execSync(cmd).toString().trim()
       if (exists === '0') {
         this.log('Selecting network range ' + this.network)
-        this.networkName = 'ce-dev-' + this.network + '.0'.replace('.', '_')
+        this.networkName = 'ce-dev-' + this.network.replace(/\./g, '_')
         return
       }
     }

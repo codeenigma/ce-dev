@@ -6,7 +6,7 @@
   "bin": {
     "ce-dev": "./bin/run"
   },
-  "bugs": "https://github.com/pm98zz-c/ce-dev/issues",
+  "bugs": "https://github.com/codeenigma/ce-dev/issues",
   "dependencies": {
     "@oclif/command": "^1.5.19",
     "@oclif/config": "^1.13.3",
@@ -35,7 +35,7 @@
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json"
   ],
-  "homepage": "https://github.com/pm98zz-c/ce-dev",
+  "homepage": "https://github.com/codeenigma/ce-dev",
   "keywords": [
     "oclif"
   ],
@@ -48,7 +48,7 @@
       "@oclif/plugin-help"
     ]
   },
-  "repository": "pm98zz-c/ce-dev",
+  "repository": "codeenigma/ce-dev",
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
     "posttest": "tslint -p . -t stylish",

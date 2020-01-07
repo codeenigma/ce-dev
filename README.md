@@ -3,12 +3,6 @@ ce-dev
 
 Local Stack wrapper tool
 
-[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/ce-dev.svg)](https://npmjs.org/package/ce-dev)
-[![CircleCI](https://circleci.com/gh/pm98zz-c/ce-dev/tree/master.svg?style=shield)](https://circleci.com/gh/pm98zz-c/ce-dev/tree/master)
-[![Downloads/week](https://img.shields.io/npm/dw/ce-dev.svg)](https://npmjs.org/package/ce-dev)
-[![License](https://img.shields.io/npm/l/ce-dev.svg)](https://github.com/pm98zz-c/ce-dev/blob/master/package.json)
-
 <!-- toc -->
 * [Usage](#usage)
 * [Commands](#commands)
@@ -20,7 +14,7 @@ $ npm install -g ce-dev
 $ ce-dev COMMAND
 running command...
 $ ce-dev (-v|--version|version)
-ce-dev/0.0.0 linux-x64 node-v8.14.1
+ce-dev/0.0.0 linux-x64 node-v10.14.2
 $ ce-dev --help [COMMAND]
 USAGE
   $ ce-dev COMMAND
@@ -61,7 +55,7 @@ EXAMPLE
   $ ce-dev build --template example.compose.yml
 ```
 
-_See code: [src/commands/build.ts](https://github.com/pm98zz-c/ce-dev/blob/v0.0.0/src/commands/build.ts)_
+_See code: [src/commands/build.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/build.ts)_
 
 ## `ce-dev help [COMMAND]`
 
@@ -98,7 +92,7 @@ EXAMPLE
   $ ce-dev init --template example.compose.yml
 ```
 
-_See code: [src/commands/init.ts](https://github.com/pm98zz-c/ce-dev/blob/v0.0.0/src/commands/init.ts)_
+_See code: [src/commands/init.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/init.ts)_
 
 ## `ce-dev provision [CONTAINER]`
 
@@ -119,11 +113,11 @@ EXAMPLE
   $ ce-dev provision example-app
 ```
 
-_See code: [src/commands/provision.ts](https://github.com/pm98zz-c/ce-dev/blob/v0.0.0/src/commands/provision.ts)_
+_See code: [src/commands/provision.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/provision.ts)_
 
 ## `ce-dev pull`
 
-Push images referenced in a compose file from a remote repository.
+Pull images referenced in a compose file from a remote repository.
 
 ```
 USAGE
@@ -139,7 +133,7 @@ EXAMPLE
   $ ce-dev pull --template example.compose.yml
 ```
 
-_See code: [src/commands/pull.ts](https://github.com/pm98zz-c/ce-dev/blob/v0.0.0/src/commands/pull.ts)_
+_See code: [src/commands/pull.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/pull.ts)_
 
 ## `ce-dev push`
 
@@ -165,7 +159,7 @@ EXAMPLE
   $ ce-dev push --template example.compose.yml
 ```
 
-_See code: [src/commands/push.ts](https://github.com/pm98zz-c/ce-dev/blob/v0.0.0/src/commands/push.ts)_
+_See code: [src/commands/push.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/push.ts)_
 
 ## `ce-dev shell [CONTAINER]`
 
@@ -185,7 +179,7 @@ EXAMPLE
   $ ce-dev shell example-app
 ```
 
-_See code: [src/commands/shell.ts](https://github.com/pm98zz-c/ce-dev/blob/v0.0.0/src/commands/shell.ts)_
+_See code: [src/commands/shell.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/shell.ts)_
 
 ## `ce-dev start`
 
@@ -202,7 +196,7 @@ EXAMPLE
   $ ce-dev start
 ```
 
-_See code: [src/commands/start.ts](https://github.com/pm98zz-c/ce-dev/blob/v0.0.0/src/commands/start.ts)_
+_See code: [src/commands/start.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/start.ts)_
 
 ## `ce-dev stop`
 
@@ -219,5 +213,5 @@ EXAMPLE
   $ ce-dev stop
 ```
 
-_See code: [src/commands/stop.ts](https://github.com/pm98zz-c/ce-dev/blob/v0.0.0/src/commands/stop.ts)_
+_See code: [src/commands/stop.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/stop.ts)_
 <!-- commandsstop -->
