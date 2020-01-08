@@ -9,16 +9,20 @@ install:
 - npm install
 script:
 - oclif-dev pack
-deploy:
-  provider: releases
-  api_key:
-    secure: KQ309vKstXn4PCVLAyrX2yERCKG62dWW4JRYij1NQ1uVUsrMAQE3nDpbB3mT7r1+t8F7H8E9G8tZO97eFE1X+irXKetGbBY79dcekzFUKAefSqISJyHl6cUADFl1jPYWh69U/m/YH6cwXH6yJ091L+mQROmMuYGmnHuz+Y5hyR0daT5TrUZ8F868B8+ZWcsk9u223tAU0NnKRCPOGTymjLRoTScyvm0jZetQ5Pu7hQVGLaBMgAvFknlbHSrRDsCX2tYKzJpwJX3rgsLNcoEviatW1iR6NFe+BH8YCnhillkGeU7weIKCjCRk+BDaLkJH/p3HxQ2HiJqK498VBs+cwfXpgvZbOyELLmNyFoNBQLqpGtwqC0tvuJ2HrRFTmxi2Vv1Kve/lCG45EcUSxYQzUIGZn/P+JMJ4s6hB1r6APODmcOfe6bUdDkMMl3otErj46+TiwEmviEqG0Cr9kce9jZxO1CVl3l7UFx757Izklb2orC4YXZNLHZirCaDWqppM2sKclABrvyxM3IuZc2bW6sTlBeh8b3d0i9tx1fdBzmdCvUpPE012A9MsKUPQ+WJ8KQ6CqvxhRdtD1MkPWvEZ4wFYSsPzmnD4bs+La8BuJdD/mkoOWR7j1gaVIXN8JfiwmHgCLmITGLAn+fkZ6o5GgG5QKKxxEWO+QByRmM4ruXs=
-  file: dist/**/**
-  on:
-    repo: pm98zz-c/ce-dev
-    branch: 1.x
-  edge: true
-  file_glob: true
-  overwrite: true
-  cleanup: false
-  draft: true
+jobs:
+  include:
+  - stage: Linux
+    os: linux
+    deploy:
+      edge: true
+      provider: releases
+      token:
+        secure: sLRR880fqZAwubqiGRGia8Wf+Jg0SL06O0nL55upGOcWozuWa1uWzTdmcECdB5sPVs4HfCmtppRY5Ooptn67+gS+/laMg321fORIDxG/Vu8QEiPCHtJdNRN1Kr8HZp/847RhOXl7+51kXuR5hgciudKs3ELXshlvF1dBq36a+ErdUPUu6WFBH2Joyb3oJYd2+aMNnwgRl2OEKeHepCdkndBaJqwBKQ65xFCU/ZjH4oNPQs7WEosnDhuPkMQHyydQ+arxCCdqMzIH4R4FeLutOgfyth/0Ji9PBu1KeTEXeCnwrG6kJpO7cZQzmot4K5mUDwQxEzuLUKllZbYSwEcqmo1ud7NRRIZnUQfd9e/3f59ksxSOFSsQckPNT5I6AM+0THGHagOOTkaufU5GkpdSra07B8P7L6pyuPBYYRlGWFf0AiWqXOkZyJ8+qSNafuyD3jmXqs3ROTzKWxmIMsRE3fATDyWmNSrR20UnwffJi5OAnysjgauReqgKI0PgxO53QbUoFUNxRVMLz6UPSfkznkk+dFa1qIRMvU6HGKC2oBBUWv8zeD5YD9NSL2fiiIz0mr+Xc9v3V3gLrhSZBEcje33HUh5r+1Cz/xCwAikXnY23F8fG2vwphphiW2nDCVzbwVPOH2W+6L8Nzoc/xK0e0s15ODSTVs8bZ8SC54muE3A=
+      file: dist/**/**
+      file_glob: true
+      overwrite: true
+      cleanup: false
+      on:
+        repo: pm98zz-c/ce-dev
+        # tags: true
+      draft: true
