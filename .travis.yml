@@ -12,8 +12,13 @@ script:
 deploy:
   provider: releases
   api_key:
-    secure: ahIe76VlhJzYuO5CJgByD9MDrtazrG+zwK6Zi0mjyDjo1qnABGc++rJzEKjVjAi+mP3mL9FHzlJ+a4zpuaarTsrjt/YLPbMeQ5KCpuEg9T5g1iCguE/ykc+hLL28ACHHSnfOKAW9ZZQUkuvYBpMWWApAlFDPnzKrcnbDt0rIuuVPdTn9f4mmFZAXBzXqH7yQ+wR0GryQRrj7nXembYvNayf6UobsENK/lPmY+1dLGHoGv25FW+frYCj2jqwbrFRxn+2FNlFxj4VLsIXPyRAeqbl+a+ifxPrxyPqgPkWxoSYWwSDlPmRvV4A57AbQDeBQBSmii8IDMdeL8CDJ/l+yOM8JprqzJ0Th1KqB6Z67PzCrm468Dac7Ud79eNTiVYVTjQa8XgG8Xzm2cqbBQZYfRtfOtp0ltTe/mRcV0f82EgjhpAnHIMgUQvtY9LLCkTjS1z8lokOE0E0URjCNZFoSpNGqar6r++E7VZKdp9RgEguxi0Qpa6YOLakQDXEo7riz9EvEaTbqJLRlhk7GQtKL0KUTXh5uE2vhJKpr3EGKoOT3cczIvGkIxVSlT8HO62bzRyd//4Ku4XtrfoAHkF4HC6xDQCfL6dFeKSn6QmMf9RvQxZgGxATHyQitz1/rKO/0DJic1RDcJn6KVuk7rzXUzR5QIjSX4qMd5NALoPzxsZs=
+    secure: KQ309vKstXn4PCVLAyrX2yERCKG62dWW4JRYij1NQ1uVUsrMAQE3nDpbB3mT7r1+t8F7H8E9G8tZO97eFE1X+irXKetGbBY79dcekzFUKAefSqISJyHl6cUADFl1jPYWh69U/m/YH6cwXH6yJ091L+mQROmMuYGmnHuz+Y5hyR0daT5TrUZ8F868B8+ZWcsk9u223tAU0NnKRCPOGTymjLRoTScyvm0jZetQ5Pu7hQVGLaBMgAvFknlbHSrRDsCX2tYKzJpwJX3rgsLNcoEviatW1iR6NFe+BH8YCnhillkGeU7weIKCjCRk+BDaLkJH/p3HxQ2HiJqK498VBs+cwfXpgvZbOyELLmNyFoNBQLqpGtwqC0tvuJ2HrRFTmxi2Vv1Kve/lCG45EcUSxYQzUIGZn/P+JMJ4s6hB1r6APODmcOfe6bUdDkMMl3otErj46+TiwEmviEqG0Cr9kce9jZxO1CVl3l7UFx757Izklb2orC4YXZNLHZirCaDWqppM2sKclABrvyxM3IuZc2bW6sTlBeh8b3d0i9tx1fdBzmdCvUpPE012A9MsKUPQ+WJ8KQ6CqvxhRdtD1MkPWvEZ4wFYSsPzmnD4bs+La8BuJdD/mkoOWR7j1gaVIXN8JfiwmHgCLmITGLAn+fkZ6o5GgG5QKKxxEWO+QByRmM4ruXs=
   file: dist/**/**
   on:
-    repo: codeenigma/ce-dev
+    repo: pm98zz-c/ce-dev
     branch: 1.x
+  edge: true
+  file_glob: true
+  overwrite: true
+  cleanup: false
+  draft: true
