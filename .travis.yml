@@ -24,3 +24,4 @@ jobs:
       cleanup: false
       on:
         tags: true
+        repo: codeenigma/ce-dev
