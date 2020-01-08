@@ -24,4 +24,3 @@ jobs:
       cleanup: false
       on:
         tags: true
-      draft: true
