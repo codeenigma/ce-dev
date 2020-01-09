@@ -3,23 +3,24 @@ ce-dev
 
 Local Stack wrapper tool
 
+***WARNING: WIP - Future changes won't be backward compatible***
+
+# Requirements
+You'll need docker-compose (and docker) on a Mac or Linux host.
+
+# Install
+- Download the latest release from your platform at https://github.com/codeenigma/ce-dev/releases
+- Extract where convenient (eg /opt or your $HOME)
+- Add ce-dev/bin/ce-dev to your $PATH in your .bashrc/.zshrc or symlink it to /usr/local/bin.
+
+
 <!-- toc -->
 * [Usage](#usage)
 * [Commands](#commands)
 <!-- tocstop -->
 # Usage
 <!-- usage -->
-```sh-session
-$ npm install -g ce-dev
-$ ce-dev COMMAND
-running command...
-$ ce-dev (-v|--version|version)
-ce-dev/0.0.0 linux-x64 node-v10.14.2
-$ ce-dev --help [COMMAND]
-USAGE
-  $ ce-dev COMMAND
-...
-```
+
 <!-- usagestop -->
 # Commands
 <!-- commands -->
