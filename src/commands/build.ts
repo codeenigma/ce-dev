@@ -54,8 +54,35 @@ export default class BuildCmd extends BaseCmd {
    * @inheritdoc
    */
   async run() {
+    this.ensureLocalRegistry()
     this.commit()
     this.generateCompose()
+  }
+
+  /**
+   * Ensure we have a local registry, if we're using localhost.
+   */
+  private ensureLocalRegistry() {
+    let [registryHost, registryPort] = this.dockerRepository.split(':')
+    if (registryHost !== 'ce-dev-registry') {
+      return
+    }
+    let port = parseInt(registryPort, 10)
+    if (isNaN(port)) {
+      return
+    }
+    let existing = execSync(this.dockerBin + ' ps -a | grep ce-dev-registry | wc -l').toString().trim()
+    if (existing === '0') {
+      this.log('Creating local registry container "ce-dev-registry".')
+      execSync(this.dockerBin + ' run -d -p ' + port + ':5000 --restart=unless-stopped --name ce-dev-registry registry:2')
+      return
+    }
+    let status = execSync(this.dockerBin + ' inspect ce-dev-registry --format={{.State.Status}}').toString().trim()
+    if (status === 'running') {
+      return
+    }
+    this.log('Starting local registry container "ce-dev-registry".')
+    execSync(this.dockerBin + ' start ce-dev-registry')
   }
 
   /**

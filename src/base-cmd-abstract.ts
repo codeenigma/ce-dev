@@ -45,7 +45,7 @@ export default abstract class BaseCmd extends Command {
    * @var
    * Docker repository to use.
    */
-  protected dockerRepository = 'localhost:5000'
+  protected dockerRepository = 'ce-dev-registry:5000'
 
   /**
    * @inheritdoc
