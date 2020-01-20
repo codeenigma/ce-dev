@@ -113,10 +113,13 @@ export default class StartCmd extends BaseCmd {
     })
     runningContainers.forEach(container => {
       let hostInfo = execSync(this.dockerBin + ' inspect ' + container + ' --format={{.HostConfig.ExtraHosts}}').toString()
-      let hostnames = hostInfo.trim().replace('[', '').replace(']', '').split(':')
-      if (hostnames[0].length > 0) {
-        this.runningHosts.set(hostnames[0], hostnames[1])
-      }
+      let hostnames = hostInfo.trim().replace('[', '').replace(']', '').split(' ')
+      hostnames.forEach(hostnameLine => {
+        let info = hostnameLine.split(':')
+        if (info[0].length > 0) {
+          this.runningHosts.set(info[0], info[1])
+        }
+      })
     })
   }
   /**

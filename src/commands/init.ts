@@ -243,6 +243,9 @@ export default class InitCmd extends BaseCmd {
     for (let service of Object.values(this.composeConfig.services)) {
       if (service['x-ce_dev'] && service['x-ce_dev'].ansible && service['x-ce_dev'].ansible.path) {
         let absolutePath = this.getPathFromRelative(service['x-ce_dev'].ansible.path)
+        if (absolutePath.length < 3) {
+          continue
+        }
         let relativePath = '/ce-dev/' + this.getRelativePath(absolutePath)
         ansiblePaths.push({
           containerName: service.container_name,
