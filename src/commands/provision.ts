@@ -105,7 +105,7 @@ export default class ProvisionCmd extends BaseCmd {
       if (info.containerName === containerName) {
         execSync(this.dockerBin + ' exec -t ' + controllerService.container_name + ' mkdir -p /etc/ansible/data/' + containerName)
         execSync(this.dockerBin + ' exec -t ' + controllerService.container_name + ' chown -R ce-dev:ce-dev /etc/ansible/data')
-        execSync(this.dockerBin + ' exec -t --user ce-dev ' + controllerService.container_name + ' ansible-playbook ' + info.ansiblePath + ' --extra-vars \'{"is_local":"yes"}\'', {stdio: 'inherit'})
+        execSync(this.dockerBin + ' exec -t --user ce-dev ' + controllerService.container_name + ' ansible-playbook ' + info.ansiblePath + ' --extra-vars \'{"is_local":"yes","ansible_provision_dir":"/home/ce-dev/ansible-provision"}\'', {stdio: 'inherit'})
       }
     })
   }
@@ -123,6 +123,6 @@ export default class ProvisionCmd extends BaseCmd {
     const hosts = this.getProjectRunningContainersAnsible().join('\n')
     fs.writeFileSync(this.tmpHostsFile, hosts + '\n')
     execSync(this.dockerBin + ' cp ' + this.tmpHostsFile + ' ' + controllerService.container_name + ':/etc/ansible/hosts/hosts')
-    execSync(this.dockerBin + ' exec -t ' + controllerService.container_name + '  chown -R ce-dev:ce-dev /etc/ansible/hosts')
+    execSync(this.dockerBin + ' exec -t ' + controllerService.container_name + '  chown -R ce-dev:ce-dev /etc/ansible/hosts/hosts')
   }
 }
