@@ -5,7 +5,11 @@ import ComposeConfigService from './compose-config-service-interface'
 
 export default interface ComposeConfig {
   'version': string
-  'services': Array<ComposeConfigService>
-  'x-ce_dev': object
+  //@todo this is actually not an array.
+  'services': Record<string, ComposeConfigService>
+  'x-ce_dev': {
+    'registry': string,
+    'project_name': string
+  }
   'networks': object
 }

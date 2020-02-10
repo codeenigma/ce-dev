@@ -62,9 +62,6 @@ export default class StartCmd extends BaseCmd {
    * @inheritdoc
    */
   async run() {
-    if (this.config.platform === 'darwin') {
-      this.createLoopAliases()
-    }
     this.up()
     this.updateHostsFile()
   }
@@ -74,24 +71,7 @@ export default class StartCmd extends BaseCmd {
    */
   private up() {
     this.log('Starting containers with docker-compose up -d')
-    execSync(this.dockerComposeBin + ' up -d', {cwd: this.ceDevDir, stdio: 'inherit'})
-  }
-  /**
-   * Mac OS. Set-up loopback aliases.
-   */
-  private createLoopAliases() {
-    this.log('Setting up loopback interface aliases. This requires administrative privileges.')
-    for (let service of Object.values(this.composeConfig.services)) {
-      if (service.networks instanceof Object === false) {
-        continue
-      }
-      for (let network of Object.values(service.networks)) {
-        if (network.ipv4_address) {
-          this.log('Creating loopback alias ' + network.ipv4_address)
-          execSync('sudo ifconfig lo0 alias ' + network.ipv4_address + '/32')
-        }
-      }
-    }
+    execSync(this.dockerComposeBin + ' -p ' + this.activeProjectInfo.project_name + ' up -d', {cwd: this.ceDevDir, stdio: 'inherit'})
   }
 
   /**
@@ -112,13 +92,11 @@ export default class StartCmd extends BaseCmd {
       return (item.length)
     })
     runningContainers.forEach(container => {
-      let hostInfo = execSync(this.dockerBin + ' inspect ' + container + ' --format={{.HostConfig.ExtraHosts}}').toString()
-      let hostnames = hostInfo.trim().replace('[', '').replace(']', '').split(' ')
-      hostnames.forEach(hostnameLine => {
-        let info = hostnameLine.split(':')
-        if (info[0].length > 0) {
-          this.runningHosts.set(info[0], info[1])
-        }
+      let ip = execSync(this.dockerBin + ' inspect ' + container + ' --format={{.NetworkSettings.Networks.ce_dev.IPAddress}}').toString().trim()
+      let aliasesString = execSync(this.dockerBin + ' inspect ' + container + ' --format={{.NetworkSettings.Networks.ce_dev.Aliases}}').toString().trim()
+      let aliases = aliasesString.split(/[\[\]\ ]/).filter(Boolean)
+      aliases.forEach(alias => {
+        this.runningHosts.set(alias.toString(), ip)
       })
     })
   }

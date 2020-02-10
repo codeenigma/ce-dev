@@ -2,11 +2,9 @@
 import {flags} from '@oclif/command'
 import {execSync} from 'child_process'
 import * as inquirer from 'inquirer'
-
-import AnsibleInfo from '../ansible-info-interface'
+const fspath = require('path')
 import BaseCmd from '../base-cmd-abstract'
 import ComposeConfig from '../compose-config-interface'
-import ComposeConfigService from '../compose-config-service-interface'
 
 const fs = require('fs')
 
@@ -95,34 +93,23 @@ export default class ProvisionCmd extends BaseCmd {
    * Name of the container to target.
    */
   private provisionContainer(containerName: string) {
-    const ansibleInfo: Array<AnsibleInfo> = this.parseYaml(this.activeAnsibleInfoFilePath)
-    const controllerService = this.getControllerService(this.composeConfig) as ComposeConfigService
-    if (!controllerService) {
-      this.error('No controller container is defined. Cannot provision.')
-      this.exit(1)
-    }
-    ansibleInfo.forEach(info => {
-      if (info.containerName === containerName) {
-        execSync(this.dockerBin + ' exec -t ' + controllerService.container_name + ' mkdir -p /etc/ansible/data/' + containerName)
-        execSync(this.dockerBin + ' exec -t ' + controllerService.container_name + ' chown -R ce-dev:ce-dev /etc/ansible/data')
-        execSync(this.dockerBin + ' exec -t --user ce-dev ' + controllerService.container_name + ' ansible-playbook ' + info.ansiblePath + ' --extra-vars \'{"is_local":"yes","ansible_provision_dir":"/home/ce-dev/ansible-provision"}\'', {stdio: 'inherit'})
-      }
-    })
+    let ansiblePath = this.activeProjectInfo.ansible_paths[containerName]
+    let src = fspath.dirname(ansiblePath)
+    let dest = '/home/ce-dev/projects-playbooks' + fspath.dirname(src)
+    this.log('Copy Ansible configuration')
+    execSync(this.dockerBin + ' exec -t --user ce-dev ce_dev_controller mkdir -p ' + dest)
+    execSync(this.dockerBin + ' cp ' + src + ' ce_dev_controller:' + dest)
+    execSync(this.dockerBin + ' exec -t --user ce-dev ce_dev_controller ansible-playbook /home/ce-dev/projects-playbooks' + ansiblePath + ' --extra-vars \'{"is_local":"yes","ansible_provision_dir":"/home/ce-dev/ansible-provision"}\'', {stdio: 'inherit'})
   }
 
   /**
    * Inject Ansible hosts file onto the controller.
    */
   private populateAnsibleHosts() {
-    const controllerService = this.getControllerService(this.composeConfig) as ComposeConfigService
-    if (!controllerService) {
-      this.error('No controller container is defined. Cannot provision.')
-      this.exit(1)
-    }
     this.log('Rebuilding Ansible hosts information on the controller.')
-    const hosts = this.getProjectRunningContainersAnsible().join('\n')
+    const hosts = Object.keys(this.activeProjectInfo.ansible_paths).join('\n')
     fs.writeFileSync(this.tmpHostsFile, hosts + '\n')
-    execSync(this.dockerBin + ' cp ' + this.tmpHostsFile + ' ' + controllerService.container_name + ':/etc/ansible/hosts/hosts')
-    execSync(this.dockerBin + ' exec -t ' + controllerService.container_name + '  chown -R ce-dev:ce-dev /etc/ansible/hosts/hosts')
+    execSync(this.dockerBin + ' cp ' + this.tmpHostsFile + ' ce_dev_controller:/etc/ansible/hosts/hosts')
+    execSync(this.dockerBin + ' exec -t ce_dev_controller chown -R ce-dev:ce-dev /etc/ansible/hosts/hosts')
   }
 }

@@ -7,7 +7,7 @@ export default interface ComposeConfigService {
   'container_name': string
   'image': string
   'x-ce_dev': {
-    'hostnames': [string]
+    'hostnames': [string] | []
     'ansible': {
       'path': string
     }

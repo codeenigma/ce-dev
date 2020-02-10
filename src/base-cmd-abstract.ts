@@ -1,9 +1,8 @@
 import {Command} from '@oclif/command'
 import {execSync} from 'child_process'
 
-import AnsibleInfo from './ansible-info-interface'
 import ComposeConfig from './compose-config-interface'
-import ComposeConfigService from './compose-config-service-interface'
+import ProjectConfig from './project-config-interface'
 
 const {spawnSync} = require('child_process')
 const fs = require('fs')
@@ -40,12 +39,51 @@ export default abstract class BaseCmd extends Command {
    * @var
    * Path to the active ansible info file.
    */
-  protected activeAnsibleInfoFilePath = ''
+  protected activeProjectInfoFilePath = ''
+  /**
+   * @var
+   * Path to the active ansible info file.
+   */
+  protected activeProjectInfo: ProjectConfig = {
+    project_name: 'ce-dev',
+    registry: 'localhost:5000',
+    ansible_paths: {}
+  }
+
   /**
    * @var
    * Docker repository to use.
    */
   protected dockerRepository = 'ce-dev-registry:5000'
+  /**
+   * @var
+   * Network range.
+   */
+  protected network = ''
+
+  /**
+   * @var
+   * Docker compose content.
+   */
+  private readonly controllerComposeConfig: any = {
+    version: '3.7',
+    services: {
+      ce_dev_controller: {
+        container_name: 'ce_dev_controller',
+        image: 'codeenigma/ce-dev:1.0',
+        hostname: 'ce_dev_controller',
+        networks: {
+          ce_dev: {}
+        }
+      }
+    },
+    networks: {
+      ce_dev: {
+        name: 'ce_dev',
+        driver: 'bridge'
+      }
+    }
+  }
 
   /**
    * @inheritdoc
@@ -68,7 +106,30 @@ export default abstract class BaseCmd extends Command {
       this.dockerComposeBin = 'sudo docker-compose'
     }
     this.activeComposeFilePath = this.ceDevDir + '/docker-compose.yml'
-    this.activeAnsibleInfoFilePath = this.ceDevDir + '/.ansible'
+    // Create data dir if needed.
+    let config_path = fspath.resolve(this.config.dataDir + '/' + this.rootDir)
+    if (fs.existsSync(config_path) === false) {
+      fs.mkdirSync(config_path, {recursive: true})
+    }
+    this.activeProjectInfoFilePath = fspath.resolve(config_path + '/projects.yml')
+    if (fs.existsSync(this.activeProjectInfoFilePath)) {
+      this.activeProjectInfo = this.parseYaml(this.activeProjectInfoFilePath)
+    }
+    this.ensureControllerContainer()
+  }
+  /**
+   * Create our global controller container.
+   */
+  protected ensureControllerContainer() {
+    let existing = execSync(this.dockerBin + ' ps | grep -w ce_dev_controller | wc -l').toString().trim()
+    if (existing === '0') {
+      this.log('Starting local controller container "ce_dev_controller".')
+      let controllerComposeFile = fspath.resolve(this.config.dataDir + '/docker-compose.yml')
+      this.writeYaml(controllerComposeFile, this.controllerComposeConfig)
+      execSync(this.dockerComposeBin + ' -p ce_dev_controller up -d', {cwd: this.config.dataDir, stdio: 'inherit'})
+    }
+    // Populate network base.
+    this.network = execSync(this.dockerBin + ' network inspect ce-dev --format="{{range .IPAM.Config}}{{.Gateway}}{{end}}"').toString().trim().slice(0, -2)
   }
 
   /**
@@ -90,6 +151,10 @@ export default abstract class BaseCmd extends Command {
       }
     })
     return exists
+  }
+
+  protected saveActiveProjectInfo() {
+    this.writeYaml(this.activeProjectInfoFilePath, this.activeProjectInfo)
   }
 
   /**
@@ -157,21 +222,6 @@ export default abstract class BaseCmd extends Command {
   }
 
   /**
-   * Fetches the service definition for the "controller" from config.
-   */
-  protected getControllerService(config: ComposeConfig): ComposeConfigService | null {
-    for (let service of Object.values(config.services)) {
-      if (!service['x-ce_dev'] || !service['x-ce_dev'].role) {
-        continue
-      }
-      if (service['x-ce_dev'].role === 'controller') {
-        return service
-      }
-    }
-    return null
-  }
-
-  /**
    * Gather project's containers that are actually running.
    */
   protected getProjectRunningContainers(): Array<string> {
@@ -201,18 +251,14 @@ export default abstract class BaseCmd extends Command {
     return ceDev
   }
   /**
-   * Gather project's containers that have an Ansible playbook.
+   * Gather project's containers that define an ansible path.
    */
   protected getProjectRunningContainersAnsible(): Array<string> {
-    const ansible: Array<string> = []
-    if (fs.existsSync(this.activeAnsibleInfoFilePath) === false) {
-      return ansible
-    }
     const running: Array<string> = this.getProjectRunningContainers()
-    const ansibleInfo: Array<AnsibleInfo> = this.parseYaml(this.activeAnsibleInfoFilePath)
-    ansibleInfo.forEach(info => {
-      if (running.indexOf(info.containerName)) {
-        ansible.push(info.containerName)
+    const ansible: Array<string> = []
+    running.forEach(containerName => {
+      if (this.activeProjectInfo.ansible_paths.hasOwnProperty(containerName)) {
+        ansible.push(containerName)
       }
     })
     return ansible
@@ -227,4 +273,5 @@ export default abstract class BaseCmd extends Command {
       this.exit(1)
     }
   }
+
 }

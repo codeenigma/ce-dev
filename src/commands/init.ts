@@ -1,11 +1,9 @@
 import {flags} from '@oclif/command'
-import {execSync} from 'child_process'
 
 import BaseCmd from '../base-cmd-abstract'
 import ComposeConfig from '../compose-config-interface'
 import ComposeConfigService from '../compose-config-service-interface'
 
-const fspath = require('path')
 export default class InitCmd extends BaseCmd {
   static description = 'Generates a docker-compose.yml file from a template'
   static examples = [
@@ -30,16 +28,7 @@ export default class InitCmd extends BaseCmd {
    * Docker compose content parsed from yaml.
    */
   private readonly composeConfig: ComposeConfig
-  /**
-   * @var
-   * Network range.
-   */
-  private network = ''
-  /**
-   * @var
-   * Network name.
-   */
-  private networkName = ''
+
   /**
    * @var
    * Hostnames/IP pairs.
@@ -68,58 +57,13 @@ export default class InitCmd extends BaseCmd {
    * Alter parsed config to be written in actual compose file.
    */
   private generateCompose() {
-    this.injectNetwork()
     this.injectContainersSSH()
-    this.injectContainersHostname()
     this.injectContainersNetworking()
-    this.injectContainersExtraHosts()
+    this.injectContainersHostname()
     this.injectContainersSysFs()
-    this.injectControllerAnsibleInfo()
+    this.injectProjectInfo()
   }
-  /**
-   * Defines a custom private network.
-   */
-  private injectNetwork() {
-    // Do nothing if we already have some custom one(s).
-    if (this.composeConfig.networks instanceof Object) {
-      return
-    }
-    // Gather available range.
-    this.assignNetwork()
-    const network = {
-      [this.networkName]: {
-        name: this.networkName,
-        driver: 'bridge',
-        ipam: {
-          driver: 'default',
-          config: [
-            {subnet: this.network + '.0/24'}
-          ]
-        }
-      }
-    }
-    this.composeConfig.networks = network
-  }
-  /**
-   * Assign an available Docker network.
-   */
-  private assignNetwork() {
-    this.log('Checking available network ranges...')
-    this.log('This requires admin priviledges')
-    for (let i = 0; i < 255; i++) {
-      this.network = '10.0.' + Math.floor(Math.random() * (254 - 1) + 2)
-      let cmd = 'sudo ifconfig | grep ' + this.network + '. | wc -l'
-      let exists = execSync(cmd).toString().trim()
-      if (exists === '0') {
-        this.log('Selecting network range ' + this.network)
-        this.networkName = 'ce-dev-' + this.network.replace(/\./g, '_')
-        return
-      }
-    }
-    // We could not find a range.
-    this.error('Could not find an available network range')
-    this.exit(1)
-  }
+
   /**
    * Adds port forwarding for SSH.
    * This can only work for containers using
@@ -143,7 +87,11 @@ export default class InitCmd extends BaseCmd {
    * Inject container name as hostname.
    */
   private injectContainersHostname() {
-    for (let service of Object.values(this.composeConfig.services)) {
+    for (let [name, service] of Object.entries(this.composeConfig.services)) {
+      let fullName = this.composeConfig['x-ce_dev'].project_name + '-' + name
+      this.composeConfig.services[fullName] = service
+      delete (this.composeConfig.services[name])
+      service.container_name = fullName
       if (service.hostname) {
         continue
       }
@@ -155,115 +103,70 @@ export default class InitCmd extends BaseCmd {
    * Inject a fixed ip to containers and amend networking accordingly.
    */
   private injectContainersNetworking() {
-    let counter = 2
     for (let service of Object.values(this.composeConfig.services)) {
       // Manually configured, we do nothing.
       if (service.networks instanceof Object) {
         continue
       }
-      let ip = this.network + '.' + counter
-      this.assignContainerIP(service, ip)
-      this.collectContainerHostnames(service, ip)
+      let host_aliases: any = []
+      if (service['x-ce_dev'] && service['x-ce_dev'].hostnames) {
+        service['x-ce_dev'].hostnames.forEach(alias => {
+          host_aliases.push(alias)
+        })
+      }
+      service.networks = {
+        ce_dev: {
+          aliases: host_aliases
+        }
+      }
       if (this.config.platform === 'darwin') {
-        this.assignContainerPortForwarding(service, ip)
+        this.assignContainerPortForwarding(service)
       }
-      counter++
     }
-  }
-  /**
-   * Assign ip to a container.
-   * @param service
-   * Service definition.
-   * @param ip
-   * Assigned IP.
-   */
-  private assignContainerIP(service: ComposeConfigService, ip: string) {
-    service.networks = {
-      [this.networkName]: {
-        ipv4_address: ip
+    // Add general network.
+    if (this.composeConfig.networks) {
+      return
+    }
+    this.composeConfig.networks = {
+      ce_dev: {
+        name: 'ce_dev',
+        driver: 'bridge',
+        external: true
       }
     }
   }
-  /**
-   * Collect container hostname for injecting later.
-   * @param service
-   * Service definition.
-   * @param ip
-   * Assigned IP.
-   */
-  private collectContainerHostnames(service: ComposeConfigService, ip: string) {
-    if (service['x-ce_dev'] && service['x-ce_dev'].hostnames instanceof Array) {
-      service['x-ce_dev'].hostnames.forEach(hostname => {
-        this.hostnames.set(hostname, ip)
-      })
-    }
-  }
+
   /**
    * Mac OS only. Replace exposed ports with forwarding.
    * @param service
    * Service definition.
-   * @param ip
-   * Assigned IP.
+   *
    */
-  private assignContainerPortForwarding(service: ComposeConfigService, ip: string) {
+  private assignContainerPortForwarding(service: ComposeConfigService) {
     if (service.expose instanceof Array) {
       if (service.ports instanceof Array === false) {
         service.ports = []
       }
       service.expose.forEach(port => {
-        service.ports.push([ip, port, port].join(':'))
+        service.ports.push([port, port].join(':'))
       })
       service.ports = [...new Set(service.ports)]
-    }
-  }
-
-  /**
-   * Adds extra hosts entries for all knowns containers.
-   */
-  private injectContainersExtraHosts() {
-    for (let service of Object.values(this.composeConfig.services)) {
-      if (service.extra_hosts instanceof Array === false) {
-        service.extra_hosts = []
-      }
-      for (let [host, ip] of this.hostnames) {
-        service.extra_hosts.push([host, ip].join(':'))
-      }
     }
   }
   /**
    * Gather mount points for ansible playbooks.
    */
-  private injectControllerAnsibleInfo() {
-    let ansiblePaths = []
-    let mountPaths = []
-    const controller = this.getControllerService(this.composeConfig)
-    if (controller === null) {
-      return
-    }
+  private injectProjectInfo() {
     for (let service of Object.values(this.composeConfig.services)) {
       if (service['x-ce_dev'] && service['x-ce_dev'].ansible && service['x-ce_dev'].ansible.path) {
         let absolutePath = this.getPathFromRelative(service['x-ce_dev'].ansible.path)
         if (absolutePath.length < 3) {
           continue
         }
-        let relativePath = '/ce-dev/' + this.getRelativePath(absolutePath)
-        ansiblePaths.push({
-          containerName: service.container_name,
-          ansiblePath: relativePath
-        })
-        mountPaths.push([fspath.dirname(absolutePath), fspath.dirname(relativePath), 'delegated'].join(':'))
+        this.activeProjectInfo.ansible_paths[service.container_name] = absolutePath
       }
     }
-    // Store for provisioning.
-    this.writeYaml(this.activeAnsibleInfoFilePath, ansiblePaths)
-    // Add as volumes on the controller.
-    if (!controller.volumes) {
-      controller.volumes = []
-    }
-    mountPaths.forEach(volume => {
-      controller.volumes.push(volume)
-    })
-    controller.volumes = [...new Set(controller.volumes)]
+    this.saveActiveProjectInfo()
   }
   /**
    * Inject SysFs for systemd.
@@ -289,8 +192,8 @@ export default class InitCmd extends BaseCmd {
    */
   private removePrivateProperties() {
     delete this.composeConfig['x-ce_dev']
-    // for (let [name, service] of Object.entries(this.composeConfig.services)) {
-    //   delete service['x-ce_dev']
-    // }
+    for (let service of Object.values(this.composeConfig.services)) {
+      delete service['x-ce_dev']
+    }
   }
 }
