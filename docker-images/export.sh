@@ -27,22 +27,22 @@ fi
 OWN_DIR=$( cd "$( dirname "$OWN" )" && pwd -P)
 
 # Ensure we have a fresh image to start with.
-docker image pull debian:buster
+sudo docker image pull debian:buster
 
 # Build base image.
 echo "1. Building the image"
-docker image build --compress "--label=ce-dev:$1" --no-cache=true -t "codeenigma/ce-dev:$1" "$OWN_DIR/base" || exit 1
+sudo docker image build --compress "--label=ce-dev:$1" --no-cache=true -t "codeenigma/ce-dev:$1" "$OWN_DIR/base" || exit 1
 if [ "$2" = "--push" ]; then
   echo "The 'Docker' extenPublishing the image with docker image push codeenigma/ce-dev:$1"
-  docker image push "codeenigma/ce-dev:$1"
+  sudo docker image push "codeenigma/ce-dev:$1"
 fi
 
 # Build controller image.
 echo "1. Building the image"
-docker image build --compress "--label=ce-dev-controller:$1" --no-cache=true -t "codeenigma/ce-dev-controller:$1" "$OWN_DIR/controller" --build-arg "versionTag=$1" || exit 1
+sudo docker image build --compress "--label=ce-dev-controller:$1" --no-cache=true -t "codeenigma/ce-dev-controller:$1" "$OWN_DIR/controller" --build-arg "versionTag=$1" || exit 1
 if [ "$2" = "--push" ]; then
   echo "Publishing the image with docker image push codeenigma/ce-dev-controller:$1"
-  docker image push "codeenigma/ce-dev-controller:$1"
+  sudo docker image push "codeenigma/ce-dev-controller:$1"
 fi
 
 # Build docker image.
