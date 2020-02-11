@@ -1,0 +1,8 @@
+---
+
+- hosts: localhost
+  become: yes
+  vars:
+    - env_type: utility
+  roles:
+    - ansible_deploy

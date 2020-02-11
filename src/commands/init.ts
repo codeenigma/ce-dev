@@ -81,6 +81,17 @@ export default class InitCmd extends BaseCmd {
       }
       service.expose.push('22')
       service.expose = [...new Set(service.expose)]
+      if (!service.volumes) {
+        service.volumes = []
+      }
+      service.volumes.push('ce_dev_ssh:/home/ce-dev/.ssh:ro')
+      service.volumes = [...new Set(service.volumes)]
+    }
+    if (!this.composeConfig.volumes) {
+      this.composeConfig.volumes = {}
+    }
+    this.composeConfig.volumes.ce_dev_ssh = {
+      external: true
     }
   }
   /**
@@ -158,12 +169,20 @@ export default class InitCmd extends BaseCmd {
    */
   private injectProjectInfo() {
     for (let service of Object.values(this.composeConfig.services)) {
-      if (service['x-ce_dev'] && service['x-ce_dev'].ansible && service['x-ce_dev'].ansible.path) {
-        let absolutePath = this.getPathFromRelative(service['x-ce_dev'].ansible.path)
-        if (absolutePath.length < 3) {
-          continue
+      if (!service['x-ce_dev'] || !service['x-ce_dev'].ansible) {
+        continue
+      }
+      if (service['x-ce_dev'].ansible.provision) {
+        let absolutePath = this.getPathFromRelative(service['x-ce_dev'].ansible.provision)
+        if (absolutePath.length > 3) {
+          this.activeProjectInfo.provision[service.container_name] = absolutePath
         }
-        this.activeProjectInfo.ansible_paths[service.container_name] = absolutePath
+      }
+      if (service['x-ce_dev'].ansible.deploy) {
+        let absolutePath = this.getPathFromRelative(service['x-ce_dev'].ansible.deploy)
+        if (absolutePath.length > 3) {
+          this.activeProjectInfo.deploy[service.container_name] = absolutePath
+        }
       }
     }
     this.activeProjectInfo.project_name = this.composeConfig['x-ce_dev'].project_name

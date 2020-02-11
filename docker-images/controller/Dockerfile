@@ -76,11 +76,32 @@ RUN \
   apt-get update && \
   apt-get dist-upgrade -y -o Dpkg::Options::="--force-confnew" && \
   apt-get install -y -o Dpkg::Options::="--force-confnew" ansible && \
-  rm -rf /tmp/* && \
-  rm -rf /var/lib/apt/lists/* && \
-  apt-get clean
+  apt-get clean  && \
+  rm -rf \
+  /var/lib/apt/lists/* \
+  /var/log/* \
+  /tmp/*
 
-RUN su - ce-dev -c "git clone https://github.com/codeenigma/ansible-provision.git /home/ce-dev/ansible-provision"
-#RUN su - ce-dev -c "/usr/bin/ansible-playbook /home/ce-dev/ansible-provision/playbook.yml --extra-vars '{\"is_local\":\"yes\"}'"
+RUN \
+  su - ce-dev -c "git clone https://github.com/codeenigma/ansible-provision.git /home/ce-dev/ansible-provision" && \
+  su - ce-dev -c "/usr/bin/ansible-playbook /home/ce-dev/ansible-provision/install.yml --extra-vars '{\"is_local\":\"yes\"}'" && \
+  apt-get clean  && \
+  rm -rf \
+  /var/lib/apt/lists/* \
+  /var/log/* \
+  /tmp/*
+
+COPY ./deploy.yml /home/ce-dev/deploy.yml
+
+RUN \
+  su - ce-dev -c "export ANSIBLE_CONFIG=/home/ce-dev/ansible-provision/ansible.cfg ; /usr/bin/ansible-playbook /home/ce-dev/deploy.yml --extra-vars '{\"is_local\":\"yes\",\"ansible_provision\":{\"local_dir\":\"/home/ce-dev/ansible-provision\"}}'" && \
+  rm /home/ce-dev/deploy.yml && \
+  rm -rf /home/ce-dev/.ssh/* && \
+  apt-get clean  && \
+  rm -rf \
+  /var/lib/apt/lists/* \
+  /var/log/* \
+  /tmp/*
+
 COPY ./ce-dev-start.sh /opt/
 CMD ["/bin/sh", "/opt/ce-dev-start.sh", "1000", "1000"]

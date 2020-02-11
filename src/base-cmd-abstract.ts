@@ -47,7 +47,8 @@ export default abstract class BaseCmd extends Command {
   protected activeProjectInfo: ProjectConfig = {
     project_name: 'ce-dev',
     registry: 'localhost:5000',
-    ansible_paths: {}
+    provision: {},
+    deploy: {}
   }
 
   /**
@@ -70,11 +71,14 @@ export default abstract class BaseCmd extends Command {
     services: {
       ce_dev_controller: {
         container_name: 'ce_dev_controller',
-        image: 'codeenigma/ce-dev:1.0',
+        image: 'codeenigma/ce-dev-controller:1.0.0',
         hostname: 'ce_dev_controller',
         networks: {
           ce_dev: {}
-        }
+        },
+        volumes: [
+          'ce_dev_ssh:/home/ce-dev/.ssh'
+        ],
       }
     },
     networks: {
@@ -82,7 +86,13 @@ export default abstract class BaseCmd extends Command {
         name: 'ce_dev',
         driver: 'bridge'
       }
+    },
+    volumes: {
+      ce_dev_ssh: {
+        name: 'ce_dev_ssh'
+      }
     }
+
   }
 
   /**
@@ -249,19 +259,6 @@ export default abstract class BaseCmd extends Command {
       }
     })
     return ceDev
-  }
-  /**
-   * Gather project's containers that define an ansible path.
-   */
-  protected getProjectRunningContainersAnsible(): Array<string> {
-    const running: Array<string> = this.getProjectRunningContainers()
-    const ansible: Array<string> = []
-    running.forEach(containerName => {
-      if (this.activeProjectInfo.ansible_paths.hasOwnProperty(containerName)) {
-        ansible.push(containerName)
-      }
-    })
-    return ansible
   }
 
   /**

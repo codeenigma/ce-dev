@@ -9,7 +9,8 @@ export default interface ComposeConfigService {
   'x-ce_dev': {
     'hostnames': [string] | []
     'ansible': {
-      'path': string
+      'provision': string,
+      'deploy': string
     }
     'role': string
   }
