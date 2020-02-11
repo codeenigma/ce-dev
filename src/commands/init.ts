@@ -166,6 +166,7 @@ export default class InitCmd extends BaseCmd {
         this.activeProjectInfo.ansible_paths[service.container_name] = absolutePath
       }
     }
+    this.activeProjectInfo.project_name = this.composeConfig['x-ce_dev'].project_name
     this.saveActiveProjectInfo()
   }
   /**

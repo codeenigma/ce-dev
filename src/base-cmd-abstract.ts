@@ -129,7 +129,7 @@ export default abstract class BaseCmd extends Command {
       execSync(this.dockerComposeBin + ' -p ce_dev_controller up -d', {cwd: this.config.dataDir, stdio: 'inherit'})
     }
     // Populate network base.
-    this.network = execSync(this.dockerBin + ' network inspect ce-dev --format="{{range .IPAM.Config}}{{.Gateway}}{{end}}"').toString().trim().slice(0, -2)
+    this.network = execSync(this.dockerBin + ' network inspect ce_dev --format="{{range .IPAM.Config}}{{.Gateway}}{{end}}"').toString().trim().slice(0, -2)
   }
 
   /**
