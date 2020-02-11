@@ -30,22 +30,14 @@ RUN \
     systemd-sysv \
     unzip \
     vim \
-    wget \
-    zsh && \
+    wget && \
   echo 'UseDNS no' >> /etc/ssh/sshd_config && \
   mkdir -p /var/run/sshd && \
-  rm /usr/sbin/policy-rc.d
-
-RUN \
-  set -x && \
-  export DEBIAN_FRONTEND=noninteractive && \
+  rm /usr/sbin/policy-rc.d && \
   apt-get clean  && \
   rm -rf \
   /var/lib/apt/lists/* \
-  /var/log/alternatives.log \
-  /var/log/apt/history.log \
-  /var/log/apt/term.log \
-  /var/log/dpkg.log \
+  /var/log/* \
   /tmp/*
 
 RUN \
@@ -55,12 +47,6 @@ RUN \
   echo ce-dev:ce-dev | chpasswd -m && \
   install -m 755 -o ce-dev -g ce-dev -d /home/ce-dev && \
   install -m 700 -o ce-dev -g ce-dev -d /home/ce-dev/.ssh && \
-  ssh-keygen -t rsa -b 4096 -N "" -f /home/ce-dev/.ssh/id_rsa && \
-  cp /home/ce-dev/.ssh/id_rsa.pub /home/ce-dev/.ssh/authorized_keys && \
-  chmod 600 /home/ce-dev/.ssh/id_rsa && \
-  chmod 600 /home/ce-dev/.ssh/id_rsa.pub && \
-  chmod 600 /home/ce-dev/.ssh/authorized_keys && \
-  chown -R ce-dev:ce-dev /home/ce-dev/.ssh && \
   echo root:ce-dev | chpasswd -m && \
   echo 'ce-dev ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/ce-dev && \
   chmod 0440 /etc/sudoers.d/ce-dev && \
@@ -80,4 +66,6 @@ ENV container docker
 STOPSIGNAL SIGRTMIN+3
 VOLUME [ "/sys/fs/cgroup", "/run", "/run/lock", "/tmp" ]
 
-CMD [ "/sbin/init" ]
+COPY ./ce-dev-start.sh /opt/
+
+CMD ["/bin/sh", "/opt/ce-dev-start.sh", "1000", "1000"]

@@ -60,8 +60,6 @@ RUN \
     /etc/machine-id \
     /var/lib/dbus/machine-id
 
-ENV container docker
-CMD [ "/sbin/init" ]
 
 RUN \
   apt-get update && \
@@ -104,4 +102,5 @@ RUN \
   /tmp/*
 
 COPY ./ce-dev-start.sh /opt/
+ENV container docker
 CMD ["/bin/sh", "/opt/ce-dev-start.sh", "1000", "1000"]

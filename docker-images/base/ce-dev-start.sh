@@ -31,7 +31,4 @@ if [ -n "$1" ] || [ -n "$2" ] || [ "$1" -lt 1 ] || [ "$1" -lt 1 ]; then
   ensure_user_ids "$1" "$2"
 fi
 
-if [ -e /run/sshd.pid ]; then
-  rm /run/sshd.pid
-fi
-/usr/sbin/sshd -D
+/sbin/init
