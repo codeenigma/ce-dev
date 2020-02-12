@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # @file
-# Base startup script.
+# Controller startup script.
 
 # Ensure user numeric uid/gid matches.
 # @param $1
@@ -26,9 +26,9 @@ ensure_user_ids(){
   fi
 }
 
-# Do nothing if we have no arguments, or we're called with root ids.
-if [ -n "$1" ] || [ -n "$2" ] || [ "$1" -lt 1 ] || [ "$1" -lt 1 ]; then
-  ensure_user_ids "$1" "$2"
+# We only change ids > 1000 (either we're root 0, on a mac 501 or already 1000).
+if [ -n "$1" ] && [ -n "$2" ]; then 
+  if [ "$1" -gt 1000 ] || [ "$2" -gt 1000 ]; then
+    ensure_user_ids "$1" "$2"
+  fi
 fi
-
-/sbin/init

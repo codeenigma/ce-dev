@@ -33,6 +33,7 @@ export default class DestroyCmd extends BaseCmd {
    */
   async run() {
     this.down()
+    this.stopControllerContainer()
   }
 
   /**

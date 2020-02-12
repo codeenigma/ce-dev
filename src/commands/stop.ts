@@ -19,5 +19,6 @@ export default class StopCmd extends BaseCmd {
     this.ensureActiveComposeFile()
     this.log('Stopping running containers with docker-compose stop')
     execSync(this.dockerComposeBin + ' stop', {cwd: this.ceDevDir})
+    this.stopControllerContainer()
   }
 }

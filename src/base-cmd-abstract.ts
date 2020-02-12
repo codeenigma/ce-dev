@@ -133,6 +133,14 @@ export default abstract class BaseCmd extends Command {
   protected ensureControllerContainer() {
     let existing = execSync(this.dockerBin + ' ps | grep -w ce_dev_controller | wc -l').toString().trim()
     if (existing === '0') {
+      // Ensure uid match on Linux.
+      if (this.config.platform === 'linux') {
+        let uid = process.getuid()
+        let gid = process.getgid()
+        if (uid > 1000 && gid > 1000) {
+          this.controllerComposeConfig.services.ce_dev_controller.command = ['/bin/sh', '/opt/ce-dev-start.sh', uid.toString(), gid.toString()]
+        }
+      }
       this.log('Starting local controller container "ce_dev_controller".')
       let controllerComposeFile = fspath.resolve(this.config.dataDir + '/docker-compose.yml')
       this.writeYaml(controllerComposeFile, this.controllerComposeConfig)
@@ -140,6 +148,15 @@ export default abstract class BaseCmd extends Command {
     }
     // Populate network base.
     this.network = execSync(this.dockerBin + ' network inspect ce_dev --format="{{range .IPAM.Config}}{{.Gateway}}{{end}}"').toString().trim().slice(0, -2)
+  }
+  /**
+   * Stop the global controller container.
+   */
+  protected stopControllerContainer() {
+    let existing = execSync(this.dockerBin + ' ps | grep -w ce_dev_controller | wc -l').toString().trim()
+    if (existing !== '0') {
+      execSync(this.dockerBin + ' stop ce_dev_controller')
+    }
   }
 
   /**

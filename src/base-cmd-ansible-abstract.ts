@@ -96,6 +96,15 @@ export default abstract class AnsibleCmd extends BaseCmd {
    * Name of the container to target.
    */
   protected playContainer(containerName: string) {
+    // Ensure uid match on Linux.
+    // @todo this should be on start or CMD, but system.d gets in the way.
+    if (this.config.platform === 'linux') {
+      let uid = process.getuid()
+      let gid = process.getgid()
+      if (uid > 1000 && gid > 1000) {
+        execSync(this.dockerBin + ' exec ' + containerName + ' /bin/sh /opt/ce-dev-start.sh ' + uid.toString() + ' ' + gid.toString() + ' || exit 0', {stdio: 'inherit'})
+      }
+    }
     let ansiblePath = this.ansiblePaths[containerName]
     let src = fspath.dirname(ansiblePath)
     let dest = this.ansibleProjectPlaybooksPath + fspath.dirname(src)

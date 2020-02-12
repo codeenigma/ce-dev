@@ -38,16 +38,11 @@ ensure_ssh_key(){
   fi
 }
 
-ssh-keygen -t rsa -b 4096 -N "" -f /home/ce-dev/.ssh/id_rsa && \
-cp /home/ce-dev/.ssh/id_rsa.pub /home/ce-dev/.ssh/authorized_keys && \
-chmod 600 /home/ce-dev/.ssh/id_rsa && \
-chmod 600 /home/ce-dev/.ssh/id_rsa.pub && \
-chmod 600 /home/ce-dev/.ssh/authorized_keys && \
-chown -R ce-dev:ce-dev /home/ce-dev/.ssh && \
-
-# Do nothing if we have no arguments, or we're called with root ids.
-if [ -n "$1" ] || [ -n "$2" ] || [ "$1" -lt 1 ] || [ "$1" -lt 1 ]; then
-  ensure_user_ids "$1" "$2"
+# We only change ids > 1000 (either we're root 0, on a mac 501 or already 1000).
+if [ -n "$1" ] && [ -n "$2" ]; then 
+  if [ "$1" -gt 1000 ] || [ "$2" -gt 1000 ]; then
+    ensure_user_ids "$1" "$2"
+  fi
 fi
 
 ensure_ssh_key

@@ -68,4 +68,4 @@ VOLUME [ "/sys/fs/cgroup", "/run", "/run/lock", "/tmp" ]
 
 COPY ./ce-dev-start.sh /opt/
 
-CMD ["/bin/sh", "/opt/ce-dev-start.sh", "1000", "1000"]
+CMD ["/sbin/init"]
