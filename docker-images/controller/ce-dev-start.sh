@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # @file
 # Controller startup script.
@@ -31,11 +31,11 @@ ensure_ssh_key(){
   if [ ! -f /home/ce-dev/.ssh/id_rsa ]; then
     ssh-keygen -t rsa -b 4096 -N "" -f /home/ce-dev/.ssh/id_rsa
     cp /home/ce-dev/.ssh/id_rsa.pub /home/ce-dev/.ssh/authorized_keys
-    chmod 600 /home/ce-dev/.ssh/id_rsa
-    chmod 600 /home/ce-dev/.ssh/id_rsa.pub
-    chmod 600 /home/ce-dev/.ssh/authorized_keys
-    chown -R ce-dev:ce-dev /home/ce-dev/.ssh
   fi
+  chmod 600 /home/ce-dev/.ssh/id_rsa
+  chmod 600 /home/ce-dev/.ssh/id_rsa.pub
+  chmod 600 /home/ce-dev/.ssh/authorized_keys
+  chown -R ce-dev:ce-dev /home/ce-dev/.ssh
 }
 
 # We only change ids > 1000 (either we're root 0, on a mac 501 or already 1000).

@@ -141,7 +141,7 @@ export default abstract class BaseCmd extends Command {
           this.controllerComposeConfig.services.ce_dev_controller.command = ['/bin/sh', '/opt/ce-dev-start.sh', uid.toString(), gid.toString()]
         }
       }
-      this.log('Starting local controller container "ce_dev_controller".')
+      this.log('Starting local controller container.')
       let controllerComposeFile = fspath.resolve(this.config.dataDir + '/docker-compose.yml')
       this.writeYaml(controllerComposeFile, this.controllerComposeConfig)
       execSync(this.dockerComposeBin + ' -p ce_dev_controller up -d', {cwd: this.config.dataDir, stdio: 'inherit'})

@@ -70,7 +70,7 @@ export default class StartCmd extends BaseCmd {
    * Wrapper around docker-compose.
    */
   private up() {
-    this.log('Starting containers with docker-compose up -d')
+    this.log('Starting project containers...')
     execSync(this.dockerComposeBin + ' -p ' + this.activeProjectInfo.project_name + ' up -d', {cwd: this.ceDevDir, stdio: 'inherit'})
   }
 
@@ -92,6 +92,7 @@ export default class StartCmd extends BaseCmd {
       return (item.length)
     })
     runningContainers.forEach(container => {
+      //@todo this would fail with other containers.
       let ip = execSync(this.dockerBin + ' inspect ' + container + ' --format={{.NetworkSettings.Networks.ce_dev.IPAddress}}').toString().trim()
       let aliasesString = execSync(this.dockerBin + ' inspect ' + container + ' --format={{.NetworkSettings.Networks.ce_dev.Aliases}}').toString().trim()
       let aliases = aliasesString.split(/[\[\]\ ]/).filter(Boolean)
