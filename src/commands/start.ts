@@ -64,6 +64,7 @@ export default class StartCmd extends BaseCmd {
   async run() {
     this.up()
     this.updateHostsFile()
+    this.ensureUid()
   }
 
   /**
@@ -91,15 +92,16 @@ export default class StartCmd extends BaseCmd {
     const runningContainers = running.split('\n').filter(item => {
       return (item.length)
     })
-    runningContainers.forEach(container => {
+    runningContainers.forEach(containerName => {
       //@todo this would fail with other containers.
-      let ip = execSync(this.dockerBin + ' inspect ' + container + ' --format={{.NetworkSettings.Networks.ce_dev.IPAddress}}').toString().trim()
-      let aliasesString = execSync(this.dockerBin + ' inspect ' + container + ' --format={{.NetworkSettings.Networks.ce_dev.Aliases}}').toString().trim()
+      let ip = execSync(this.dockerBin + ' inspect ' + containerName + ' --format={{.NetworkSettings.Networks.ce_dev.IPAddress}}').toString().trim()
+      let aliasesString = execSync(this.dockerBin + ' inspect ' + containerName + ' --format={{.NetworkSettings.Networks.ce_dev.Aliases}}').toString().trim()
       let aliases = aliasesString.split(/[\[\]\ ]/).filter(Boolean)
       aliases.forEach(alias => {
         this.runningHosts.set(alias.toString(), ip)
       })
     })
+
   }
   /**
    * Write hosts information.
@@ -131,6 +133,25 @@ export default class StartCmd extends BaseCmd {
       fs.writeFile(this.tmpHostsFile, lines.join('\n') + '\n', () => {
         execSync('sudo mv ' + this.tmpHostsFile + ' ' + this.hostsFile)
       })
+    })
+  }
+
+  private ensureUid() {
+    if (this.config.platform !== 'linux') {
+      return
+    }
+    const running = this.getProjectRunningContainersCeDev()
+    if (running.length < 1) {
+      return
+    }
+    // Ensure uid match on Linux.
+    // @todo this should be on CMD, but system.d gets in the way.
+    running.forEach(containerName => {
+      let uid = process.getuid()
+      let gid = process.getgid()
+      if (uid > 1000 && gid > 1000) {
+        execSync(this.dockerBin + ' exec ' + containerName + ' /bin/sh /opt/ce-dev-start.sh ' + uid.toString() + ' ' + gid.toString() + ' || exit 0', {stdio: 'inherit'})
+      }
     })
   }
 }

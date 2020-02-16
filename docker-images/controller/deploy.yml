@@ -4,5 +4,8 @@
   become: yes
   vars:
     - env_type: utility
+    - ansible_deploy:
+        own_repository: https://github.com/codeenigma/ansible-deploy.git
+        config_repository: https://github.com/codeenigma/ce-dev-ansible-deploy-config.git
   roles:
     - ansible_deploy

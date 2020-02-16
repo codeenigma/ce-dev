@@ -47,8 +47,8 @@ export default abstract class BaseCmd extends Command {
   protected activeProjectInfo: ProjectConfig = {
     project_name: 'ce-dev',
     registry: 'localhost:5000',
-    provision: {},
-    deploy: {}
+    provision: [],
+    deploy: []
   }
 
   /**
@@ -77,7 +77,8 @@ export default abstract class BaseCmd extends Command {
           ce_dev: {}
         },
         volumes: [
-          'ce_dev_ssh:/home/ce-dev/.ssh'
+          'ce_dev_ssh:/home/ce-dev/.ssh',
+          this.config.cacheDir + ':/home/ce-dev/.ce-dev-cache'
         ],
       }
     },
@@ -90,6 +91,15 @@ export default abstract class BaseCmd extends Command {
     volumes: {
       ce_dev_ssh: {
         name: 'ce_dev_ssh'
+      },
+      ce_dev_apt_cache: {
+        name: 'ce_dev_apt_cache'
+      },
+      ce_dev_composer_cache: {
+        name: 'ce_dev_composer_cache'
+      },
+      ce_dev_nvm_node: {
+        name: 'ce_dev_nvm_node'
       }
     }
 

@@ -1,4 +1,5 @@
 import ComposeConfigService from './compose-config-service-interface'
+import ProjectConfig from './project-config-interface'
 /**
  * Describes a docker compose structure.
  */
@@ -6,10 +7,7 @@ import ComposeConfigService from './compose-config-service-interface'
 export default interface ComposeConfig {
   'version': string
   'services': Record<string, ComposeConfigService>
-  'x-ce_dev': {
-    'registry': string,
-    'project_name': string
-  }
+  'x-ce_dev': ProjectConfig
   'networks': Record<string, object>,
   'volumes': Record<string, object>
 }

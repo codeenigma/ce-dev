@@ -7,12 +7,7 @@ export default interface ComposeConfigService {
   'container_name': string
   'image': string
   'x-ce_dev': {
-    'hostnames': [string] | []
-    'ansible': {
-      'provision': string,
-      'deploy': string
-    }
-    'role': string
+    'host_aliases': [string] | []
   }
   'volumes': Array<string>
   'expose': Array<string>

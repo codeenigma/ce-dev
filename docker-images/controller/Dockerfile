@@ -82,7 +82,7 @@ RUN \
 
 RUN \
   su - ce-dev -c "git clone https://github.com/codeenigma/ansible-provision.git /home/ce-dev/ansible-provision" && \
-  su - ce-dev -c "/usr/bin/ansible-playbook /home/ce-dev/ansible-provision/install.yml --extra-vars '{\"is_local\":\"yes\"}'" && \
+  su - ce-dev -c "/usr/bin/ansible-playbook /home/ce-dev/ansible-provision/install.yml --extra-vars '{\"is_local\":\"yes\",\"ansible_provision\":{\"config_repository\":\"https://github.com/codeenigma/ce-dev-ansible-provision-config.git\"}}'" && \
   apt-get clean  && \
   rm -rf \
   /var/lib/apt/lists/* \

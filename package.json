@@ -33,7 +33,8 @@
     "/bin",
     "/lib",
     "/npm-shrinkwrap.json",
-    "/oclif.manifest.json"
+    "/oclif.manifest.json",
+    "templates"
   ],
   "repository": "https://github.com/codeenigma/ce-dev",
   "keywords": [

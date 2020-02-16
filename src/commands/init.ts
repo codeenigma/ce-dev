@@ -30,12 +30,6 @@ export default class InitCmd extends BaseCmd {
   private readonly composeConfig: ComposeConfig
 
   /**
-   * @var
-   * Hostnames/IP pairs.
-   */
-  private readonly hostnames: Map<string, string> = new Map()
-
-  /**
    * @inheritdoc
    */
   public constructor(argv: string[], config: any) {
@@ -61,6 +55,7 @@ export default class InitCmd extends BaseCmd {
     this.injectContainersNetworking()
     this.injectContainersHostname()
     this.injectContainersSysFs()
+    this.injectCacheVolumes()
     this.injectProjectInfo()
   }
 
@@ -120,8 +115,8 @@ export default class InitCmd extends BaseCmd {
         continue
       }
       let host_aliases: any = []
-      if (service['x-ce_dev'] && service['x-ce_dev'].hostnames) {
-        service['x-ce_dev'].hostnames.forEach(alias => {
+      if (service['x-ce_dev'] && service['x-ce_dev'].host_aliases) {
+        service['x-ce_dev'].host_aliases.forEach(alias => {
           host_aliases.push(alias)
         })
       }
@@ -168,22 +163,21 @@ export default class InitCmd extends BaseCmd {
    * Gather mount points for ansible playbooks.
    */
   private injectProjectInfo() {
-    for (let service of Object.values(this.composeConfig.services)) {
-      if (!service['x-ce_dev'] || !service['x-ce_dev'].ansible) {
-        continue
-      }
-      if (service['x-ce_dev'].ansible.provision) {
-        let absolutePath = this.getPathFromRelative(service['x-ce_dev'].ansible.provision)
+    if (this.composeConfig['x-ce_dev'].provision) {
+      this.composeConfig['x-ce_dev'].provision.forEach(playbookPath => {
+        let absolutePath = this.getPathFromRelative(playbookPath)
         if (absolutePath.length > 3) {
-          this.activeProjectInfo.provision[service.container_name] = absolutePath
+          this.activeProjectInfo.provision.push(absolutePath)
         }
-      }
-      if (service['x-ce_dev'].ansible.deploy) {
-        let absolutePath = this.getPathFromRelative(service['x-ce_dev'].ansible.deploy)
+      })
+    }
+    if (this.composeConfig['x-ce_dev'].deploy) {
+      this.composeConfig['x-ce_dev'].deploy.forEach(playbookPath => {
+        let absolutePath = this.getPathFromRelative(playbookPath)
         if (absolutePath.length > 3) {
-          this.activeProjectInfo.deploy[service.container_name] = absolutePath
+          this.activeProjectInfo.deploy.push(absolutePath)
         }
-      }
+      })
     }
     this.activeProjectInfo.project_name = this.composeConfig['x-ce_dev'].project_name
     this.saveActiveProjectInfo()
@@ -205,6 +199,41 @@ export default class InitCmd extends BaseCmd {
         service.cap_add.push('SYS_ADMIN')
         service.cap_add = [...new Set(service.cap_add)]
       }
+    }
+  }
+  /**
+   * Inject volumes.
+   */
+  private injectCacheVolumes() {
+    for (let service of Object.values(this.composeConfig.services)) {
+      if (service['x-ce_dev']) {
+        if (!service.volumes) {
+          service.volumes = []
+        }
+        service.volumes.push('/var/log')
+        service.volumes.push('/var/cache')
+        service.volumes.push('/var/backups')
+        service.volumes.push('/var/tmp')
+        service.volumes.push('/var/spool')
+        service.volumes.push('/var/mail')
+        service.volumes.push('ce_dev_apt_cache:/var/cache/apt/archives')
+        service.volumes.push('ce_dev_composer_cache:/home/ce-dev/.composer/cache')
+        service.volumes.push('ce_dev_nvm_node:/home/ce-dev/.nvm/versions/node')
+        //@todo npm/yarn
+        service.volumes = [...new Set(service.volumes)]
+      }
+    }
+    if (!this.composeConfig.volumes) {
+      this.composeConfig.volumes = {}
+    }
+    this.composeConfig.volumes.ce_dev_apt_cache = {
+      external: true
+    }
+    this.composeConfig.volumes.ce_dev_composer_cache = {
+      external: true
+    }
+    this.composeConfig.volumes.ce_dev_nvm_node = {
+      external: true
     }
   }
   /**

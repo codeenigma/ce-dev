@@ -15,19 +15,34 @@ You'll need docker-compose (and docker) on a Mac or Linux host.
 
 
 <!-- toc -->
+* [Requirements](#requirements)
+* [Install](#install)
 * [Usage](#usage)
 * [Commands](#commands)
 <!-- tocstop -->
 # Usage
 <!-- usage -->
-
+```sh-session
+$ npm install -g ce-dev
+$ ce-dev COMMAND
+running command...
+$ ce-dev (-v|--version|version)
+ce-dev/0.0.0 linux-x64 node-v10.14.2
+$ ce-dev --help [COMMAND]
+USAGE
+  $ ce-dev COMMAND
+...
+```
 <!-- usagestop -->
 # Commands
 <!-- commands -->
 * [`ce-dev build`](#ce-dev-build)
+* [`ce-dev create`](#ce-dev-create)
+* [`ce-dev deploy`](#ce-dev-deploy)
+* [`ce-dev destroy`](#ce-dev-destroy)
 * [`ce-dev help [COMMAND]`](#ce-dev-help-command)
 * [`ce-dev init`](#ce-dev-init)
-* [`ce-dev provision [CONTAINER]`](#ce-dev-provision-container)
+* [`ce-dev provision`](#ce-dev-provision)
 * [`ce-dev pull`](#ce-dev-pull)
 * [`ce-dev push`](#ce-dev-push)
 * [`ce-dev shell [CONTAINER]`](#ce-dev-shell-container)
@@ -57,6 +72,60 @@ EXAMPLE
 ```
 
 _See code: [src/commands/build.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/build.ts)_
+
+## `ce-dev create`
+
+Generates a new project from a template
+
+```
+USAGE
+  $ ce-dev create
+
+OPTIONS
+  -d, --destination=destination  Path to the project destination.
+  -h, --help                     show CLI help
+
+  -p, --project=project          A unique name for your project. Because it is used in various places (db names, url,
+                                 etc), stick with lowercase alphanumeric chars.
+
+  -t, --template=template        Name of a template: "drupal8"
+
+EXAMPLE
+  $ ce-dev create --template drupal8 --project myproject
+```
+
+_See code: [src/commands/create.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/create.ts)_
+
+## `ce-dev deploy`
+
+Setu an app with Ansible playbooks.
+
+```
+USAGE
+  $ ce-dev deploy
+
+EXAMPLE
+  $ ce-dev deploy example-app
+```
+
+_See code: [src/commands/deploy.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/deploy.ts)_
+
+## `ce-dev destroy`
+
+Destroy project's containers using docker-compose kill.
+
+```
+USAGE
+  $ ce-dev destroy
+
+OPTIONS
+  -h, --help  show CLI help
+
+EXAMPLE
+  $ ce-dev destroy
+```
+
+_See code: [src/commands/destroy.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/destroy.ts)_
 
 ## `ce-dev help [COMMAND]`
 
@@ -95,23 +164,13 @@ EXAMPLE
 
 _See code: [src/commands/init.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/init.ts)_
 
-## `ce-dev provision [CONTAINER]`
+## `ce-dev provision`
 
 Provision containers with Ansible playbooks.
 
 ```
 USAGE
-  $ ce-dev provision [CONTAINER]
-
-ARGUMENTS
-  CONTAINER  Name of the container to target. Use `docker ps` to see available containers.
-
-OPTIONS
-  -a, --all   Provision all containers
-  -h, --help  show CLI help
-
-EXAMPLE
-  $ ce-dev provision example-app
+  $ ce-dev provision
 ```
 
 _See code: [src/commands/provision.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/provision.ts)_

@@ -11,6 +11,9 @@ script:
 - oclif-dev pack
 jobs:
   include:
+  - stage: Images
+    os: linux
+    script: /bin/sh docker-images/export.sh latest
   - stage: Linux
     os: linux
     deploy:
