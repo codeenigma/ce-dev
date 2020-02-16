@@ -163,6 +163,7 @@ export default class InitCmd extends BaseCmd {
    * Gather mount points for ansible playbooks.
    */
   private injectProjectInfo() {
+    this.activeProjectInfo.provision = []
     if (this.composeConfig['x-ce_dev'].provision) {
       this.composeConfig['x-ce_dev'].provision.forEach(playbookPath => {
         let absolutePath = this.getPathFromRelative(playbookPath)
@@ -171,7 +172,7 @@ export default class InitCmd extends BaseCmd {
         }
       })
     }
-
+    this.activeProjectInfo.deploy = []
     if (this.composeConfig['x-ce_dev'].deploy) {
       this.composeConfig['x-ce_dev'].deploy.forEach(playbookPath => {
         let absolutePath = this.getPathFromRelative(playbookPath)

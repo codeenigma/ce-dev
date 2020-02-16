@@ -20,7 +20,7 @@
     - name: Download composer file.
       get_url:
         url: https://raw.githubusercontent.com/drupal/recommended-project/8.8.x/composer.json
-        dest: "{{ deploy_path }}/"
+        dest: "{{ deploy_path }}/composer.json"
         force: no
   roles:
     - _init
