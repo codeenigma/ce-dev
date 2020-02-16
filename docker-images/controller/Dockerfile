@@ -14,24 +14,19 @@ RUN \
   /var/log/* \
   /tmp/*
 
-COPY ./provision.yml /home/ce-dev/provision.yml
+
+RUN su - ce-dev -c "git clone https://github.com/codeenigma/ansible-provision.git /home/ce-dev/ansible-provision"
+
+COPY ./provision.yml /home/ce-dev/ansible-provision/provision.yml
+COPY ./deploy.yml /home/ce-dev/ansible-provision/deploy.yml
 
 RUN \
-  su - ce-dev -c "git clone https://github.com/codeenigma/ansible-provision.git /home/ce-dev/ansible-provision" && \
-  su - ce-dev -c "cd /home/ce-dev/ansible-provision && /usr/bin/ansible-playbook /home/ce-dev/provision.yml" && \
-  rm /home/ce-dev/deploy.yml && \
-  apt-get clean  && \
-  rm -rf \
-  /var/lib/apt/lists/* \
-  /var/log/* \
-  /tmp/*
-
-COPY ./deploy.yml /home/ce-dev/deploy.yml
+  su - ce-dev -c "/usr/bin/ansible-playbook /home/ce-dev/ansible-provision/provision.yml" && \
+  su - ce-dev -c "/usr/bin/ansible-playbook /home/ce-dev/ansible-provision/deploy.yml" && \
+  rm /home/ce-dev/ansible-provision/provision.yml && \
+  rm /home/ce-dev/ansible-provision/deploy.yml
 
 RUN \
-  su - ce-dev -c "cd /home/ce-dev/ansible-provision && /usr/bin/ansible-playbook /home/ce-dev/deploy.yml" && \
-  rm /home/ce-dev/deploy.yml && \
-  rm -rf /home/ce-dev/.ssh/* && \
   apt-get clean  && \
   rm -rf \
   /var/lib/apt/lists/* \
@@ -39,5 +34,7 @@ RUN \
   /tmp/*
 
 COPY ./ce-dev-start.sh /opt/
+
 ENV container docker
+
 CMD ["/bin/sh", "/opt/ce-dev-start.sh", "1000", "1000"]
