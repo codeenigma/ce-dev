@@ -1,0 +1,27 @@
+---
+
+- hosts: {{ project_name }}-web
+  vars:
+    - domain_name: www.{{ project_name }}.local
+    - project_name: {{ project_name }}
+    - project_type: drupal8
+    - webroot: web
+    - build_type: local
+    - deploy_path: /home/ce-dev/deploy/live.{{ project_name }}_local
+    - drupal:
+        sites:
+          - folder: "default"
+            public_files: "sites/default/files"
+            config_import_command: "cim"
+            config_sync_directory: "config/sync"
+            sanitize_command: "sql-sanitize"
+{% raw %}
+  pre_tasks:
+    - name: Download composer file.
+      get_url:
+        url: https://raw.githubusercontent.com/drupal/recommended-project/8.8.x/composer.json
+        dest: "{{ deploy_path }}/"
+        force: no
+  roles:
+    - _init
+{% endraw %}

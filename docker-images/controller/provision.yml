@@ -10,7 +10,7 @@
         config_repository: https://github.com/codeenigma/ce-dev-ansible-deploy-config.git
     - ansible_provision:
         own_repository: https://github.com/codeenigma/ansible-provision.git
-        config_repository: https://github.com/codeenigma/ce-dev-ansible-deploy-config.git
+        config_repository: https://github.com/codeenigma/ce-dev-ansible-provision-config.git
         username: ce-dev
         local_dir: /home/ce-dev/ansible-provision
   roles:

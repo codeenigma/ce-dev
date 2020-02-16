@@ -4,6 +4,7 @@
   become: yes
   vars:
     - domain_name: www.{{ project_name }}.local
+    - project_name: {{ project_name }}
     - mysql_client:
         host: {{ project_name }}-db
         user: root
@@ -16,7 +17,7 @@
             access_log:  "/var/log/nginx/access.log"
             error_log:  "/var/log/nginx/error.log"
             error_log_level:  "notice"
-            webroot:  "/home/{{ deploy_user.username }}/deploy/live.cewww_dev/www"
+            webroot:  "/home/{{ deploy_user.username }}/deploy/live.{{ project_name }}_local/web"
             project_type:  "drupal8"
             ssl_certificate: "/etc/nginx/ssl/ssl_self_signed/{{ domain_name }}.crt"
             ssl_certificate_key: "/etc/nginx/ssl/ssl_self_signed/{{ domain_name }}.key"
@@ -38,7 +39,3 @@
         name: php-fpm
     - import_role:
         name: nginx
-    - import_role:
-        name: memcached
-    - import_role:
-        name: nodejs

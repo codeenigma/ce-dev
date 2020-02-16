@@ -13,7 +13,7 @@ services:
         - www.{{ project_name }}.local
     image: codeenigma/ce-dev:1.0.0
     volumes:
-      - "..:/home/ce-dev/deploy/live.{{ project_name }}_local"
+      - "..:/home/ce-dev/deploy/live.{{ project_name }}_local:delegated"
   db:
     image: mariadb
     environment:

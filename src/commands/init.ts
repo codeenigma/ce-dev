@@ -171,6 +171,7 @@ export default class InitCmd extends BaseCmd {
         }
       })
     }
+
     if (this.composeConfig['x-ce_dev'].deploy) {
       this.composeConfig['x-ce_dev'].deploy.forEach(playbookPath => {
         let absolutePath = this.getPathFromRelative(playbookPath)

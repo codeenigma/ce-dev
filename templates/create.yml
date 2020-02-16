@@ -22,3 +22,7 @@
       template:
         src: "{{ project_type }}/ce-dev/ansible/provision.yml"
         dest: "/home/ce-dev/.ce-dev-cache/{{ project_name }}/ce-dev/ansible/provision.yml"
+    - name: Generate deploy playbook.
+      template:
+        src: "{{ project_type }}/ce-dev/ansible/deploy.yml"
+        dest: "/home/ce-dev/.ce-dev-cache/{{ project_name }}/ce-dev/ansible/deploy.yml"
