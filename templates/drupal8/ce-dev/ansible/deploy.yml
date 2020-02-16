@@ -2,11 +2,12 @@
 
 - hosts: {{ project_name }}-web
   vars:
-    - domain_name: www.{{ project_name }}.local
     - project_name: {{ project_name }}
     - project_type: drupal8
     - webroot: web
     - build_type: local
+{% raw %}
+    - domain_name: www.{{ project_name }}.local
     - deploy_path: /home/ce-dev/deploy/live.{{ project_name }}_local
     - drupal:
         sites:
@@ -15,7 +16,12 @@
             config_import_command: "cim"
             config_sync_directory: "config/sync"
             sanitize_command: "sql-sanitize"
-{% raw %}
+    - composer:
+        command: install
+        no_dev: no
+        working_dir: "{{ deploy_path }}"
+        apcu_autoloader: no
+        
   pre_tasks:
     - name: Download composer file.
       get_url:
@@ -23,5 +29,5 @@
         dest: "{{ deploy_path }}/composer.json"
         force: no
   roles:
-    - _init
+    - composer
 {% endraw %}

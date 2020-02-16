@@ -38,6 +38,10 @@ RUN \
   /tmp/*
 
 RUN \
+  mkdir -p /home/ce-dev/deploy /home/ce-dev/.composer/cache /home/ce-dev/.nvm/versions/node && \
+  chown -R ce-dev:ce-dev /home/ce-dev
+
+RUN \
   systemctl mask --   \
   dev-hugepages.mount \
   sys-fs-fuse-connections.mount

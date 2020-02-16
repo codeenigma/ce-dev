@@ -29,6 +29,8 @@
           - 7.3
 {% endraw %}
   tasks:
+    - apt:
+        update_cache: yes
     - import_role:
         name: _meta/common_base
     - import_role:
