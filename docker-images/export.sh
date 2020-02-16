@@ -30,15 +30,18 @@ OWN_DIR=$( cd "$( dirname "$OWN" )" && pwd -P)
 sudo docker image pull debian:buster
 
 # Build base image.
-echo "1. Building the image"
-sudo docker image build --compress "--label=ce-dev:$1" --no-cache=true -t "codeenigma/ce-dev:$1" "$OWN_DIR/base" || exit 1
+echo "Building base image."
+sudo docker image build --compress "--label=ce-dev-base:latest" --no-cache=true -t "ce-dev-base:latest" "$OWN_DIR/base" || exit 1
+
+echo "Building systemd image."
+sudo docker image build --compress "--label=ce-dev:$1" --no-cache=true -t "codeenigma/ce-dev:$1" "$OWN_DIR/systemd" || exit 1
 if [ "$2" = "--push" ]; then
-  echo "The 'Docker' extenPublishing the image with docker image push codeenigma/ce-dev:$1"
+  echo "Publishing the image with docker image push codeenigma/ce-dev:$1"
   sudo docker image push "codeenigma/ce-dev:$1"
 fi
 
 # Build controller image.
-echo "1. Building the image"
+echo "Building controller image"
 sudo docker image build --compress "--label=ce-dev-controller:$1" --no-cache=true -t "codeenigma/ce-dev-controller:$1" "$OWN_DIR/controller" --build-arg "versionTag=$1" || exit 1
 if [ "$2" = "--push" ]; then
   echo "Publishing the image with docker image push codeenigma/ce-dev-controller:$1"
@@ -52,3 +55,6 @@ fi
 #   echo "Publishing the image with docker image push codeenigma/ce-dev-controller:$1"
 #   docker image push "codeenigma/ce-dev-dind:$1"
 # fi
+
+echo "Remove intermediate image"
+sudo docker image rm ce-dev-base:latest
