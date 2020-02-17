@@ -1,11 +1,14 @@
-
+import ComposeConfigService from './compose-config-service-interface'
 /**
  * Describes a docker compose "service" element.
  */
 
-export default interface ComposeConfigService {
+export default interface CeDevConfigService extends ComposeConfigService {
   'container_name': string
   'image': string
+  'x-ce_dev': {
+    'host_aliases': [string] | []
+  }
   'volumes': Array<string>
   'expose': Array<string>
   'ports': Array<string>

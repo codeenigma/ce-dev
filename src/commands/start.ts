@@ -2,7 +2,6 @@ import {flags} from '@oclif/command'
 import {execSync} from 'child_process'
 
 import BaseCmd from '../base-cmd-abstract'
-import ComposeConfig from '../compose-config-interface'
 
 const fs = require('fs')
 const readline = require('readline')
@@ -16,11 +15,6 @@ export default class StartCmd extends BaseCmd {
     help: flags.help({char: 'h'})
   }
 
-  /**
-   * @var
-   * Docker compose content parsed from yaml.
-   */
-  private readonly composeConfig: ComposeConfig
   /**
    * @var
    * Hostnames/IP pairs.
@@ -54,7 +48,6 @@ export default class StartCmd extends BaseCmd {
   public constructor(argv: string[], config: any) {
     super(argv, config)
     this.ensureActiveComposeFile()
-    this.composeConfig = this.LoadComposeConfig(this.activeComposeFilePath)
     this.tmpHostsFile = this.config.cacheDir + '/etcHosts'
   }
 

@@ -1,9 +1,9 @@
 import {Command} from '@oclif/command'
 import {execSync} from 'child_process'
 
+import CeDevComposeConfig from './ce-dev-config-interface'
+import CeDevProjectConfig from './ce-dev-project-config-interface'
 import ComposeConfig from './compose-config-interface'
-import ProjectConfig from './project-config-interface'
-
 const {spawnSync} = require('child_process')
 const fs = require('fs')
 const fspath = require('path')
@@ -44,7 +44,7 @@ export default abstract class BaseCmd extends Command {
    * @var
    * Path to the active ansible info file.
    */
-  protected activeProjectInfo: ProjectConfig = {
+  protected activeProjectInfo: CeDevProjectConfig = {
     project_name: 'ce-dev',
     registry: 'localhost:5000',
     provision: [],
@@ -252,7 +252,7 @@ export default abstract class BaseCmd extends Command {
    * @param file
    * Path to a file to parse
    */
-  protected LoadComposeConfig(file: string): ComposeConfig {
+  protected LoadComposeConfig(file: string): CeDevComposeConfig | ComposeConfig {
     //@todo Check config is valid.
     let composeConfig = this.parseYaml(file) as ComposeConfig
     return composeConfig

@@ -1,7 +1,7 @@
 import {flags} from '@oclif/command'
 
 import BaseCmd from '../base-cmd-abstract'
-import ComposeConfig from '../compose-config-interface'
+import CeDevConfig from '../ce-dev-config-interface'
 import ComposeConfigService from '../compose-config-service-interface'
 
 export default class InitCmd extends BaseCmd {
@@ -27,7 +27,7 @@ export default class InitCmd extends BaseCmd {
    * @var
    * Docker compose content parsed from yaml.
    */
-  private readonly composeConfig: ComposeConfig
+  private readonly composeConfig: CeDevConfig
 
   /**
    * @inheritdoc
@@ -36,7 +36,8 @@ export default class InitCmd extends BaseCmd {
     super(argv, config)
     const {flags} = this.parse(InitCmd)
     this.composeTemplate = this.getPathFromRelative(flags.template)
-    this.composeConfig = this.LoadComposeConfig(this.composeTemplate)
+    this.composeConfig = this.LoadComposeConfig(this.composeTemplate) as CeDevConfig
+
   }
   /**
    * @inheritdoc

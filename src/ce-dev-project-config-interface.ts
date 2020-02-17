@@ -1,4 +1,4 @@
-export default interface ProjectConfig {
+export default interface CeDevProjectConfig {
   'project_name': string,
   'registry': string,
   'provision': Array<string>

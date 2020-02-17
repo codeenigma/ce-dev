@@ -2,7 +2,7 @@ import {flags} from '@oclif/command'
 import {execSync} from 'child_process'
 
 import BaseCmd from '../base-cmd-abstract'
-import ComposeConfig from '../compose-config-interface'
+import CeDevConfig from '../ce-dev-config-interface'
 
 export default class BuildCmd extends BaseCmd {
   static description = 'Commit the existing containers as new docker images, and create a new docker-compose file referencing them.'
@@ -37,7 +37,7 @@ export default class BuildCmd extends BaseCmd {
    * @var
    * Docker compose content parsed from yaml.
    */
-  private readonly composeConfig: ComposeConfig
+  private readonly composeConfig: CeDevConfig
 
   /**
    * @inheritdoc
@@ -48,7 +48,7 @@ export default class BuildCmd extends BaseCmd {
     this.composeTemplate = this.getPathFromRelative(flags.template)
     //@todo normalize path for destination.
     this.composeDest = flags.destination
-    this.composeConfig = this.LoadComposeConfig(this.composeTemplate)
+    this.composeConfig = this.LoadComposeConfig(this.composeTemplate) as CeDevConfig
   }
   /**
    * @inheritdoc
