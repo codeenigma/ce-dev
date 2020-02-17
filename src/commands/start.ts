@@ -93,13 +93,15 @@ export default class StartCmd extends BaseCmd {
       return (item.length)
     })
     runningContainers.forEach(containerName => {
-      //@todo this would fail with other containers.
       let ip = execSync(this.dockerBin + ' inspect ' + containerName + ' --format={{.NetworkSettings.Networks.ce_dev.IPAddress}}').toString().trim()
-      let aliasesString = execSync(this.dockerBin + ' inspect ' + containerName + ' --format={{.NetworkSettings.Networks.ce_dev.Aliases}}').toString().trim()
-      let aliases = aliasesString.split(/[\[\]\ ]/).filter(Boolean)
-      aliases.forEach(alias => {
-        this.runningHosts.set(alias.toString(), ip)
-      })
+      //@todo Need a better check.
+      if (ip !== '<no value>') {
+        let aliasesString = execSync(this.dockerBin + ' inspect ' + containerName + ' --format={{.NetworkSettings.Networks.ce_dev.Aliases}}').toString().trim()
+        let aliases = aliasesString.split(/[\[\]\ ]/).filter(Boolean)
+        aliases.forEach(alias => {
+          this.runningHosts.set(alias.toString(), ip)
+        })
+      }
     })
 
   }

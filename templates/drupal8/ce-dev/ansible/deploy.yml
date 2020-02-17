@@ -1,5 +1,5 @@
 ---
-
+# Template playbook for a local Drupal8 codebase.
 - hosts: {{ project_name }}-web
   vars:
     - project_name: {{ project_name }}
@@ -8,33 +8,43 @@
     - build_type: local
 {% raw %}
     - domain_name: www.{{ project_name }}.local
+    # Path to your project root. This must match the "volume" set in the docker-compose template.
     - deploy_path: /home/ce-dev/deploy/live.{{ project_name }}_local
+    # This actually does not take any backup, but is needed to populate settings.php.
     - mysql_backup:
         handling: none
         credentials_handling: static
+    # A list of Drupal sites (for multisites).
     - drupal:
         sites:
           - folder: "default"
             public_files: "sites/default/files"
-            config_import_command: "cim"
+            # Toggle config import on/off. Disabled for initial passes.
+            config_import_command: ""
+            # config_import_command: "cim"
             config_sync_directory: "config/sync"
             sanitize_command: "sql-sanitize"
+            # Remove after initial pass, to avoid reinstalling Drupal.
+            force_install: yes
+    # Composer command to run.
     - composer:
         command: install
         no_dev: no
         working_dir: "{{ deploy_path }}"
         apcu_autoloader: no
-        
   pre_tasks:
+    # You can safely remove this step once you have a working composer.json.
     - name: Download composer file.
       get_url:
         url: https://raw.githubusercontent.com/drupal/recommended-project/8.8.x/composer.json
         dest: "{{ deploy_path }}/composer.json"
         force: no
   roles:
-    - _init
-    - composer
-    - database_backup
-    - config_generate
-    - database_apply
+    - _init # Sets some variables the deploy scripts rely on.
+    - composer # Composer install step.
+    - database_backup # This is still needed to generate credentials.
+    - config_generate # Generates settings.php
+#    - database_sync # Grab database from a remote server.
+    - database_apply # Run drush updb and config import.
+    - _exit # Some common housekeeping.
 {% endraw %}

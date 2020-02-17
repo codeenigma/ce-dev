@@ -93,9 +93,10 @@ export default class BuildCmd extends BaseCmd {
    * Push generated images.
    */
   private push() {
-    for (let service of Object.values(this.composeConfig.services)) {
-      this.log('Pushing image ' + service.container_name + '...')
-      execSync(this.dockerBin + ' push ' + this.dockerRepository + '/' + service.container_name + ':latest', {stdio: 'inherit'})
+    for (let name of Object.keys(this.composeConfig.services)) {
+      let containerName = this.composeConfig['x-ce_dev'].project_name + '-' + name
+      this.log('Pushing image ' + containerName + '...')
+      execSync(this.dockerBin + ' push ' + this.dockerRepository + '/' + containerName + ':latest', {stdio: 'inherit'})
     }
   }
 }

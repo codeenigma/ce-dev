@@ -89,9 +89,10 @@ export default class BuildCmd extends BaseCmd {
    * Commit containers as base images.
    */
   private commit() {
-    for (let service of Object.values(this.composeConfig.services)) {
-      this.log('Committing container ' + service.container_name + ' as a new image.')
-      execSync(this.dockerBin + ' commit ' + service.container_name + ' ' + this.dockerRepository + '/' + service.container_name + ':latest', {stdio: 'inherit'})
+    for (let name of Object.keys(this.composeConfig.services)) {
+      let containerName = this.composeConfig['x-ce_dev'].project_name + '-' + name
+      this.log('Committing container ' + containerName + ' as a new image.')
+      execSync(this.dockerBin + ' commit ' + containerName + ' ' + this.dockerRepository + '/' + containerName + ':latest', {stdio: 'inherit'})
     }
   }
   /**
@@ -99,8 +100,9 @@ export default class BuildCmd extends BaseCmd {
    */
   private generateCompose() {
     this.log('Generating new compose file ' + this.composeDest + '.')
-    for (let service of Object.values(this.composeConfig.services)) {
-      service.image = this.dockerRepository + '/' + service.container_name + ':latest'
+    for (let [name, service] of Object.entries(this.composeConfig.services)) {
+      let containerName = this.composeConfig['x-ce_dev'].project_name + '-' + name
+      service.image = this.dockerRepository + '/' + containerName + ':latest'
     }
     this.writeYaml(this.composeDest, this.composeConfig)
   }
