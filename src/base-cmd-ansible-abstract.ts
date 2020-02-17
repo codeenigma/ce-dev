@@ -23,7 +23,11 @@ export default abstract class AnsibleCmd extends BaseCmd {
      * Path on the container to playbooks.
      */
   protected ansibleProjectPlaybooksPath = ''
-
+  /**
+   * @var
+   * Relative path to the script to call.
+   */
+  protected ansibleScript = ''
   /**
    * @var
    * Docker compose content parsed from yaml.
@@ -58,13 +62,19 @@ export default abstract class AnsibleCmd extends BaseCmd {
    */
   protected play() {
     this.ansiblePaths.forEach(ansiblePath => {
-      let src = fspath.dirname(ansiblePath)
-      let dest = this.ansibleProjectPlaybooksPath + fspath.dirname(src)
+      const src = fspath.dirname(ansiblePath)
+      const dest = this.ansibleProjectPlaybooksPath + fspath.dirname(src)
       this.log('Copy Ansible configuration')
       execSync(this.dockerBin + ' exec -t --user ce-dev ce_dev_controller mkdir -p ' + dest)
       execSync(this.dockerBin + ' cp ' + src + ' ce_dev_controller:' + dest)
-      execSync(this.dockerBin + ' exec -t --workdir ' + this.ansibleScriptsPath + ' --user ce-dev ce_dev_controller ansible-playbook ' + this.ansibleProjectPlaybooksPath + ansiblePath + ' --extra-vars \'{"is_local":"yes"}\'', {stdio: 'inherit'})
+      const script = fspath.join(this.ansibleScriptsPath, this.ansibleScript)
+      const cmd = script + ' ' + this.getCommandParameters(ansiblePath)
+      execSync(this.dockerBin + ' exec -t --workdir ' + this.ansibleScriptsPath + ' --user ce-dev ce_dev_controller ' + cmd , {stdio: 'inherit'})
     })
+  }
+
+  protected getCommandParameters(ansiblePath: string): string {
+    return ansiblePath
   }
 
   /**
