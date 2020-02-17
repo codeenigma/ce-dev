@@ -14,7 +14,7 @@ export default class InitCmd extends BaseCmd {
     template: flags.string({
       char: 't',
       description: 'path to a docker-compose template file, relative to the project root',
-      default: 'ce-dev.compose.yml'
+      default: 'ce-dev.compose.prebuilt.yml'
     })
   }
   /**
@@ -36,8 +36,10 @@ export default class InitCmd extends BaseCmd {
     super(argv, config)
     const {flags} = this.parse(InitCmd)
     this.composeTemplate = this.getPathFromRelative(flags.template)
+    if (!this.composeTemplate) {
+      this.composeTemplate = this.getPathFromRelative('ce-dev.compose.yml')
+    }
     this.composeConfig = this.LoadComposeConfig(this.composeTemplate) as CeDevConfig
-
   }
   /**
    * @inheritdoc

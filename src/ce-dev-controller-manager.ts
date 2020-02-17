@@ -106,8 +106,8 @@ export default class CeDevControllerManager {
    * Start our controller.
    */
   public registryStart() {
-    this.writeYaml(this.controllerComposeFile, this.getRegistryConfig())
-    execSync(this.dockerComposeBin + ' -f ' + this.controllerComposeFile + ' -p ce_dev_registry up -d', {cwd: this.config.dataDir, stdio: 'inherit'})
+    this.writeYaml(this.registryComposeFile, this.getRegistryConfig())
+    execSync(this.dockerComposeBin + ' -f ' + this.registryComposeFile + ' -p ce_dev_registry up -d', {cwd: this.config.dataDir, stdio: 'inherit'})
   }
   /**
    * Dump structure as YAML to a file.
@@ -172,7 +172,10 @@ export default class CeDevControllerManager {
                 'ce-dev-registry'
               ]
             }
-          }
+          },
+          ports: [
+            '5000:5000'
+          ]
         }
       },
       networks: {
