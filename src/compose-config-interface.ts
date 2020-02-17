@@ -4,8 +4,8 @@ import ComposeConfigService from './compose-config-service-interface'
  */
 
 export default interface ComposeConfig {
-  'version': string
-  'services': Record<string, ComposeConfigService>
-  'networks': Record<string, object>,
-  'volumes': Record<string, object>
+  'version'?: string
+  'services'?: Record<string, ComposeConfigService>
+  'networks'?: Record<string, object>,
+  'volumes'?: Record<string, object>
 }

@@ -2,6 +2,7 @@ import {Command} from '@oclif/command'
 import {execSync} from 'child_process'
 
 import CeDevComposeConfig from './ce-dev-config-interface'
+import CeDevControllerManager from './ce-dev-controller-manager'
 import CeDevProjectConfig from './ce-dev-project-config-interface'
 import ComposeConfig from './compose-config-interface'
 const {spawnSync} = require('child_process')
@@ -42,7 +43,7 @@ export default abstract class BaseCmd extends Command {
   protected activeProjectInfoFilePath = ''
   /**
    * @var
-   * Path to the active ansible info file.
+   * Project info.
    */
   protected activeProjectInfo: CeDevProjectConfig = {
     project_name: 'ce-dev',
@@ -66,44 +67,7 @@ export default abstract class BaseCmd extends Command {
    * @var
    * Docker compose content.
    */
-  private readonly controllerComposeConfig: any = {
-    version: '3.7',
-    services: {
-      ce_dev_controller: {
-        container_name: 'ce_dev_controller',
-        image: 'codeenigma/ce-dev-controller:1.0.0',
-        hostname: 'ce_dev_controller',
-        networks: {
-          ce_dev: {}
-        },
-        volumes: [
-          'ce_dev_ssh:/home/ce-dev/.ssh',
-          this.config.cacheDir + ':/home/ce-dev/.ce-dev-cache'
-        ],
-      }
-    },
-    networks: {
-      ce_dev: {
-        name: 'ce_dev',
-        driver: 'bridge'
-      }
-    },
-    volumes: {
-      ce_dev_ssh: {
-        name: 'ce_dev_ssh'
-      },
-      ce_dev_apt_cache: {
-        name: 'ce_dev_apt_cache'
-      },
-      ce_dev_composer_cache: {
-        name: 'ce_dev_composer_cache'
-      },
-      ce_dev_nvm_node: {
-        name: 'ce_dev_nvm_node'
-      }
-    }
-
-  }
+  private readonly controllerManager: CeDevControllerManager
 
   /**
    * @inheritdoc
@@ -135,30 +99,25 @@ export default abstract class BaseCmd extends Command {
     if (fs.existsSync(this.activeProjectInfoFilePath)) {
       this.activeProjectInfo = this.parseYaml(this.activeProjectInfoFilePath)
     }
-    this.ensureControllerContainer()
+    this.controllerManager = new CeDevControllerManager(this.dockerBin, this.dockerComposeBin, this.config)
+    this.ensureController()
   }
-  /**
-   * Create our global controller container.
-   */
-  protected ensureControllerContainer() {
-    let existing = execSync(this.dockerBin + ' ps | grep -w ce_dev_controller | wc -l').toString().trim()
-    if (existing === '0') {
-      // Ensure uid match on Linux.
-      if (this.config.platform === 'linux') {
-        let uid = process.getuid()
-        let gid = process.getgid()
-        if (uid > 1000 && gid > 1000) {
-          this.controllerComposeConfig.services.ce_dev_controller.command = ['/bin/sh', '/opt/ce-dev-start.sh', uid.toString(), gid.toString()]
-        }
-      }
-      this.log('Starting local controller container.')
-      let controllerComposeFile = fspath.resolve(this.config.dataDir + '/docker-compose.yml')
-      this.writeYaml(controllerComposeFile, this.controllerComposeConfig)
-      execSync(this.dockerComposeBin + ' -p ce_dev_controller up -d', {cwd: this.config.dataDir, stdio: 'inherit'})
+
+  protected ensureController() {
+    if (this.controllerManager.networkExists() === false) {
+      this.log('Creating private network...')
+      this.controllerManager.networkStart()
     }
-    // Populate network base.
-    this.network = execSync(this.dockerBin + ' network inspect ce_dev --format="{{range .IPAM.Config}}{{.Gateway}}{{end}}"').toString().trim().slice(0, -2)
+    if (this.controllerManager.controllerExists() === false) {
+      this.log('Starting controller container...')
+      this.controllerManager.controllerStart()
+    }
+    if (this.controllerManager.registryExists() === false) {
+      this.log('Starting registry container...')
+      this.controllerManager.registryStart()
+    }
   }
+
   /**
    * Stop the global controller container.
    */
@@ -264,10 +223,12 @@ export default abstract class BaseCmd extends Command {
   protected getProjectRunningContainers(): Array<string> {
     const running: Array<string> = []
     const config: ComposeConfig = this.LoadComposeConfig(this.activeComposeFilePath)
-    for (let service of Object.values(config.services)) {
-      let status = execSync(this.dockerBin + ' inspect ' + service.container_name + ' --format={{.State.Status}}').toString().trim()
-      if (status === 'running') {
-        running.push(service.container_name)
+    if (config.services) {
+      for (let service of Object.values(config.services)) {
+        let status = execSync(this.dockerBin + ' inspect ' + service.container_name + ' --format={{.State.Status}}').toString().trim()
+        if (status === 'running') {
+          running.push(service.container_name as string)
+        }
       }
     }
     return running
