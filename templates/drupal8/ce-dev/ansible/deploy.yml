@@ -9,6 +9,9 @@
 {% raw %}
     - domain_name: www.{{ project_name }}.local
     - deploy_path: /home/ce-dev/deploy/live.{{ project_name }}_local
+    - mysql_backup:
+        handling: none
+        credentials_handling: static
     - drupal:
         sites:
           - folder: "default"
@@ -29,5 +32,9 @@
         dest: "{{ deploy_path }}/composer.json"
         force: no
   roles:
+    - _init
     - composer
+    - database_backup
+    - config_generate
+    - database_apply
 {% endraw %}
