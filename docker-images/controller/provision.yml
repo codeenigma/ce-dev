@@ -14,4 +14,4 @@
         username: ce-dev
         local_dir: /home/ce-dev/ansible-provision
   roles:
-    - ansible_provision
+    - ansible/ansible_provision
