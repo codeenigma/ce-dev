@@ -44,8 +44,8 @@ export default class CeDevControllerManager {
     this.dockerComposeBin = dockerComposeBin
     this.config = config
     this.controllerComposeFile = fspath.join(this.config.dataDir, 'docker-compose.controller.yml')
-    this.networkComposeFile = fspath.join(this.config.dataDir, 'docker-compose.controller.yml')
-    this.registryComposeFile = fspath.join(this.config.dataDir, 'docker-compose.controller.yml')
+    this.networkComposeFile = fspath.join(this.config.dataDir, 'docker-compose.network.yml')
+    this.registryComposeFile = fspath.join(this.config.dataDir, 'docker-compose.registry.yml')
   }
   /**
    * Check if our network is up and running.
@@ -62,6 +62,7 @@ export default class CeDevControllerManager {
    */
   public networkStart() {
     this.writeYaml(this.networkComposeFile, this.getNetworkConfig())
+    execSync(this.dockerBin + ' network create ce_dev --attachable', {cwd: this.config.dataDir, stdio: 'inherit'})
     execSync(this.dockerComposeBin + ' -f ' + this.networkComposeFile + ' -p ce_dev up -d', {cwd: this.config.dataDir, stdio: 'inherit'})
   }
   /**

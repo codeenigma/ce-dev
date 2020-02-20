@@ -15,7 +15,6 @@ RUN \
     cron \
     curl \
     dirmngr \ 
-    git \
     gnupg \
     rsync \
     openssh-server \

@@ -70,12 +70,16 @@ export default class CreateCmd extends BaseCmd {
     }
     this.projectName = project as string
     let template = flags.template
+    //@todo make list dynamic.
     if (!template) {
       let response: any = await inquirer.prompt([{
         name: 'template',
         message: 'Template',
         type: 'list',
-        choices: ['drupal8']
+        choices: [
+          'drupal8',
+          'blank'
+        ]
       }])
       template = response.template
     }

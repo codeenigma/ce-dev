@@ -12,7 +12,6 @@ RUN \
     bash \
     curl \
     dirmngr \ 
-    git \
     gnupg \
     rsync \
     openssh-server \

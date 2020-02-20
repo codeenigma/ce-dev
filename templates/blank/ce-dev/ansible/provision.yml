@@ -1,0 +1,12 @@
+---
+
+- hosts: {{ project_name }}-{{ project_name }}
+  become: yes
+  vars:
+    - project_name: {{ project_name }}
+    - env_type: dev
+  tasks:
+    - apt:
+        update_cache: yes
+    - import_role:
+        name: _meta/common_base
