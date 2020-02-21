@@ -42,7 +42,7 @@ fi
 
 # Build controller image.
 echo "Building controller image"
-sudo docker image build --compress "--label=ce-dev-controller:$1" --no-cache=true -t "codeenigma/ce-dev-controller:$1" "$OWN_DIR/controller" --build-arg "versionTag=$1" || exit 1
+sudo docker image build --compress "--label=ce-dev-controller:$1" --no-cache=true -t "codeenigma/ce-dev-controller:$1" "$OWN_DIR/controller" || exit 1
 if [ "$2" = "--push" ]; then
   echo "Publishing the image with docker image push codeenigma/ce-dev-controller:$1"
   sudo docker image push "codeenigma/ce-dev-controller:$1"

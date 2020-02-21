@@ -18,13 +18,10 @@ RUN \
 RUN su - ce-dev -c "git clone https://github.com/codeenigma/ansible-provision.git /home/ce-dev/ansible-provision"
 
 COPY ./provision.yml /home/ce-dev/ansible-provision/provision.yml
-COPY ./deploy.yml /home/ce-dev/ansible-provision/deploy.yml
 
 RUN \
   su - ce-dev -c "/usr/bin/ansible-playbook /home/ce-dev/ansible-provision/provision.yml" && \
-  su - ce-dev -c "/usr/bin/ansible-playbook /home/ce-dev/ansible-provision/deploy.yml" && \
-  rm /home/ce-dev/ansible-provision/provision.yml && \
-  rm /home/ce-dev/ansible-provision/deploy.yml
+  rm /home/ce-dev/ansible-provision/provision.yml
 
 RUN \
   apt-get clean  && \
