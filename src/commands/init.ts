@@ -54,8 +54,8 @@ export default class InitCmd extends BaseCmd {
    * Alter parsed config to be written in actual compose file.
    */
   private generateCompose() {
-    this.injectContainersSSH()
     this.injectContainersNetworking()
+    this.injectContainersSSH()
     this.injectContainersHostname()
     this.injectContainersSysFs()
     this.injectCacheVolumes()
