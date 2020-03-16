@@ -128,7 +128,7 @@ export default class CeDevControllerManager {
       services: {
         ce_dev_controller: {
           container_name: 'ce_dev_controller',
-          image: 'codeenigma/ce-dev-controller:1.0.0',
+          image: 'codeenigma/ce-dev-controller:1.0.1',
           hostname: 'ce_dev_controller',
           networks: {
             ce_dev: {}

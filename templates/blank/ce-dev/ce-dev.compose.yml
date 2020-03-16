@@ -8,5 +8,5 @@ x-ce_dev:
     - ce-dev/ansible/deploy.yml
 services:
   {{ project_name }}:
-    image: codeenigma/ce-dev:1.0.0
+    image: codeenigma/ce-dev:1.0.1
     x-ce_dev: {}
