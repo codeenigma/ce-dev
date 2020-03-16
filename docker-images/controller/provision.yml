@@ -10,11 +10,13 @@
         config_repository: https://github.com/codeenigma/ce-dev-ansible-deploy-config.git
         username: ce-dev
         local_dir: /home/ce-dev/ansible-deploy
+        groups: []
     - ansible_provision:
         own_repository: https://github.com/codeenigma/ansible-provision.git
         config_repository: https://github.com/codeenigma/ce-dev-ansible-provision-config.git
         username: ce-dev
         local_dir: /home/ce-dev/ansible-provision
+        groups: []
   roles:
-    - ansible/ansible_provision
-    - ansible/ansible_deploy
+    - ansible_provision
+    - ansible_deploy
