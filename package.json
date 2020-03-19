@@ -9,22 +9,22 @@
   "bugs": "https://github.com/codeenigma/ce-dev/issues",
   "dependencies": {
     "@oclif/command": "^1.5.19",
-    "@oclif/config": "^1.13.3",
-    "@oclif/plugin-autocomplete": "^0.1.4",
-    "@oclif/plugin-help": "^2.2.1",
-    "inquirer": "^7.0.0",
+    "@oclif/config": "^1.14.0",
+    "@oclif/plugin-autocomplete": "^0.1.5",
+    "@oclif/plugin-help": "^2.2.3",
+    "inquirer": "^7.1.0",
     "js-yaml": "^3.13.1",
-    "tslib": "^1.10.0"
+    "tslib": "^1.11.1"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.22.2",
-    "@types/inquirer": "^6.5.0",
     "@oclif/tslint": "^3.1.1",
-    "@types/node": "^10.14.22",
-    "globby": "^10.0.1",
-    "ts-node": "^8.4.1",
-    "tslint": "^5.20.0",
-    "typescript": "^3.6.4"
+    "@types/inquirer": "^6.5.0",
+    "@types/node": "^10.17.17",
+    "globby": "^10.0.2",
+    "ts-node": "^8.7.0",
+    "tslint": "^5.20.1",
+    "typescript": "^3.8.3"
   },
   "engines": {
     "node": ">=8.0.0"
