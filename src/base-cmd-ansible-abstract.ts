@@ -82,10 +82,12 @@ export default abstract class AnsibleCmd extends BaseCmd {
    */
   protected populateAnsibleHosts() {
     this.log('Rebuilding Ansible hosts information on the controller.')
-    const hosts = Object.keys(this.composeConfig.services).join('\n')
-    fs.writeFileSync(this.tmpHostsFile, hosts + '\n')
-    execSync(this.dockerBin + ' cp ' + this.tmpHostsFile + ' ce_dev_controller:' + this.ansibleScriptsPath + '/hosts/hosts')
-    execSync(this.dockerBin + ' exec -t ce_dev_controller chown -R ce-dev:ce-dev ' + this.ansibleScriptsPath + '/hosts/hosts')
+    if (this.composeConfig.services) {
+      const hosts = Object.keys(this.composeConfig.services).join('\n')
+      fs.writeFileSync(this.tmpHostsFile, hosts + '\n')
+      execSync(this.dockerBin + ' cp ' + this.tmpHostsFile + ' ce_dev_controller:' + this.ansibleScriptsPath + '/hosts/hosts')
+      execSync(this.dockerBin + ' exec -t ce_dev_controller chown -R ce-dev:ce-dev ' + this.ansibleScriptsPath + '/hosts/hosts')
+    }
   }
 
 }
