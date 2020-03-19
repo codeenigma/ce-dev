@@ -3,6 +3,7 @@ import {execSync} from 'child_process'
 
 import BaseCmd from '../base-cmd-abstract'
 import ComposeConfig from '../compose-config-interface'
+import ComposeConfigService from '../compose-config-service-interface'
 
 export default class BuildCmd extends BaseCmd {
   static description = 'Pull images referenced in a compose file from a remote repository.'
@@ -49,7 +50,7 @@ export default class BuildCmd extends BaseCmd {
    * Push generated images.
    */
   private pull() {
-    for (let service of Object.values(this.composeConfig.services)) {
+    for (let service of Object.values(this.composeConfig.services as ComposeConfigService)) {
       this.log('Pulling image ' + service.container_name + '...')
       execSync(this.dockerBin + ' pull ' + this.dockerRepository + '/' + service.container_name + ':latest', {stdio: 'inherit'})
     }

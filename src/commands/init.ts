@@ -157,7 +157,7 @@ export default class InitCmd extends BaseCmd {
         service.ports = []
       }
       service.expose.forEach(port => {
-        service.ports.push([port, port].join(':'))
+        service.ports?.push([port, port].join(':'))
       })
       service.ports = [...new Set(service.ports)]
     }
