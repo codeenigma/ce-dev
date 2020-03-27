@@ -17,23 +17,9 @@ You'll need docker-compose (and docker) on a Mac or Linux host.
 <!-- toc -->
 * [Requirements](#requirements)
 * [Install](#install)
-* [Usage](#usage)
 * [Commands](#commands)
+* [Troubleshooting](#troubleshooting)
 <!-- tocstop -->
-# Usage
-<!-- usage -->
-```sh-session
-$ npm install -g ce-dev
-$ ce-dev COMMAND
-running command...
-$ ce-dev (-v|--version|version)
-ce-dev/0.0.0 linux-x64 node-v10.14.2
-$ ce-dev --help [COMMAND]
-USAGE
-  $ ce-dev COMMAND
-...
-```
-<!-- usagestop -->
 # Commands
 <!-- commands -->
 * [`ce-dev build`](#ce-dev-build)
@@ -275,3 +261,19 @@ EXAMPLE
 
 _See code: [src/commands/stop.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/stop.ts)_
 <!-- commandsstop -->
+
+# Troubleshooting
+
+## SSH Issues
+Containers are normally autoconfigured to allow the 'ce-dev' user to SSH to each others. In case something went wrong, you can re-generate the keys.
+1. Delete the existing keys
+```
+(sudo) docker exec -it ce_dev_controller /bin/bash
+rm -rf /home/ce-dev/.ssh/*
+exit
+```
+2. Restart the containers to recreate it.
+```
+(sudo) docker stop ce_dev_controller
+ce-dev start
+```
