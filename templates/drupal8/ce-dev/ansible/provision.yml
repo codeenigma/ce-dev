@@ -24,6 +24,16 @@
             is_default: yes
             https_redirect: no
             ratelimitingcrawlers: no
+            ssl_handling: ssl_selfsigned
+            is_default: no
+            servers:
+              - port: 80
+                ssl: no
+                https_redirect: yes
+              - port: 443
+                ssl: yes
+                https_redirect: no
+            upstreams: []
     - php:
         version:
           - 7.3
