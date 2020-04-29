@@ -31,21 +31,21 @@ sudo docker image pull debian:buster
 
 # Build base image.
 echo "Building base image."
-sudo docker image build --compress "--label=ce-dev-base:latest" --no-cache=true -t "ce-dev-base:latest" "$OWN_DIR/base" || exit 1
+sudo docker image build --compress "--label=ce-dev-base-1.x:latest" --no-cache=true -t "ce-dev-base-1.x:latest" "$OWN_DIR/base" || exit 1
 
 echo "Building systemd image."
-sudo docker image build --compress "--label=ce-dev:$1" --no-cache=true -t "codeenigma/ce-dev:$1" "$OWN_DIR/systemd" || exit 1
+sudo docker image build --compress "--label=ce-dev-1.x:$1" --no-cache=true -t "codeenigma/ce-dev-1.x:$1" "$OWN_DIR/systemd" || exit 1
 if [ "$2" = "--push" ]; then
-  echo "Publishing the image with docker image push codeenigma/ce-dev:$1"
-  sudo docker image push "codeenigma/ce-dev:$1"
+  echo "Publishing the image with docker image push codeenigma/ce-dev-1.x:$1"
+  sudo docker image push "codeenigma/ce-dev-1.x:$1"
 fi
 
 # Build controller image.
 echo "Building controller image"
-sudo docker image build --compress "--label=ce-dev-controller:$1" --no-cache=true -t "codeenigma/ce-dev-controller:$1" "$OWN_DIR/controller" || exit 1
+sudo docker image build --compress "--label=ce-dev-controller-1.x:$1" --no-cache=true -t "codeenigma/ce-dev-controller-1.x:$1" "$OWN_DIR/controller" || exit 1
 if [ "$2" = "--push" ]; then
-  echo "Publishing the image with docker image push codeenigma/ce-dev-controller:$1"
-  sudo docker image push "codeenigma/ce-dev-controller:$1"
+  echo "Publishing the image with docker image push codeenigma/ce-dev-controller-1.x:$1"
+  sudo docker image push "codeenigma/ce-dev-controller-1.x:$1"
 fi
 
 # Build docker image.

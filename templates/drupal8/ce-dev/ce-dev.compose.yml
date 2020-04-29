@@ -11,7 +11,7 @@ services:
     x-ce_dev:
       host_aliases:
         - www.{{ project_name }}.local
-    image: codeenigma/ce-dev:1.0.2
+    image: codeenigma/ce-dev:latest
     volumes:
       - "../:/home/ce-dev/deploy/live.{{ project_name }}_local:delegated"
   db:
