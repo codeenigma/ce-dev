@@ -7,14 +7,15 @@
     - env_type: utility
     - ansible_deploy:
         own_repository: https://github.com/codeenigma/ansible-deploy.git
-        own_repository_branch: 1.x
         config_repository: https://github.com/codeenigma/ce-dev-ansible-deploy-config.git
         username: ce-dev
         local_dir: /home/ce-dev/ansible-deploy
         groups: []
     - ansible_provision:
         own_repository: https://github.com/codeenigma/ansible-provision.git
+        own_repository_branch: 1.x
         config_repository: https://github.com/codeenigma/ce-dev-ansible-provision-config.git
+        config_repository_branch: 1.x
         username: ce-dev
         local_dir: /home/ce-dev/ansible-provision
         groups: []
