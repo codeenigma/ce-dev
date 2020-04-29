@@ -1,4 +1,4 @@
-FROM ce-dev-base:latest
+FROM ce-dev-base-1x:latest
 
 RUN \
   set -x && \
