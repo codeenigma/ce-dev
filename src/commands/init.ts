@@ -82,7 +82,7 @@ export default class InitCmd extends BaseCmd {
       if (!service.volumes) {
         service.volumes = []
       }
-      service.volumes.push('ce_dev_ssh:/home/ce-dev/.ssh:ro')
+      service.volumes.push('ce_dev_ssh:/home/ce-dev/.ssh')
       service.volumes = [...new Set(service.volumes)]
     }
     if (!this.composeConfig.volumes) {
