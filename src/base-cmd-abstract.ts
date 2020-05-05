@@ -242,7 +242,7 @@ export default abstract class BaseCmd extends Command {
     running.forEach(containerName => {
       let image = execSync(this.dockerBin + ' inspect ' + containerName + ' --format={{.Config.Image}}').toString().trim()
       let labels = execSync(this.dockerBin + ' inspect ' + image + ' --format={{.Config.Labels}}').toString().trim()
-      if (labels.indexOf('ce-dev:') > 0) {
+      if (labels.indexOf('ce-dev-1.x:') > 0) {
         ceDev.push(containerName)
       }
     })
