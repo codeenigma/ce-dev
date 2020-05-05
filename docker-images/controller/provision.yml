@@ -3,6 +3,7 @@
 - hosts: localhost
   become: yes
   vars:
+    - domain_name: example.com
     - is_local: yes
     - env_type: utility
     - ansible_deploy:
