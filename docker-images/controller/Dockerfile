@@ -15,7 +15,7 @@ RUN \
   /tmp/*
 
 
-RUN su - ce-dev -c "git clone https://github.com/codeenigma/ansible-provision.git /home/ce-dev/ansible-provision"
+RUN su - ce-dev -c "git clone --branch 1.x https://github.com/codeenigma/ansible-provision.git /home/ce-dev/ansible-provision"
 
 COPY ./provision.yml /home/ce-dev/ansible-provision/provision.yml
 
