@@ -23,6 +23,10 @@ export default class BuildCmd extends BaseCmd {
     password: flags.string({
       char: 'p',
       description: 'Password to use to login against the Docker registry. Warning, this will appear in your shell history in clear text.',
+    }),
+    anonymous: flags.boolean({
+      char: 'a',
+      description: 'Do not prompt for login credentials.',
     })
   }
 
@@ -51,6 +55,12 @@ export default class BuildCmd extends BaseCmd {
   private readonly dockerPassword: string = ''
 
   /**
+   * @var
+   * Wether to prompt for a login.
+   */
+  private readonly dockerLogin: boolean = true
+
+  /**
    * @inheritdoc
    */
   public constructor(argv: string[], config: any) {
@@ -64,13 +74,18 @@ export default class BuildCmd extends BaseCmd {
     if (flags.password) {
       this.dockerPassword = flags.password
     }
+    if (flags.anonymous) {
+      this.dockerLogin = false
+    }
   }
 
   /**
    * @inheritdoc
    */
   async run() {
-    this.login()
+    if (this.dockerLogin) {
+      this.login()
+    }
     this.push()
   }
 

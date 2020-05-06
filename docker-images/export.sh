@@ -48,13 +48,13 @@ if [ "$2" = "--push" ]; then
   sudo docker image push "codeenigma/ce-dev-controller-1.x:$1"
 fi
 
-# Build docker image.
-# echo "1. Building the image"
-# docker image build --compress "--label=ce-dev-dind:$1" --no-cache=true -t "codeenigma/ce-dev-dind:$1" "$OWN_DIR/dind" --build-arg "versionTag=$1" || exit 1
-# if [ "$2" = "--push" ]; then
-#   echo "Publishing the image with docker image push codeenigma/ce-dev-controller:$1"
-#   docker image push "codeenigma/ce-dev-dind:$1"
-# fi
+# Build dind image.
+echo "Building dind image"
+sudo docker image build --compress "--label=ce-dev-dind-1.x:$1" --no-cache=true -t "codeenigma/ce-dev-dind-1.x:$1" "$OWN_DIR/dind" || exit 1
+if [ "$2" = "--push" ]; then
+  echo "Publishing the image with docker image push codeenigma/ce-dev-dind-1.x:$1"
+  sudo docker image push "codeenigma/ce-dev-dind-1.x:$1"
+fi
 
 echo "Remove intermediate image"
 sudo docker image rm ce-dev-base-1.x:latest

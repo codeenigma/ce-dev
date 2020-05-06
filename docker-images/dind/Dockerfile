@@ -1,5 +1,4 @@
-ARG versionTag
-FROM codeenigma/ce-dev:$versionTag
+FROM codeenigma/ce-dev-1.x
 
 RUN \
   set -x && \
