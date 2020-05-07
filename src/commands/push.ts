@@ -93,8 +93,8 @@ export default class BuildCmd extends BaseCmd {
    * Login to Docker repository.
    */
   private login() {
-    this.log('Login to repository ' + this.dockerRepository + '.')
-    let cmd = this.dockerBin + ' login ' + this.dockerRepository
+    this.log('Login to repository ' + this.dockerRegistry + '.')
+    let cmd = this.dockerBin + ' login ' + this.dockerRegistry
     if (this.dockerUsername.length > 0) {
       cmd += ' -u ' + this.dockerUsername
     }
@@ -111,7 +111,7 @@ export default class BuildCmd extends BaseCmd {
     for (let name of Object.keys(this.composeConfig.services)) {
       let containerName = this.composeConfig['x-ce_dev'].project_name + '-' + name
       this.log('Pushing image ' + containerName + '...')
-      execSync(this.dockerBin + ' push ' + this.dockerRepository + '/' + containerName + ':latest', {stdio: 'inherit'})
+      execSync(this.dockerBin + ' push ' + this.dockerRegistry + '/' + containerName + ':latest', {stdio: 'inherit'})
     }
   }
 }

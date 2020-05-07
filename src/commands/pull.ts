@@ -51,8 +51,10 @@ export default class BuildCmd extends BaseCmd {
    */
   private pull() {
     for (let service of Object.values(this.composeConfig.services as ComposeConfigService)) {
-      this.log('Pulling image ' + service.container_name + '...')
-      execSync(this.dockerBin + ' pull ' + this.dockerRepository + '/' + service.container_name + ':latest', {stdio: 'inherit'})
+      if (service.image) {
+        this.log('Pulling image ' + service.image + '...')
+        execSync(this.dockerBin + ' pull ' + service.image , {stdio: 'inherit'})
+      }
     }
   }
 }

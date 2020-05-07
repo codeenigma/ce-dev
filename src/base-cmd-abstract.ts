@@ -56,7 +56,7 @@ export default abstract class BaseCmd extends Command {
    * @var
    * Docker repository to use.
    */
-  protected dockerRepository = 'ce-dev-registry:5000'
+  protected dockerRegistry = 'ce-dev-registry:5000'
   /**
    * @var
    * Network range.
@@ -99,6 +99,7 @@ export default abstract class BaseCmd extends Command {
     if (fs.existsSync(this.activeProjectInfoFilePath)) {
       this.activeProjectInfo = this.parseYaml(this.activeProjectInfoFilePath)
     }
+    this.dockerRegistry = this.activeProjectInfo.registry
     this.controllerManager = new CeDevControllerManager(this.dockerBin, this.dockerComposeBin, this.config)
     this.ensureController()
   }
