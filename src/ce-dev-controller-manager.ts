@@ -33,11 +33,6 @@ export default class CeDevControllerManager {
    * Compose file path for our controller definition.
    */
   private readonly controllerComposeFile: string
-  /**
-   * @var
-   * Compose file path for our registry definition.
-   */
-  private readonly registryComposeFile: string
 
   public constructor(dockerBin: string, dockerComposeBin: string, config: IConfig) {
     this.dockerBin = dockerBin
@@ -45,7 +40,6 @@ export default class CeDevControllerManager {
     this.config = config
     this.controllerComposeFile = fspath.join(this.config.dataDir, 'docker-compose.controller.yml')
     this.networkComposeFile = fspath.join(this.config.dataDir, 'docker-compose.network.yml')
-    this.registryComposeFile = fspath.join(this.config.dataDir, 'docker-compose.registry.yml')
   }
   /**
    * Check if our network is up and running.
@@ -93,23 +87,7 @@ export default class CeDevControllerManager {
       execSync(this.dockerComposeBin + ' -f ' + this.controllerComposeFile + ' -p ce_dev_controller up -d', {cwd: this.config.dataDir, stdio: 'inherit'})
     }
   }
-  /**
-   * Check if our registry is up and running.
-   */
-  public registryExists() {
-    let existing = execSync(this.dockerBin + ' ps | grep -w ce_dev_registry | wc -l').toString().trim()
-    if (existing === '0') {
-      return false
-    }
-    return true
-  }
-  /**
-   * Start our controller.
-   */
-  public registryStart() {
-    this.writeYaml(this.registryComposeFile, this.getRegistryConfig())
-    execSync(this.dockerComposeBin + ' -f ' + this.registryComposeFile + ' -p ce_dev_registry up -d', {cwd: this.config.dataDir, stdio: 'inherit'})
-  }
+
   /**
    * Dump structure as YAML to a file.
    * @param file
@@ -160,32 +138,7 @@ export default class CeDevControllerManager {
       }
     }
   }
-  private getRegistryConfig(): ComposeConfig {
-    return {
-      version: '3.7',
-      services: {
-        ce_dev_registry: {
-          container_name: 'ce_dev_registry',
-          image: 'registry:2',
-          networks: {
-            ce_dev: {
-              aliases: [
-                'ce-dev-registry'
-              ]
-            }
-          },
-          ports: [
-            '5000:5000'
-          ]
-        }
-      },
-      networks: {
-        ce_dev: {
-          external: true
-        }
-      }
-    }
-  }
+
   private getNetworkConfig(): ComposeConfig {
     return {
       version: '3.7',

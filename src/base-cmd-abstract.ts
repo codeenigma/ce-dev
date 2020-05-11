@@ -47,7 +47,7 @@ export default abstract class BaseCmd extends Command {
    */
   protected activeProjectInfo: CeDevProjectConfig = {
     project_name: 'ce-dev',
-    registry: 'localhost:5000',
+    registry: 'codeenigma',
     provision: [],
     deploy: []
   }
@@ -56,7 +56,7 @@ export default abstract class BaseCmd extends Command {
    * @var
    * Docker repository to use.
    */
-  protected dockerRegistry = 'ce-dev-registry:5000'
+  protected dockerRegistry = 'codeenigma'
   /**
    * @var
    * Network range.
@@ -112,10 +112,6 @@ export default abstract class BaseCmd extends Command {
     if (this.controllerManager.controllerExists() === false) {
       this.log('Starting controller container...')
       this.controllerManager.controllerStart()
-    }
-    if (this.controllerManager.registryExists() === false) {
-      this.log('Starting registry container...')
-      this.controllerManager.registryStart()
     }
   }
 
