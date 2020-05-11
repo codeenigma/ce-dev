@@ -43,3 +43,8 @@ if [ -n "$1" ] && [ -n "$2" ]; then
     ensure_user_ids "$1" "$2"
   fi
 fi
+
+if [ -e /run/sshd.pid ]; then
+  rm /run/sshd.pid
+fi
+/usr/sbin/sshd -D
