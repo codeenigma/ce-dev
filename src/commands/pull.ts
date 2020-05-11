@@ -1,48 +1,40 @@
-import {flags} from '@oclif/command'
 import {execSync} from 'child_process'
 
-import BaseCmd from '../base-cmd-abstract'
-import ComposeConfig from '../compose-config-interface'
+import DockerImagesCmd from '../base-cmd-abstract-docker-images'
+import CeDevConfig from '../ce-dev-config-interface'
 import ComposeConfigService from '../compose-config-service-interface'
-
-export default class BuildCmd extends BaseCmd {
+export default class PullCmd extends DockerImagesCmd {
   static description = 'Pull images referenced in a compose file from a remote repository.'
   static examples = [
     '$ ce-dev pull --template example.compose.yml',
   ]
-  static flags = {
-    help: flags.help({char: 'h'}),
-    template: flags.string({
-      char: 't',
-      description: 'Path to a docker-compose template file, relative to the project root. WARNING: this must match the original one the project was constructed with.',
-      default: 'ce-dev.compose.prebuilt.yml'
-    })
-  }
-  /**
-   * @var
-   * Absolute path to the Compose file template.
-   */
-  private readonly composeTemplate: string
-
-  /**
-   * @var
-   * Docker compose content parsed from yaml.
-   */
-  private readonly composeConfig: ComposeConfig
 
   /**
    * @inheritdoc
    */
   public constructor(argv: string[], config: any) {
     super(argv, config)
-    const {flags} = this.parse(BuildCmd)
+    const {flags} = this.parse(DockerImagesCmd)
     this.composeTemplate = this.getPathFromRelative(flags.template)
-    this.composeConfig = this.LoadComposeConfig(this.composeTemplate)
+    this.composeConfig = this.LoadComposeConfig(this.composeTemplate) as CeDevConfig
+    if (flags.username) {
+      this.dockerUsername = flags.username
+    }
+    if (flags.password) {
+      this.dockerPassword = flags.password
+    }
+    if (flags.anonymous) {
+      this.dockerLogin = false
+    }
   }
+
   /**
    * @inheritdoc
    */
   async run() {
+    if (this.dockerLogin) {
+      this.login()
+    }
     this.pull()
   }
 
