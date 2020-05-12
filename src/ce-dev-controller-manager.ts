@@ -75,14 +75,9 @@ export default class CeDevControllerManager {
   public controllerStart() {
     let config = this.getControllerConfig()
     if (config.services) {
-      // Ensure uid match on Linux.
-      if (this.config.platform === 'linux') {
-        let uid = process.getuid()
-        let gid = process.getgid()
-        if (uid > 1000 && gid > 1000) {
-          config.services.ce_dev_controller.command = ['/bin/sh', '/opt/ce-dev-start.sh', uid.toString(), gid.toString()]
-        }
-      }
+      let uid = process.getuid()
+      let gid = process.getgid()
+      config.services.ce_dev_controller.command = ['/bin/sh', '/opt/ce-dev-start.sh', uid.toString(), gid.toString()]
       this.writeYaml(this.controllerComposeFile, this.getControllerConfig())
       execSync(this.dockerComposeBin + ' -f ' + this.controllerComposeFile + ' -p ce_dev_controller up -d', {cwd: this.config.dataDir, stdio: 'inherit'})
     }
