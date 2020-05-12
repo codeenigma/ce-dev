@@ -7,5 +7,6 @@ export default interface ComposeConfig {
   'version'?: string
   'services'?: Record<string, ComposeConfigService>
   'networks'?: Record<string, object>,
-  'volumes'?: Record<string, object>
+  'volumes'?: Record<string, object>,
+  'command'?: Array<string>
 }
