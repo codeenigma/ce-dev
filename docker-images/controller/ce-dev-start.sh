@@ -44,6 +44,9 @@ if [ -n "$1" ] && [ -n "$2" ]; then
   fi
 fi
 
+# We always generate a fresh pair.
+ensure_ssh_key
+
 if [ -e /run/sshd.pid ]; then
   rm /run/sshd.pid
 fi
