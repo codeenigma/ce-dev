@@ -132,9 +132,6 @@ export default class StartCmd extends BaseCmd {
   }
 
   private ensureUid() {
-    if (this.config.platform !== 'linux') {
-      return
-    }
     const running = this.getProjectRunningContainersCeDev()
     if (running.length < 1) {
       return
@@ -145,7 +142,7 @@ export default class StartCmd extends BaseCmd {
       let uid = process.getuid()
       let gid = process.getgid()
       if (uid > 1000 && gid > 1000) {
-        execSync(this.dockerBin + ' exec ' + containerName + ' /bin/sh /opt/ce-dev-start.sh ' + uid.toString() + ' ' + gid.toString() + ' || exit 0', {stdio: 'inherit'})
+        execSync(this.dockerBin + ' exec ' + containerName + ' /bin/sh /opt/ce-dev-ownership.sh ' + uid.toString() + ' ' + gid.toString(), {stdio: 'inherit'})
       }
     })
   }

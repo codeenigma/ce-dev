@@ -96,5 +96,7 @@ VOLUME [ "/sys/fs/cgroup", "/run", "/run/lock", "/tmp" ]
 
 COPY ./ce-dev-ownership.sh /opt/
 COPY ./ce-dev-ssh.sh /opt/
+COPY ./unison /usr/local/bin
+COPY ./unison-fsmonitor /usr/local/bin
 
-CMD ["/sbin/init"]
+ENTRYPOINT ["/sbin/init"]

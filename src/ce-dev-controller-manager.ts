@@ -73,8 +73,14 @@ export default class CeDevControllerManager {
    * Start our controller.
    */
   public controllerStart() {
+    let uid = process.getuid()
+    let gid = process.getgid()
+    uid.toString()
+    gid.toString()
     this.writeYaml(this.controllerComposeFile, this.getControllerConfig())
     execSync(this.dockerComposeBin + ' -f ' + this.controllerComposeFile + ' -p ce_dev_controller up -d', {cwd: this.config.dataDir, stdio: 'inherit'})
+    execSync(this.dockerBin + ' exec ce_dev_controller /bin/sh /opt/ce-dev-ownership.sh ' + uid.toString() + ' ' + gid.toString())
+    execSync(this.dockerBin + ' exec ce_dev_controller /bin/sh /opt/ce-dev-ssh.sh')
   }
 
   /**
@@ -90,8 +96,6 @@ export default class CeDevControllerManager {
   }
 
   private getControllerConfig(): ComposeConfig {
-    let uid = process.getuid()
-    let gid = process.getgid()
     return {
       version: '3.7',
       services: {
@@ -102,9 +106,9 @@ export default class CeDevControllerManager {
           networks: {
             ce_dev: {}
           },
-          command: ['/bin/sh', '/opt/ce-dev-start.sh', uid.toString(), gid.toString()],
           volumes: [
             'ce_dev_ssh:/home/ce-dev/.ssh',
+            '/sys/fs/cgroup:/sys/fs/cgroup:ro',
             this.config.cacheDir + ':/home/ce-dev/.ce-dev-cache'
           ],
         }
