@@ -37,11 +37,9 @@ ensure_ssh_key(){
   chown -R ce-dev:ce-dev /home/ce-dev/.ssh
 }
 
-# We only change ids > 1000 (either we're root 0, on a mac 501 or already 1000).
+# Match ids with host user.
 if [ -n "$1" ] && [ -n "$2" ]; then 
-  if [ "$1" -gt 1000 ] || [ "$2" -gt 1000 ]; then
     ensure_user_ids "$1" "$2"
-  fi
 fi
 
 # We always generate a fresh pair.
