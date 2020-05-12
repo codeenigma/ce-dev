@@ -1,4 +1,4 @@
-FROM ce-dev-base-1.x:latest
+FROM ce-dev-1.x:latest
 
 RUN \
   set -x && \
@@ -29,9 +29,3 @@ RUN \
   /var/lib/apt/lists/* \
   /var/log/* \
   /tmp/*
-
-COPY ./ce-dev-start.sh /opt/
-
-ENV container docker
-
-CMD ["/bin/sh", "/opt/ce-dev-start.sh", "1000", "1000"]

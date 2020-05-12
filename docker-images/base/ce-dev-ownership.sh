@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# @file
-# Controller startup script.
-
 # Ensure user numeric uid/gid matches.
 # @param $1
 # User id.
@@ -26,26 +23,7 @@ ensure_user_ids(){
   fi
 }
 
-# Generate ssh key pair.
-ensure_ssh_key(){
-  rm -rf /home/ce-dev/.ssh/*
-  ssh-keygen -t rsa -b 4096 -N "" -f /home/ce-dev/.ssh/id_rsa
-  cp /home/ce-dev/.ssh/id_rsa.pub /home/ce-dev/.ssh/authorized_keys
-  chmod 600 /home/ce-dev/.ssh/id_rsa
-  chmod 600 /home/ce-dev/.ssh/id_rsa.pub
-  chmod 600 /home/ce-dev/.ssh/authorized_keys
-  chown -R ce-dev:ce-dev /home/ce-dev/.ssh
-}
-
 # Match ids with host user.
 if [ -n "$1" ] && [ -n "$2" ]; then 
     ensure_user_ids "$1" "$2"
 fi
-
-# We always generate a fresh pair.
-ensure_ssh_key
-
-if [ -e /run/sshd.pid ]; then
-  rm /run/sshd.pid
-fi
-/usr/sbin/sshd -D
