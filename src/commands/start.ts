@@ -136,15 +136,12 @@ export default class StartCmd extends BaseCmd {
     if (running.length < 1) {
       return
     }
-    // Ensure uid match on Linux.
     // @todo this should be on CMD, but system.d gets in the way.
     running.forEach(containerName => {
       let uid = process.getuid()
       let gid = process.getgid()
-      if (uid > 1000 && gid > 1000) {
-        execSync(this.dockerBin + ' exec ' + containerName + ' /bin/sh /opt/ce-dev-ownership.sh ' + uid.toString() + ' ' + gid.toString(), {stdio: 'inherit'})
-        execSync(this.dockerBin + ' exec ' + containerName + ' /bin/run-parts /opt/run-parts', {stdio: 'inherit'})
-      }
+      execSync(this.dockerBin + ' exec ' + containerName + ' /bin/sh /opt/ce-dev-ownership.sh ' + uid.toString() + ' ' + gid.toString(), {stdio: 'inherit'})
+      execSync(this.dockerBin + ' exec ' + containerName + ' /bin/run-parts /opt/run-parts', {stdio: 'inherit'})
     })
   }
 }
