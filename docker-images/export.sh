@@ -54,9 +54,9 @@ if [ "$2" = "--push" ]; then
 fi
 
 # Build dind image.
-echo "Building dind image"
-sudo docker image build --compress "--label=ce-dev-dind-1.x:$1" --no-cache=true -t "codeenigma/ce-dev-dind-1.x:$1" "$OWN_DIR/dind" || exit 1
-if [ "$2" = "--push" ]; then
-  echo "Publishing the image with docker image push codeenigma/ce-dev-dind-1.x:$1"
-  sudo docker image push "codeenigma/ce-dev-dind-1.x:$1"
-fi
+# echo "Building dind image"
+# sudo docker image build --compress "--label=ce-dev-dind-1.x:$1" --no-cache=true -t "codeenigma/ce-dev-dind-1.x:$1" "$OWN_DIR/dind" || exit 1
+# if [ "$2" = "--push" ]; then
+#   echo "Publishing the image with docker image push codeenigma/ce-dev-dind-1.x:$1"
+#   sudo docker image push "codeenigma/ce-dev-dind-1.x:$1"
+# fi
