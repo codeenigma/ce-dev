@@ -42,6 +42,7 @@ export default class PullCmd extends DockerImagesCmd {
    * Push generated images.
    */
   private pull() {
+    this.pullControllerContainer()
     for (let service of Object.values(this.composeConfig.services as ComposeConfigService)) {
       if (service.image) {
         this.log('Pulling image ' + service.image + '...')

@@ -82,6 +82,21 @@ export default class CeDevControllerManager {
     execSync(this.dockerBin + ' exec ce_dev_controller /bin/sh /opt/ce-dev-ownership.sh ' + uid.toString() + ' ' + gid.toString())
     execSync(this.dockerBin + ' exec ce_dev_controller /bin/sh /opt/ce-dev-ssh.sh')
   }
+  /**
+   * Stop our controller.
+   */
+  public controllerStop() {
+    let existing = execSync(this.dockerBin + ' ps | grep -w ce_dev_controller | wc -l').toString().trim()
+    if (existing !== '0') {
+      execSync(this.dockerBin + ' stop ce_dev_controller')
+    }
+  }
+  /**
+   * Pull our controller image.
+   */
+  public pullImage() {
+    execSync(this.dockerBin + ' pull codeenigma/ce-dev-controller-1.x:latest', {stdio: 'inherit'})
+  }
 
   /**
    * Dump structure as YAML to a file.

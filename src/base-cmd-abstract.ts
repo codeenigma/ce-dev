@@ -119,10 +119,14 @@ export default abstract class BaseCmd extends Command {
    * Stop the global controller container.
    */
   protected stopControllerContainer() {
-    let existing = execSync(this.dockerBin + ' ps | grep -w ce_dev_controller | wc -l').toString().trim()
-    if (existing !== '0') {
-      execSync(this.dockerBin + ' stop ce_dev_controller')
-    }
+    this.log('Stopping controller container...')
+    this.controllerManager.controllerStop()
+  }
+  /**
+   * Pull controller latest image.
+   */
+  protected pullControllerContainer() {
+    this.controllerManager.pullImage()
   }
 
   /**
