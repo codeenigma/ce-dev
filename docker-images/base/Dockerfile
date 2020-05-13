@@ -90,7 +90,7 @@ COPY ./unison-fsmonitor /usr/local/bin
 COPY ./unison.sh /opt/run-parts/unison.sh
 
 RUN \
-  mkdir -p /home/ce-dev/deploy /home/ce-dev/.composer/cache /home/ce-dev/.nvm/versions/node && \
+  mkdir -p /home/ce-dev/deploy/live.local /home/ce-dev/.composer/cache /home/ce-dev/.nvm/versions/node && \
   chown -R ce-dev:ce-dev /home/ce-dev && \
   chmod 0555 /opt/run-parts/unison.sh
 
