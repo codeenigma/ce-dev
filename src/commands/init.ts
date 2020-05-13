@@ -59,6 +59,7 @@ export default class InitCmd extends BaseCmd {
     this.injectContainersHostname()
     this.injectContainersSysFs()
     this.injectCacheVolumes()
+    this.injectProjectVolume()
     this.injectProjectInfo()
   }
 
@@ -239,6 +240,20 @@ export default class InitCmd extends BaseCmd {
     }
     this.composeConfig.volumes.ce_dev_nvm_node = {
       external: true
+    }
+  }
+  /**
+   * Inject volumes.
+   */
+  private injectProjectVolume() {
+    for (let service of Object.values(this.composeConfig.services)) {
+      if (service['x-ce_dev']) {
+        if (!service.volumes) {
+          service.volumes = []
+        }
+        service.volumes.push('../:/.x-ce-dev:delegated')
+        service.volumes = [...new Set(service.volumes)]
+      }
     }
   }
   /**

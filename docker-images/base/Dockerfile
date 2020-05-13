@@ -81,9 +81,16 @@ RUN \
   /var/log/* \
   /tmp/*
 
+COPY ./ce-dev-ownership.sh /opt/
+COPY ./ce-dev-ssh.sh /opt/
+COPY ./unison /usr/local/bin
+COPY ./unison-fsmonitor /usr/local/bin
+COPY ./unison.sh /opt/unison.sh
+
 RUN \
   mkdir -p /home/ce-dev/deploy /home/ce-dev/.composer/cache /home/ce-dev/.nvm/versions/node && \
-  chown -R ce-dev:ce-dev /home/ce-dev
+  chown -R ce-dev:ce-dev /home/ce-dev && \
+  chmod 0555 /opt/unison.sh
 
 RUN \
   systemctl mask --   \
@@ -93,10 +100,5 @@ RUN \
 ENV container docker
 STOPSIGNAL SIGRTMIN+3
 VOLUME [ "/sys/fs/cgroup", "/run", "/run/lock", "/tmp" ]
-
-COPY ./ce-dev-ownership.sh /opt/
-COPY ./ce-dev-ssh.sh /opt/
-COPY ./unison /usr/local/bin
-COPY ./unison-fsmonitor /usr/local/bin
 
 ENTRYPOINT ["/sbin/init"]

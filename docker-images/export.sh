@@ -26,7 +26,7 @@ if [ -z "$OWN" ]; then
 fi
 OWN_DIR=$( cd "$( dirname "$OWN" )" && pwd -P)
 
-# Build Unison if we have no binary.
+# Build Unison if we have no binary. @todo move to multi-stage build in base image.
 UNISON_VERSION="2.51.2"
 cd /tmp/ || exit 1
 wget https://github.com/bcpierce00/unison/archive/v$UNISON_VERSION.tar.gz
