@@ -143,7 +143,7 @@ export default class StartCmd extends BaseCmd {
       let gid = process.getgid()
       if (uid > 1000 && gid > 1000) {
         execSync(this.dockerBin + ' exec ' + containerName + ' /bin/sh /opt/ce-dev-ownership.sh ' + uid.toString() + ' ' + gid.toString(), {stdio: 'inherit'})
-        execSync(this.dockerBin + ' exec ' + containerName + ' /bin/run-parts /opt/unison.sh', {stdio: 'inherit'})
+        execSync(this.dockerBin + ' exec ' + containerName + ' /bin/run-parts /opt/run-parts', {stdio: 'inherit'})
       }
     })
   }

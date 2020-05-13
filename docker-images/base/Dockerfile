@@ -87,7 +87,7 @@ COPY ./ce-dev-ownership.sh /opt/
 COPY ./ce-dev-ssh.sh /opt/
 COPY ./unison /usr/local/bin
 COPY ./unison-fsmonitor /usr/local/bin
-COPY ./unison.sh /opt/run-parts/unison.sh
+COPY ./unison.sh /opt/run-parts/unison
 
 RUN \
   mkdir -p /home/ce-dev/deploy/live.local /home/ce-dev/.composer/cache /home/ce-dev/.nvm/versions/node && \
