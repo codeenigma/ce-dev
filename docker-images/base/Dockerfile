@@ -81,16 +81,18 @@ RUN \
   /var/log/* \
   /tmp/*
 
+RUN mkdir /opt/run-parts
+
 COPY ./ce-dev-ownership.sh /opt/
 COPY ./ce-dev-ssh.sh /opt/
 COPY ./unison /usr/local/bin
 COPY ./unison-fsmonitor /usr/local/bin
-COPY ./unison.sh /opt/unison.sh
+COPY ./unison.sh /opt/run-parts/unison.sh
 
 RUN \
   mkdir -p /home/ce-dev/deploy /home/ce-dev/.composer/cache /home/ce-dev/.nvm/versions/node && \
   chown -R ce-dev:ce-dev /home/ce-dev && \
-  chmod 0555 /opt/unison.sh
+  chmod 0555 /opt/run-parts/unison.sh
 
 RUN \
   systemctl mask --   \
