@@ -186,6 +186,9 @@ export default class InitCmd extends BaseCmd {
       })
     }
     this.activeProjectInfo.project_name = this.composeConfig['x-ce_dev'].project_name
+    if (this.composeConfig['x-ce_dev'].registry) {
+      this.activeProjectInfo.registry = this.composeConfig['x-ce_dev'].registry
+    }
     this.saveActiveProjectInfo()
   }
   /**

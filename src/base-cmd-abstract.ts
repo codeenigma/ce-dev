@@ -56,7 +56,7 @@ export default abstract class BaseCmd extends Command {
    * @var
    * Docker repository to use.
    */
-  protected dockerRegistry = 'codeenigma'
+  protected dockerRegistry = ''
   /**
    * @var
    * Network range.
@@ -95,7 +95,7 @@ export default abstract class BaseCmd extends Command {
     if (fs.existsSync(config_path) === false) {
       fs.mkdirSync(config_path, {recursive: true})
     }
-    this.activeProjectInfoFilePath = fspath.resolve(config_path + '/projects.yml')
+    this.activeProjectInfoFilePath = fspath.resolve(config_path + '/project.yml')
     if (fs.existsSync(this.activeProjectInfoFilePath)) {
       this.activeProjectInfo = this.parseYaml(this.activeProjectInfoFilePath)
     }
