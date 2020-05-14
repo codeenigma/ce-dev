@@ -42,5 +42,7 @@ export default class DestroyCmd extends BaseCmd {
   private down() {
     this.log('Killing containers with docker-compose kill')
     execSync(this.dockerComposeBin + ' -p ' + this.activeProjectInfo.project_name + ' kill', {cwd: this.ceDevDir, stdio: 'inherit'})
+    this.log('Remove containers and anonymous volumes with docker-compose rm')
+    execSync(this.dockerComposeBin + ' -p ' + this.activeProjectInfo.project_name + ' rm -v --force', {cwd: this.ceDevDir, stdio: 'inherit'})
   }
 }
