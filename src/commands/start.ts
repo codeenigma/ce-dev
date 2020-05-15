@@ -1,5 +1,6 @@
 import {flags} from '@oclif/command'
 import {execSync} from 'child_process'
+import ux from 'cli-ux'
 
 import BaseCmd from '../base-cmd-abstract'
 
@@ -64,17 +65,19 @@ export default class StartCmd extends BaseCmd {
    * Wrapper around docker-compose.
    */
   private up() {
-    this.log('Starting project containers...')
+    ux.action.start('Starting project containers')
     execSync(this.dockerComposeBin + ' -p ' + this.activeProjectInfo.project_name + ' up -d', {cwd: this.ceDevDir, stdio: 'inherit'})
+    ux.action.stop()
   }
 
   /**
    * Update the /etc/hosts file with container informations.
    */
   private updateHostsFile() {
-    this.log('Updating /etc/hosts file')
+    ux.action.start('Updating /etc/hosts file')
     this.gatherRunningContainers()
     this.generateHostsFile()
+    ux.action.stop()
   }
 
   /**
@@ -139,10 +142,11 @@ export default class StartCmd extends BaseCmd {
     // @todo this should be on CMD, but system.d gets in the way.
     running.forEach(containerName => {
       if (this.config.platform === 'linux') {
-        this.log('Ensuring file ownership...')
+        ux.action.start('Ensuring file ownership')
         let uid = process.getuid()
         let gid = process.getgid()
         execSync(this.dockerBin + ' exec ' + containerName + ' /bin/sh /opt/ce-dev-ownership.sh ' + uid.toString() + ' ' + gid.toString(), {stdio: 'inherit'})
+        ux.action.stop()
       }
       execSync(this.dockerBin + ' exec ' + containerName + ' /bin/run-parts /opt/run-parts', {stdio: 'inherit'})
     })

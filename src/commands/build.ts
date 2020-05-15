@@ -1,5 +1,6 @@
 import {flags} from '@oclif/command'
 import {execSync} from 'child_process'
+import ux from 'cli-ux'
 
 import BaseCmd from '../base-cmd-abstract'
 import CeDevConfig from '../ce-dev-config-interface'
@@ -65,19 +66,21 @@ export default class BuildCmd extends BaseCmd {
   private commit() {
     for (let name of Object.keys(this.composeConfig.services)) {
       let containerName = this.composeConfig['x-ce_dev'].project_name + '-' + name
-      this.log('Committing container ' + containerName + ' as a new image.')
+      ux.action.start('Committing container ' + containerName + ' as a new image.')
       execSync(this.dockerBin + ' commit ' + containerName + ' ' + this.dockerRegistry + '/' + containerName + ':latest', {stdio: 'inherit'})
+      ux.action.stop()
     }
   }
   /**
    * Generate derivative compose file.
    */
   private generateCompose() {
-    this.log('Generating new compose file ' + this.composeDest + '.')
+    ux.action.start('Generating new compose file ' + this.composeDest + '.')
     for (let [name, service] of Object.entries(this.composeConfig.services)) {
       let containerName = this.composeConfig['x-ce_dev'].project_name + '-' + name
       service.image = this.dockerRegistry + '/' + containerName + ':latest'
     }
     this.writeYaml(this.composeDest, this.composeConfig)
+    ux.action.stop()
   }
 }

@@ -10,8 +10,9 @@
   "dependencies": {
     "@oclif/command": "^1.6.1",
     "@oclif/config": "^1.15.1",
-    "@oclif/plugin-autocomplete": "^0.1.5",
+    "@oclif/plugin-autocomplete": "^0.2.0",
     "@oclif/plugin-help": "^2.2.3",
+    "cli-ux": "^5.4.6",
     "inquirer": "^7.1.0",
     "js-yaml": "^3.13.1",
     "tslib": "^1.11.2"
@@ -46,7 +47,8 @@
     "commands": "./lib/commands",
     "bin": "ce-dev",
     "plugins": [
-      "@oclif/plugin-help"
+      "@oclif/plugin-help",
+      "@oclif/plugin-autocomplete"
     ]
   },
   "scripts": {

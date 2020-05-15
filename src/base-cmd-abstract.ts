@@ -1,5 +1,6 @@
 import {Command} from '@oclif/command'
 import {execSync} from 'child_process'
+import ux from 'cli-ux'
 
 import CeDevComposeConfig from './ce-dev-config-interface'
 import CeDevControllerManager from './ce-dev-controller-manager'
@@ -49,7 +50,8 @@ export default abstract class BaseCmd extends Command {
     project_name: 'ce-dev',
     registry: 'codeenigma',
     provision: [],
-    deploy: []
+    deploy: [],
+    urls: []
   }
 
   /**
@@ -119,8 +121,9 @@ export default abstract class BaseCmd extends Command {
    * Stop the global controller container.
    */
   protected stopControllerContainer() {
-    this.log('Stopping controller container...')
+    ux.action.start('Stopping controller container')
     this.controllerManager.controllerStop()
+    ux.action.stop()
   }
   /**
    * Pull controller latest image.

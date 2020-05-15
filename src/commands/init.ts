@@ -185,6 +185,12 @@ export default class InitCmd extends BaseCmd {
         }
       })
     }
+    this.activeProjectInfo.urls = []
+    if (this.composeConfig['x-ce_dev'].urls) {
+      this.composeConfig['x-ce_dev'].urls.forEach(url => {
+        this.activeProjectInfo.urls.push(url)
+      })
+    }
     this.activeProjectInfo.project_name = this.composeConfig['x-ce_dev'].project_name
     if (this.composeConfig['x-ce_dev'].registry) {
       this.activeProjectInfo.registry = this.composeConfig['x-ce_dev'].registry

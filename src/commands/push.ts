@@ -1,4 +1,5 @@
 import {execSync} from 'child_process'
+import ux from 'cli-ux'
 
 import DockerImagesCmd from '../base-cmd-abstract-docker-images'
 export default class PushCmd extends DockerImagesCmd {
@@ -23,8 +24,9 @@ export default class PushCmd extends DockerImagesCmd {
   private push() {
     for (let name of Object.keys(this.composeConfig.services)) {
       let containerName = this.composeConfig['x-ce_dev'].project_name + '-' + name
-      this.log('Pushing image ' + containerName + '...')
+      ux.action.start('Pushing image ' + containerName)
       execSync(this.dockerBin + ' push ' + this.dockerRegistry + '/' + containerName + ':latest', {stdio: 'inherit'})
+      ux.action.stop()
     }
   }
 }

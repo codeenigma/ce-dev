@@ -1,5 +1,6 @@
 import {flags} from '@oclif/command'
 import {execSync} from 'child_process'
+import ux from 'cli-ux'
 
 import BaseCmd from '../base-cmd-abstract'
 
@@ -17,8 +18,9 @@ export default class StopCmd extends BaseCmd {
    */
   async run() {
     this.ensureActiveComposeFile()
-    this.log('Stopping running containers with docker-compose stop')
+    ux.action.start('Stopping running containers with docker-compose stop')
     execSync(this.dockerComposeBin + ' -p ' + this.activeProjectInfo.project_name + ' stop', {cwd: this.ceDevDir})
     this.stopControllerContainer()
+    ux.action.stop()
   }
 }
