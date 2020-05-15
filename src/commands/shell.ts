@@ -37,6 +37,6 @@ export default class ShellCmd extends BaseCmd {
       }])
       container = response.container
     }
-    execSync(this.dockerBin + ' exec -it ' + container + ' su ce-dev', {stdio: 'inherit'})
+    execSync(this.dockerBin + ' exec -it -u ce-dev -w /home/ce-dev ' + container + ' sudo su ce-dev || exit 0', {stdio: 'inherit'})
   }
 }
