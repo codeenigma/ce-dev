@@ -22,6 +22,8 @@ You'll need docker-compose (and docker) on a Mac or Linux host.
 <!-- tocstop -->
 # Commands
 <!-- commands -->
+* [`ce-dev autocomplete [SHELL]`](#ce-dev-autocomplete-shell)
+* [`ce-dev browse`](#ce-dev-browse)
 * [`ce-dev build`](#ce-dev-build)
 * [`ce-dev create`](#ce-dev-create)
 * [`ce-dev deploy`](#ce-dev-deploy)
@@ -35,6 +37,43 @@ You'll need docker-compose (and docker) on a Mac or Linux host.
 * [`ce-dev start`](#ce-dev-start)
 * [`ce-dev stop`](#ce-dev-stop)
 
+## `ce-dev autocomplete [SHELL]`
+
+display autocomplete installation instructions
+
+```
+USAGE
+  $ ce-dev autocomplete [SHELL]
+
+ARGUMENTS
+  SHELL  shell type
+
+OPTIONS
+  -r, --refresh-cache  Refresh cache (ignores displaying instructions)
+
+EXAMPLES
+  $ ce-dev autocomplete
+  $ ce-dev autocomplete bash
+  $ ce-dev autocomplete zsh
+  $ ce-dev autocomplete --refresh-cache
+```
+
+_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v0.2.0/src/commands/autocomplete/index.ts)_
+
+## `ce-dev browse`
+
+Open preset URL(s) in a browser
+
+```
+USAGE
+  $ ce-dev browse
+
+EXAMPLE
+  $ ce-dev browse
+```
+
+_See code: [src/commands/browse.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/browse.ts)_
+
 ## `ce-dev build`
 
 Commit the existing containers as new docker images, and create a new docker-compose file referencing them.
@@ -45,19 +84,19 @@ USAGE
 
 OPTIONS
   -d, --destination=destination  [default: ce-dev.compose.prebuilt.yml] Path to the output docker-compose file, relative
-                                 to the project root.
+                                 to the project ce-dev folder.
 
   -h, --help                     show CLI help
 
   -t, --template=template        [default: ce-dev.compose.yml] Path to a docker-compose template file, relative to the
-                                 project root. WARNING: this must match the original one the project was constructed
-                                 with.
+                                 project ce-dev folder. WARNING: this must match the original one the project was
+                                 constructed with.
 
 EXAMPLE
   $ ce-dev build --template example.compose.yml
 ```
 
-_See code: [src/commands/build.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/build.ts)_
+_See code: [src/commands/build.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/build.ts)_
 
 ## `ce-dev create`
 
@@ -80,11 +119,11 @@ EXAMPLE
   $ ce-dev create --template drupal8 --project myproject
 ```
 
-_See code: [src/commands/create.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/create.ts)_
+_See code: [src/commands/create.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/create.ts)_
 
 ## `ce-dev deploy`
 
-Setu an app with Ansible playbooks.
+Setup an app with Ansible playbooks.
 
 ```
 USAGE
@@ -94,7 +133,7 @@ EXAMPLE
   $ ce-dev deploy example-app
 ```
 
-_See code: [src/commands/deploy.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/deploy.ts)_
+_See code: [src/commands/deploy.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/deploy.ts)_
 
 ## `ce-dev destroy`
 
@@ -111,7 +150,7 @@ EXAMPLE
   $ ce-dev destroy
 ```
 
-_See code: [src/commands/destroy.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/destroy.ts)_
+_See code: [src/commands/destroy.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/destroy.ts)_
 
 ## `ce-dev help [COMMAND]`
 
@@ -128,7 +167,7 @@ OPTIONS
   --all  see all commands in CLI
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.1/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.3/src/commands/help.ts)_
 
 ## `ce-dev init`
 
@@ -141,14 +180,14 @@ USAGE
 OPTIONS
   -h, --help               show CLI help
 
-  -t, --template=template  [default: ce-dev.compose.yml] path to a docker-compose template file, relative to the project
-                           root
+  -t, --template=template  [default: ce-dev.compose.prebuilt.yml] path to a docker-compose template file, relative to
+                           the project root
 
 EXAMPLE
   $ ce-dev init --template example.compose.yml
 ```
 
-_See code: [src/commands/init.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/init.ts)_
+_See code: [src/commands/init.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/init.ts)_
 
 ## `ce-dev provision`
 
@@ -159,7 +198,7 @@ USAGE
   $ ce-dev provision
 ```
 
-_See code: [src/commands/provision.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/provision.ts)_
+_See code: [src/commands/provision.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/provision.ts)_
 
 ## `ce-dev pull`
 
@@ -170,16 +209,22 @@ USAGE
   $ ce-dev pull
 
 OPTIONS
+  -a, --anonymous          Do not prompt for login credentials.
   -h, --help               show CLI help
+
+  -p, --password=password  Password to use to login against the Docker registry. Warning, this will appear in your shell
+                           history in clear text.
 
   -t, --template=template  [default: ce-dev.compose.prebuilt.yml] Path to a docker-compose template file, relative to
                            the project root. WARNING: this must match the original one the project was constructed with.
+
+  -u, --username=username  Username to use to login against the Docker registry.
 
 EXAMPLE
   $ ce-dev pull --template example.compose.yml
 ```
 
-_See code: [src/commands/pull.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/pull.ts)_
+_See code: [src/commands/pull.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/pull.ts)_
 
 ## `ce-dev push`
 
@@ -190,6 +235,7 @@ USAGE
   $ ce-dev push
 
 OPTIONS
+  -a, --anonymous          Do not prompt for login credentials.
   -h, --help               show CLI help
 
   -p, --password=password  Password to use to login against the Docker registry. Warning, this will appear in your shell
@@ -198,14 +244,13 @@ OPTIONS
   -t, --template=template  [default: ce-dev.compose.prebuilt.yml] Path to a docker-compose template file, relative to
                            the project root. WARNING: this must match the original one the project was constructed with.
 
-  -u, --username=username  Username to use to login against the Docker registry. For repository that do not require
-                           auth, you can enter anything as username/pwd
+  -u, --username=username  Username to use to login against the Docker registry.
 
 EXAMPLE
   $ ce-dev push --template example.compose.yml
 ```
 
-_See code: [src/commands/push.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/push.ts)_
+_See code: [src/commands/push.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/push.ts)_
 
 ## `ce-dev shell [CONTAINER]`
 
@@ -225,7 +270,7 @@ EXAMPLE
   $ ce-dev shell example-app
 ```
 
-_See code: [src/commands/shell.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/shell.ts)_
+_See code: [src/commands/shell.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/shell.ts)_
 
 ## `ce-dev start`
 
@@ -242,7 +287,7 @@ EXAMPLE
   $ ce-dev start
 ```
 
-_See code: [src/commands/start.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/start.ts)_
+_See code: [src/commands/start.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/start.ts)_
 
 ## `ce-dev stop`
 
@@ -259,7 +304,7 @@ EXAMPLE
   $ ce-dev stop
 ```
 
-_See code: [src/commands/stop.ts](https://github.com/codeenigma/ce-dev/blob/v0.0.0/src/commands/stop.ts)_
+_See code: [src/commands/stop.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/stop.ts)_
 <!-- commandsstop -->
 
 # Troubleshooting
