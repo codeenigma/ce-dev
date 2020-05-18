@@ -89,7 +89,10 @@ export default class StartCmd extends BaseCmd {
       return (item.length)
     })
     runningContainers.forEach(containerName => {
-      let ip = execSync(this.dockerBin + ' inspect ' + containerName + ' --format={{.NetworkSettings.Networks.ce_dev.IPAddress}}').toString().trim()
+      let ip = "127.0.0.1"
+      if(this.config.platform === 'linux'){
+        let ip = execSync(this.dockerBin + ' inspect ' + containerName + ' --format={{.NetworkSettings.Networks.ce_dev.IPAddress}}').toString().trim()
+      }
       //@todo Need a better check.
       if (ip !== '<no value>') {
         let aliasesString = execSync(this.dockerBin + ' inspect ' + containerName + ' --format={{.NetworkSettings.Networks.ce_dev.Aliases}}').toString().trim()
@@ -141,13 +144,7 @@ export default class StartCmd extends BaseCmd {
     }
     // @todo this should be on CMD, but system.d gets in the way.
     running.forEach(containerName => {
-      if (this.config.platform === 'linux') {
-        ux.action.start('Ensuring file ownership')
-        let uid = process.getuid()
-        let gid = process.getgid()
-        execSync(this.dockerBin + ' exec ' + containerName + ' /bin/sh /opt/ce-dev-ownership.sh ' + uid.toString() + ' ' + gid.toString(), {stdio: 'inherit'})
-        ux.action.stop()
-      }
+      this.ensureOwnership(containerName)
       execSync(this.dockerBin + ' exec ' + containerName + ' /bin/run-parts /opt/run-parts', {stdio: 'inherit'})
     })
   }

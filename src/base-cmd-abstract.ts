@@ -263,4 +263,19 @@ export default abstract class BaseCmd extends Command {
     }
   }
 
+   /**
+   * Match numeric user ids with hosts.
+   */
+  protected ensureOwnership(containerName: string) {
+    let uid = 1000
+    let gid = 1000
+    if (this.config.platform === 'linux') {
+      uid = process.getuid()
+      gid = process.getgid()
+    }
+    ux.action.start('Ensuring file ownership')
+    execSync(this.dockerBin + ' exec ' + containerName + ' /bin/sh /opt/ce-dev-ownership.sh ' + uid.toString() + ' ' + gid.toString(), {stdio: 'inherit'})
+    ux.action.stop()
+  }
+
 }

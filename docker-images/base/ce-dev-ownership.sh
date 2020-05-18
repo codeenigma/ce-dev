@@ -6,20 +6,22 @@
 # @param $2
 # Group id.
 ensure_user_ids(){
-  # Check if change is needed.
-  OWN_CHANGED=0
-  if [ "$(id -u ce-dev)" != "$1" ]; then
+  OLD_UID="$(id -u ce-dev)"
+  OLD_GID="$(id -g ce-dev)"
+  if [ "$OLD_UID" != "$1" ]; then
     usermod -u "$1" ce-dev
+    chown -R --from="$OLD_UID" "$NEW_UID" /var
+    chown -R "$NEW_UID" /.x-ce-dev
+    chown -R "$NEW_UID" /home/ce-dev
     echo "User ID changed to $1."
-    OWN_CHANGED=1
   fi
-  if [ "$(id -g ce-dev)" != "$2" ]; then
+  if [ "$OLD_GID" != "$2" ]; then
     groupmod -g "$2" ce-dev
+    chown -R --from=":$OLD_GID" ":$NEW_GID" /var
+    chown -R ":$NEW_GID" /.x-ce-dev
+    chown -R ":$NEW_GID" /home/ce-dev
     echo "Group ID changed to $2."
     OWN_CHANGED=1
-  fi
-  if [ "$OWN_CHANGED" -eq 1 ]; then
-    chown -R ce-dev:ce-dev /home/ce-dev
   fi
 }
 
