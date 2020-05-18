@@ -89,9 +89,9 @@ export default class StartCmd extends BaseCmd {
       return (item.length)
     })
     runningContainers.forEach(containerName => {
-      let ip = "127.0.0.1"
-      if(this.config.platform === 'linux'){
-        let ip = execSync(this.dockerBin + ' inspect ' + containerName + ' --format={{.NetworkSettings.Networks.ce_dev.IPAddress}}').toString().trim()
+      let ip = '127.0.0.1'
+      if (this.config.platform === 'linux') {
+        ip = execSync(this.dockerBin + ' inspect ' + containerName + ' --format={{.NetworkSettings.Networks.ce_dev.IPAddress}}').toString().trim()
       }
       //@todo Need a better check.
       if (ip !== '<no value>') {
@@ -142,10 +142,11 @@ export default class StartCmd extends BaseCmd {
     if (running.length < 1) {
       return
     }
-    // @todo this should be on CMD, but system.d gets in the way.
     running.forEach(containerName => {
       this.ensureOwnership(containerName)
-      execSync(this.dockerBin + ' exec ' + containerName + ' /bin/run-parts /opt/run-parts', {stdio: 'inherit'})
+      if (this.activeProjectInfo.unison) {
+        execSync(this.dockerBin + ' exec ' + containerName + ' /bin/run-parts /opt/run-parts', {stdio: 'inherit'})
+      }
     })
   }
 }

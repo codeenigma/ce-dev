@@ -54,13 +54,13 @@ export default class InitCmd extends BaseCmd {
    * Alter parsed config to be written in actual compose file.
    */
   private generateCompose() {
+    this.generateProjectInfo()
     this.injectContainersNetworking()
     this.injectContainersSSH()
     this.injectContainersHostname()
     this.injectContainersSysFs()
     this.injectCacheVolumes()
     this.injectProjectVolume()
-    this.injectProjectInfo()
   }
 
   /**
@@ -166,7 +166,7 @@ export default class InitCmd extends BaseCmd {
   /**
    * Gather mount points for ansible playbooks.
    */
-  private injectProjectInfo() {
+  private generateProjectInfo() {
     this.activeProjectInfo.provision = []
     if (this.composeConfig['x-ce_dev'].provision) {
       this.composeConfig['x-ce_dev'].provision.forEach(playbookPath => {
@@ -194,6 +194,9 @@ export default class InitCmd extends BaseCmd {
     this.activeProjectInfo.project_name = this.composeConfig['x-ce_dev'].project_name
     if (this.composeConfig['x-ce_dev'].registry) {
       this.activeProjectInfo.registry = this.composeConfig['x-ce_dev'].registry
+    }
+    if (this.composeConfig['x-ce_dev'].unison === false) {
+      this.activeProjectInfo.unison = false
     }
     this.saveActiveProjectInfo()
   }
@@ -255,6 +258,9 @@ export default class InitCmd extends BaseCmd {
    * Inject volumes.
    */
   private injectProjectVolume() {
+    if (this.activeProjectInfo.unison === false) {
+      return
+    }
     for (let service of Object.values(this.composeConfig.services)) {
       if (service['x-ce_dev']) {
         if (!service.volumes) {

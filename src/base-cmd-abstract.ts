@@ -51,7 +51,8 @@ export default abstract class BaseCmd extends Command {
     registry: 'codeenigma',
     provision: [],
     deploy: [],
-    urls: []
+    urls: [],
+    unison: true
   }
 
   /**
@@ -263,7 +264,7 @@ export default abstract class BaseCmd extends Command {
     }
   }
 
-   /**
+  /**
    * Match numeric user ids with hosts.
    */
   protected ensureOwnership(containerName: string) {

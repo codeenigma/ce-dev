@@ -3,5 +3,6 @@ export default interface CeDevProjectConfig {
   'registry': string,
   'provision': Array<string>,
   'deploy': Array<string>,
-  'urls': Array<string>
+  'urls': Array<string>,
+  'unison': boolean
 }
