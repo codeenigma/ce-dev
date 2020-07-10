@@ -144,8 +144,12 @@ export default class StartCmd extends BaseCmd {
     }
     running.forEach(containerName => {
       this.ensureOwnership(containerName)
-      if (this.activeProjectInfo.unison) {
-        execSync(this.dockerBin + ' exec ' + containerName + ' /bin/run-parts /opt/run-parts', {stdio: 'inherit'})
+      if (this.activeProjectInfo.unison[containerName]) {
+        ux.action.start('Trigger Unison file synchronisation')
+        this.activeProjectInfo.unison[containerName].forEach(volume => {
+          execSync(this.dockerBin + ' exec ' + containerName + ' /bin/sh /opt/unison-startup.sh ' + volume.src + ' ' + volume.dest + ' ' + volume.ignore, {stdio: 'inherit'})
+        })
+        ux.action.stop()
       }
     })
   }

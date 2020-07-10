@@ -1,5 +1,6 @@
 #!/bin/sh
 
+mkdir -p "/tmp/$1"
 while true; do
-  flock /tmp/unison.lock /usr/local/bin/unison -copythreshold 100000 -owner -group -batch -repeat watch -fastercheckUNSAFE -prefer /.x-ce-dev /.x-ce-dev /home/ce-dev/deploy/live.local
+  flock -w 30 /tmp"$1"/unison.lock /usr/local/bin/unison -copythreshold 100000 -owner -group -batch -repeat watch -fastercheckUNSAFE -prefer "$1" "$@" || exit 1
 done

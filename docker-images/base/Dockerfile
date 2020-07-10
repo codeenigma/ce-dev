@@ -81,14 +81,12 @@ RUN \
   /var/log/* \
   /tmp/*
 
-RUN mkdir /opt/run-parts
-
 COPY ./ce-dev-ownership.sh /opt/
 COPY ./ce-dev-ssh.sh /opt/
 COPY ./unison /usr/local/bin
 COPY ./unison-fsmonitor /usr/local/bin
 COPY ./unison.sh /opt/unison.sh
-COPY ./unison-startup.sh /opt/run-parts/unison
+COPY ./unison-startup.sh /opt/unison-startup.sh
 
 RUN \
   mkdir -p /home/ce-dev/deploy/live.local /home/ce-dev/.composer/cache /home/ce-dev/.nvm/versions/node && \

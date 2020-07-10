@@ -2,7 +2,9 @@ import {flags} from '@oclif/command'
 
 import BaseCmd from '../base-cmd-abstract'
 import CeDevConfig from '../ce-dev-config-interface'
+import CeDevConfigService from '../ce-dev-config-service-interface'
 import ComposeConfigService from '../compose-config-service-interface'
+import UnisonVolumeContainer from '../unison-volume-container-interface'
 
 export default class InitCmd extends BaseCmd {
   static description = 'Generates a docker-compose.yml file from a template'
@@ -60,7 +62,7 @@ export default class InitCmd extends BaseCmd {
     this.injectContainersHostname()
     this.injectContainersSysFs()
     this.injectCacheVolumes()
-    this.injectProjectVolume()
+    this.injectUnisonVolumes()
   }
 
   /**
@@ -195,9 +197,7 @@ export default class InitCmd extends BaseCmd {
     if (this.composeConfig['x-ce_dev'].registry) {
       this.activeProjectInfo.registry = this.composeConfig['x-ce_dev'].registry
     }
-    if (this.composeConfig['x-ce_dev'].unison === false) {
-      this.activeProjectInfo.unison = false
-    }
+    this.activeProjectInfo.unison = {}
     this.saveActiveProjectInfo()
   }
   /**
@@ -257,19 +257,40 @@ export default class InitCmd extends BaseCmd {
   /**
    * Inject volumes.
    */
-  private injectProjectVolume() {
-    if (this.activeProjectInfo.unison === false) {
-      return
-    }
-    for (let service of Object.values(this.composeConfig.services)) {
-      if (service['x-ce_dev']) {
+  private injectUnisonVolumes() {
+    for (let [serviceName, service] of Object.entries(this.composeConfig.services)) {
+      if (service['x-ce_dev'] && service['x-ce_dev'].unison) {
         if (!service.volumes) {
           service.volumes = []
         }
-        service.volumes.push('../:/.x-ce-dev:delegated')
-        service.volumes = [...new Set(service.volumes)]
+        this.injectUnisonVolume(serviceName, service)
       }
     }
+  }
+  /**
+   * Replace unison volume mounts.
+   */
+  private injectUnisonVolume(serviceName: string, service: CeDevConfigService) {
+    service['x-ce_dev'].unison.forEach(volume => {
+      if (volume.target_platforms.indexOf(this.config.platform) >= 0) {
+        service.volumes.push([volume.src, '/.x-ce-dev' + volume.dest, 'delegated'].join(':'))
+        this.activeProjectInfo.unison[serviceName] = []
+        let volumeConfig: UnisonVolumeContainer = {
+          src: '/.x-ce-dev' + volume.dest,
+          dest: volume.dest,
+          ignore: ''
+        }
+        let ignoreList: Array<string> = []
+        if (volume.ignore) {
+          volume.ignore.forEach(ignoreDirective => {
+            ignoreList.push('-ignore ' + '"' + ignoreDirective + '"')
+          })
+        }
+        volumeConfig.ignore = ignoreList.join(' ')
+        this.activeProjectInfo.unison[serviceName].push(volumeConfig)
+      }
+    })
+    this.saveActiveProjectInfo()
   }
   /**
    * Clean up compose structure.
