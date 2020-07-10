@@ -21,7 +21,6 @@ ensure_user_ids(){
     chown -R ":$NEW_GID" /.x-ce-dev
     chown -R ":$NEW_GID" /home/ce-dev
     echo "Group ID changed to $2."
-    OWN_CHANGED=1
   fi
 }
 
