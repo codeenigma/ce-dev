@@ -4,9 +4,19 @@ x-ce_dev:
   project_name: {{ project_name }}
   provision: 
     - ce-dev/ansible/provision.yml
-  deploy: 
+  deploy:
     - ce-dev/ansible/deploy.yml
+  urls: []
+  version: 1.x
 services:
   {{ project_name }}:
     image: codeenigma/ce-dev-1.x:latest
-    x-ce_dev: {}
+    x-ce_dev:
+      unison:
+      - src: ../
+        dest: /home/ce-dev/deploy/live.local
+        target_platforms:
+          - darwin
+        ignore:
+          - Name vendor
+          - Name node_modules

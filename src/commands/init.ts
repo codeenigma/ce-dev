@@ -197,7 +197,6 @@ export default class InitCmd extends BaseCmd {
     if (this.composeConfig['x-ce_dev'].registry) {
       this.activeProjectInfo.registry = this.composeConfig['x-ce_dev'].registry
     }
-    this.activeProjectInfo.unison = {}
     this.saveActiveProjectInfo()
   }
   /**
@@ -288,6 +287,8 @@ export default class InitCmd extends BaseCmd {
         }
         volumeConfig.ignore = ignoreList.join(' ')
         this.activeProjectInfo.unison[serviceName].push(volumeConfig)
+      } else {
+        service.volumes.push([volume.src, volume.dest, 'delegated'].join(':'))
       }
     })
     this.saveActiveProjectInfo()

@@ -52,7 +52,7 @@ export default abstract class BaseCmd extends Command {
     provision: [],
     deploy: [],
     urls: [],
-    unison: []
+    unison: {}
   }
 
   /**

@@ -65,6 +65,12 @@ export default class StartCmd extends BaseCmd {
    * Wrapper around docker-compose.
    */
   private up() {
+    let running = this.getProjectRunningContainers()
+    if (running.length) {
+      ux.action.start('Project containers are already running, stopping.')
+      execSync(this.dockerComposeBin + ' -p ' + this.activeProjectInfo.project_name + ' stop', {cwd: this.ceDevDir, stdio: 'inherit'})
+      ux.action.stop()
+    }
     ux.action.start('Starting project containers')
     execSync(this.dockerComposeBin + ' -p ' + this.activeProjectInfo.project_name + ' up -d', {cwd: this.ceDevDir, stdio: 'inherit'})
     ux.action.stop()

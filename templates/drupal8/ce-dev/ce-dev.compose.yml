@@ -8,12 +8,19 @@ x-ce_dev:
     - ce-dev/ansible/deploy.yml
 services:
   web:
+    image: codeenigma/ce-dev-1.x:latest
     x-ce_dev:
       host_aliases:
         - www.{{ project_name }}.local
-    image: codeenigma/ce-dev-1.x:latest
-    volumes:
-      - "../:/home/ce-dev/deploy/live.{{ project_name }}_local:delegated"
+      unison:
+      - src: ../
+        dest: /home/ce-dev/deploy/live.local
+        target_platforms:
+          - darwin
+        ignore:
+          - Name vendor
+          - Name node_modules
+          - Path */sites/*/files
   db:
     image: mariadb
     environment:

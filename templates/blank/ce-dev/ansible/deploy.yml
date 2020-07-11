@@ -3,4 +3,3 @@
 - hosts: {{ project_name }}-{{ project_name }}
   vars:
     - project_name: {{ project_name }}
-    - build_type: local
