@@ -1,7 +1,8 @@
 ce-dev
 ======
-
 Local Stack wrapper tool
+
+[![Build Status](https://api.travis-ci.com/codeenigma/ce-dev.svg?branch=1.x)](https://api.travis-ci.com/codeenigma/ce-dev.svg?branch=1.x)
 
 ***WARNING: WIP - Future changes won't be backward compatible***
 
