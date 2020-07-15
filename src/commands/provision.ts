@@ -5,7 +5,7 @@ export default class ProvisionCmd extends AnsibleCmd {
   static description = 'Provision containers with Ansible playbooks.'
 
   protected ansibleProjectPlaybooksPath = '/home/ce-dev/projects-playbooks/provision'
-  protected ansibleScriptsPath = '/home/ce-dev/ansible-provision'
+  protected ansibleScriptsPath = '/home/ce-dev/ce-provision'
   protected ansibleScript = 'scripts/provision.sh'
   /**
    * @inheritdoc

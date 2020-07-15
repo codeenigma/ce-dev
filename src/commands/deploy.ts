@@ -8,7 +8,7 @@ export default class DeployCmd extends AnsibleCmd {
   ]
 
   protected ansibleProjectPlaybooksPath = '/home/ce-dev/projects-playbooks/deploy'
-  protected ansibleScriptsPath = '/home/ce-dev/ansible-deploy'
+  protected ansibleScriptsPath = '/home/ce-dev/ce-deploy'
   protected ansibleScript = 'scripts/deploy.sh'
   /**
    * @inheritdoc

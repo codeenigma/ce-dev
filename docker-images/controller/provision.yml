@@ -4,23 +4,25 @@
   become: yes
   vars:
     - domain_name: example.com
-    - _ansible_provision_build_tmp_dir: /tmp
+    - _ce_provision_build_tmp_dir: /tmp
     - is_local: yes
     - env_type: utility
-    - ansible_deploy:
-        own_repository: https://github.com/codeenigma/ansible-deploy.git
-        config_repository: https://github.com/codeenigma/ce-dev-ansible-deploy-config.git
-        username: ce-dev
-        local_dir: /home/ce-dev/ansible-deploy
-        groups: []
-    - ansible_provision:
-        own_repository: https://github.com/codeenigma/ansible-provision.git
+    - ce_deploy:
+        own_repository: https://github.com/codeenigma/ce-deploy.git
+        config_repository: https://github.com/codeenigma/ce-dev-ce-deploy-config.git
         own_repository_branch: 1.x
-        config_repository: https://github.com/codeenigma/ce-dev-ansible-provision-config.git
         config_repository_branch: 1.x
         username: ce-dev
-        local_dir: /home/ce-dev/ansible-provision
+        local_dir: /home/ce-dev/ce-deploy
+        groups: []
+    - ce_provision:
+        own_repository: https://github.com/codeenigma/ce-provision.git
+        own_repository_branch: 1.x
+        config_repository: https://github.com/codeenigma/ce-dev-ce-provision-config.git
+        config_repository_branch: 1.x
+        username: ce-dev
+        local_dir: /home/ce-dev/ce-provision
         groups: []
   roles:
-    - ansible_provision
-    - ansible_deploy
+    - ce_provision
+    - ce_deploy

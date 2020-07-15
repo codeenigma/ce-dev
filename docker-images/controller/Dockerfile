@@ -15,9 +15,9 @@ RUN \
   /tmp/*
 
 
-RUN su - ce-dev -c "git clone --branch 1.x https://github.com/codeenigma/ansible-provision.git /home/ce-dev/ansible-provision"
+RUN su - ce-dev -c "git clone --branch 1.x https://github.com/codeenigma/ce-provision.git /home/ce-dev/ce-provision"
 
-COPY ./provision.yml /home/ce-dev/ansible-provision/provision.yml
+COPY ./provision.yml /home/ce-dev/ce-provision/provision.yml
 
 RUN \
   set -x && \
@@ -25,8 +25,8 @@ RUN \
   echo 'deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main' > /etc/apt/sources.list.d/ansible.list && \
   apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367 && \
   apt-get update && \
-  su - ce-dev -c "/usr/bin/ansible-playbook /home/ce-dev/ansible-provision/provision.yml" && \
-  rm /home/ce-dev/ansible-provision/provision.yml && \
+  su - ce-dev -c "/usr/bin/ansible-playbook /home/ce-dev/ce-provision/provision.yml" && \
+  rm /home/ce-dev/ce-provision/provision.yml && \
   apt-get clean  && \
   rm -rf \
   /var/lib/apt/lists/* \
