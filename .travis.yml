@@ -1,9 +1,3 @@
-addons:
-  apt:
-    packages:
-    - p7zip-full
-    - build-essential
-    - ocaml-native-compilers
 language: node_js
 node_js:
 - 10

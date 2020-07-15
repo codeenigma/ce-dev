@@ -26,14 +26,6 @@ if [ -z "$OWN" ]; then
 fi
 OWN_DIR=$( cd "$( dirname "$OWN" )" && pwd -P)
 
-# Build Unison if we have no binary. @todo move to multi-stage build in base image.
-UNISON_VERSION="2.51.2"
-cd /tmp/ || exit 1
-wget https://github.com/bcpierce00/unison/archive/v$UNISON_VERSION.tar.gz
-tar -xzvf v$UNISON_VERSION.tar.gz
-cd /tmp/unison-$UNISON_VERSION || exit 1
-make
-cp -t "$OWN_DIR/base" /tmp/unison-$UNISON_VERSION/src/unison /tmp/unison-$UNISON_VERSION/src/unison-fsmonitor
 # Ensure we have a fresh image to start with.
 sudo docker image pull debian:buster
 

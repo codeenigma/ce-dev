@@ -1,3 +1,19 @@
+FROM debian:buster as unison
+RUN \
+  set -x && \
+  export DEBIAN_FRONTEND=noninteractive && \
+  apt-get update && \
+  apt-get install -y -o Dpkg::Options::="--force-confnew" \
+    p7zip-full \
+    build-essential \
+    wget \
+    ocaml-native-compilers && \
+  cd /tmp/ && \
+  wget https://github.com/bcpierce00/unison/archive/v2.51.2.tar.gz && \
+  tar -xzvf v2.51.2.tar.gz && \
+  cd /tmp/unison-2.51.2 && \
+  make
+
 FROM debian:buster
 
 RUN \
@@ -77,22 +93,20 @@ RUN \
   wget && \
   apt-get clean  && \
   rm -rf \
-  /var/lib/apt/lists/* \
-  /var/log/* \
-  /tmp/*
+    /var/lib/apt/lists/* \
+    /var/log/* \
+    /tmp/*
 
+COPY --from=unison /tmp/unison-2.51.2/src/unison /usr/local/bin/
+COPY --from=unison /tmp/unison-2.51.2/src/unison-fsmonitor /usr/local/bin
 COPY ./ce-dev-ownership.sh /opt/
 COPY ./ce-dev-ssh.sh /opt/
-COPY ./unison /usr/local/bin
-COPY ./unison-fsmonitor /usr/local/bin
-COPY ./unison.sh /opt/unison.sh
-COPY ./unison-startup.sh /opt/unison-startup.sh
+COPY ./unison.sh /opt/
+COPY ./unison-startup.sh /opt/
 
 RUN \
   mkdir -p /home/ce-dev/deploy/live.local /home/ce-dev/.composer/cache /home/ce-dev/.nvm/versions/node && \
-  chown -R ce-dev:ce-dev /home/ce-dev && \
-  chmod 0555 /opt/run-parts/unison && \
-  chmod 0555 /opt/unison.sh
+  chown -R ce-dev:ce-dev /home/ce-dev
 
 RUN \
   systemctl mask --   \
