@@ -29,13 +29,18 @@ export default class ShellCmd extends BaseCmd {
         this.warn('No running containers can be targetted. Exiting.')
         this.exit(1)
       }
-      let response: any = await inquirer.prompt([{
-        name: 'container',
-        message: 'Select a container to target',
-        type: 'list',
-        choices: running,
-      }])
-      container = response.container
+      // Single container, just use this.
+      if (running.length === 1) {
+        container = running[0]
+      } else {
+        let response: any = await inquirer.prompt([{
+          name: 'container',
+          message: 'Select a container to target',
+          type: 'list',
+          choices: running,
+        }])
+        container = response.container
+      }
     }
     execSync(this.dockerBin + ' exec -it -u ce-dev -w /home/ce-dev ' + container + ' sudo su ce-dev || exit 0', {stdio: 'inherit'})
   }
