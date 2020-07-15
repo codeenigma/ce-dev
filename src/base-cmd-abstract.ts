@@ -226,17 +226,22 @@ export default abstract class BaseCmd extends Command {
    * Gather project's containers that are actually running.
    */
   protected getProjectRunningContainers(): Array<string> {
-    const running: Array<string> = []
     const config: ComposeConfig = this.LoadComposeConfig(this.activeComposeFilePath)
+    const projectContainers: Array<string> = []
     if (config.services) {
       for (let service of Object.values(config.services)) {
-        let status = execSync(this.dockerBin + ' inspect ' + service.container_name + ' --format={{.State.Status}}').toString().trim()
-        if (status === 'running') {
-          running.push(service.container_name as string)
-        }
+        projectContainers.push('/' + service.container_name as string)
       }
     }
-    return running
+    const running = execSync(this.dockerBin + ' ps --quiet').toString()
+    const runningContainers = running.split('\n').filter(item => {
+      if (item.length < 1) {
+        return false
+      }
+      let name = execSync(this.dockerBin + ' inspect ' + item + ' --format={{.Name}}').toString().trim()
+      return (projectContainers.indexOf(name) > -1)
+    })
+    return runningContainers
   }
   /**
    * Gather project's containers that are build from ce-dev base image.
