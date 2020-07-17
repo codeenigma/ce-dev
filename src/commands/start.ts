@@ -31,7 +31,12 @@ export default class StartCmd extends BaseCmd {
    * @var
    * File path to tmp host file.
    */
-  private readonly tmpHostsFile: string
+  private readonly tmpHostsFile: string = this.config.cacheDir + '/etcHosts'
+  /**
+   * @var
+   * File path to tmp ssh config file.
+   */
+  private readonly tmpSSHConfigFile: string = this.config.cacheDir + '/sshConfig'
   /**
    * @var
    * Delimiter marker for managed entries.
@@ -49,7 +54,6 @@ export default class StartCmd extends BaseCmd {
   public constructor(argv: string[], config: any) {
     super(argv, config)
     this.ensureActiveComposeFile()
-    this.tmpHostsFile = this.config.cacheDir + '/etcHosts'
   }
 
   /**
@@ -58,7 +62,47 @@ export default class StartCmd extends BaseCmd {
   async run() {
     this.up()
     this.updateHostsFile()
-    this.ensureUid()
+    this.performStartTasks()
+  }
+  /**
+   * Match numeric user ids  with hosts.
+   */
+  protected ensureOwnership(containerName: string) {
+    let uid = 1000
+    let gid = 1000
+    if (this.config.platform === 'linux') {
+      uid = process.getuid()
+      gid = process.getgid()
+    }
+    ux.action.start('Ensuring file ownership')
+    execSync(this.dockerBin + ' exec ' + containerName + ' /bin/sh /opt/ce-dev-ownership.sh ' + uid.toString() + ' ' + gid.toString(), {stdio: 'inherit'})
+    ux.action.stop()
+  }
+  /**
+   * Generate SSH Config.
+   * @todo Change how we handle this, as it works only for one project running at a time.
+   */
+  protected generateSSHConfig(containerName: string) {
+    ux.action.start('Generate SSH config')
+    // Grab back existing file.
+    const existing = execSync(this.dockerBin + ' exec ' + containerName + ' cat /home/ce-dev/.ssh/config').toString()
+    let config: Array<string> = []
+    this.activeProjectInfo.ssh_hosts.forEach(host => {
+      let dest = '/dev/shm/' + host.host
+      let entry = [
+        'Host ' + host.host,
+        'User ' + host.user,
+        'IdentityFile ' + dest,
+        ''
+      ]
+      config.push(...entry)
+      execSync(this.dockerBin + ' cp ' + host.src_key + ' ' + containerName + ':' + '/tmp/' + host.host, {stdio: 'inherit'})
+      execSync(this.dockerBin + ' exec -t ' + containerName + ' mv /tmp/' + host.host + ' ' + dest, {stdio: 'inherit'})
+    })
+    fs.writeFile(this.tmpSSHConfigFile, existing + config.join('\n') + '\n', () => {
+      execSync(this.dockerBin + ' cp ' + this.tmpSSHConfigFile + ' ' + containerName + ':/home/ce-dev/.ssh/config', {stdio: 'inherit'})
+    })
+    ux.action.stop()
   }
 
   /**
@@ -143,20 +187,24 @@ export default class StartCmd extends BaseCmd {
     })
   }
 
-  private ensureUid() {
+  private performStartTasks() {
     const running = this.getProjectRunningContainersCeDev()
     if (running.length < 1) {
       return
     }
     running.forEach(containerName => {
       this.ensureOwnership(containerName)
-      if (this.activeProjectInfo.unison[containerName]) {
-        ux.action.start('Trigger Unison file synchronisation')
-        this.activeProjectInfo.unison[containerName].forEach(volume => {
-          execSync(this.dockerBin + ' exec ' + containerName + ' /bin/sh /opt/unison-startup.sh ' + volume.src + ' ' + volume.dest + ' ' + volume.ignore, {stdio: 'inherit'})
-        })
-        ux.action.stop()
-      }
+      this.triggerUnison(containerName)
+      this.generateSSHConfig(containerName)
     })
+  }
+  private triggerUnison(containerName: string) {
+    if (this.activeProjectInfo.unison[containerName]) {
+      ux.action.start('Trigger Unison file synchronisation')
+      this.activeProjectInfo.unison[containerName].forEach(volume => {
+        execSync(this.dockerBin + ' exec ' + containerName + ' /bin/sh /opt/unison-startup.sh ' + volume.src + ' ' + volume.dest + ' ' + volume.ignore, {stdio: 'inherit'})
+      })
+      ux.action.stop()
+    }
   }
 }

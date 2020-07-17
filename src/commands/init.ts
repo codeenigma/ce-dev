@@ -1,11 +1,10 @@
 import {flags} from '@oclif/command'
-
+import * as inquirer from 'inquirer'
+inquirer.registerPrompt('fuzzypath', require('inquirer-fuzzy-path'))
 import BaseCmd from '../base-cmd-abstract'
-import CeDevConfig from '../ce-dev-config-interface'
-import CeDevConfigService from '../ce-dev-config-service-interface'
+import UnisonVolumeContainer from '../ce-dev-project-config-unison-volume-interface'
+import ComposeConfig from '../compose-config-interface'
 import ComposeConfigService from '../compose-config-service-interface'
-import UnisonVolumeContainer from '../unison-volume-container-interface'
-
 export default class InitCmd extends BaseCmd {
   static description = 'Generates a docker-compose.yml file from a template'
   static examples = [
@@ -29,7 +28,7 @@ export default class InitCmd extends BaseCmd {
    * @var
    * Docker compose content parsed from yaml.
    */
-  private readonly composeConfig: CeDevConfig
+  private readonly composeConfig: ComposeConfig
 
   /**
    * @inheritdoc
@@ -41,12 +40,13 @@ export default class InitCmd extends BaseCmd {
     if (!this.composeTemplate) {
       this.composeTemplate = this.getPathFromRelative('ce-dev.compose.yml')
     }
-    this.composeConfig = this.LoadComposeConfig(this.composeTemplate) as CeDevConfig
+    this.composeConfig = this.LoadComposeConfig(this.composeTemplate) as ComposeConfig
   }
   /**
    * @inheritdoc
    */
   async run() {
+    this.generateProjectInfo()
     this.generateCompose()
     this.removePrivateProperties()
     this.writeYaml(this.activeComposeFilePath, this.composeConfig)
@@ -56,7 +56,6 @@ export default class InitCmd extends BaseCmd {
    * Alter parsed config to be written in actual compose file.
    */
   private generateCompose() {
-    this.generateProjectInfo()
     this.injectContainersNetworking()
     this.injectContainersSSH()
     this.injectContainersHostname()
@@ -77,7 +76,7 @@ export default class InitCmd extends BaseCmd {
       if (service['x-ce_dev'] instanceof Object === false) {
         continue
       }
-      if (service.expose instanceof Array === false) {
+      if (!service.expose) {
         service.expose = []
       }
       service.expose.push('22')
@@ -197,8 +196,69 @@ export default class InitCmd extends BaseCmd {
     if (this.composeConfig['x-ce_dev'].registry) {
       this.activeProjectInfo.registry = this.composeConfig['x-ce_dev'].registry
     }
+    this.activeProjectInfo.version = this.composeConfig['x-ce_dev'].version ? this.composeConfig['x-ce_dev'].version : '1.x'
+    this.activeProjectInfo.ssh_hosts = []
     this.saveActiveProjectInfo()
+    this.gatherConfig()
   }
+  /**
+   * Gather SSH hosts information.
+   */
+  private gatherConfig() {
+    if (!this.composeConfig['x-ce_dev'].ssh_hosts) {
+      return
+    }
+    let prompts: Array<inquirer.Question> = []
+    this.composeConfig['x-ce_dev'].ssh_hosts.forEach((hostname, index) => {
+      prompts.push(...this.gatherHostsSSHPrompt(hostname, index))
+    })
+    let config = this.activeProjectInfo.ssh_hosts
+    let hosts = this.composeConfig['x-ce_dev'].ssh_hosts
+    inquirer.prompt(prompts).then(
+      response => {
+        hosts.forEach((hostname, index) => {
+          config.push(
+            {
+              host: hostname,
+              user: response['user' + index],
+              src_key: response['key' + index]
+            }
+          )
+        })
+        this.saveActiveProjectInfo()
+      }).catch(
+        // @todo something sketchy going on with error handling.
+        // Surely me being stupid.
+        error => {
+          this.log(error)
+          this.exit(1)
+        })
+
+  }
+  /**
+   * Gather SSH hosts information recursively.
+   */
+  private gatherHostsSSHPrompt(host: string, index: number): Array<inquirer.Question> {
+    return [
+      {
+        name: 'user' + index,
+        message: 'Username to use for SSH host ' + host,
+        type: 'input',
+        default: this.UserConfig.ssh_user
+      },
+      {
+        name: 'key' + index,
+        message: 'Key to use for SSH host ' + host,
+        type: 'fuzzypath',
+        // @ts-ignore
+        // Can not autoregister plugins yet.
+        itemType: 'file',
+        rootPath: process.env.HOME + '/.ssh',
+        default: this.UserConfig.ssh_key
+      }
+    ]
+  }
+
   /**
    * Inject SysFs for systemd.
    */
@@ -259,9 +319,6 @@ export default class InitCmd extends BaseCmd {
   private injectUnisonVolumes() {
     for (let [serviceName, service] of Object.entries(this.composeConfig.services)) {
       if (service['x-ce_dev'] && service['x-ce_dev'].unison) {
-        if (!service.volumes) {
-          service.volumes = []
-        }
         this.injectUnisonVolume(serviceName, service)
       }
     }
@@ -269,9 +326,15 @@ export default class InitCmd extends BaseCmd {
   /**
    * Replace unison volume mounts.
    */
-  private injectUnisonVolume(serviceName: string, service: CeDevConfigService) {
+  private injectUnisonVolume(serviceName: string, service: ComposeConfigService) {
+    if (!service['x-ce_dev'] || !service['x-ce_dev'].unison) {
+      return
+    }
     service['x-ce_dev'].unison.forEach(volume => {
       if (volume.target_platforms.indexOf(this.config.platform) >= 0) {
+        if (!service.volumes) {
+          service.volumes = []
+        }
         service.volumes.push([volume.src, '/.x-ce-dev' + volume.dest, 'delegated'].join(':'))
         this.activeProjectInfo.unison[serviceName] = []
         let volumeConfig: UnisonVolumeContainer = {
@@ -288,6 +351,9 @@ export default class InitCmd extends BaseCmd {
         volumeConfig.ignore = ignoreList.join(' ')
         this.activeProjectInfo.unison[serviceName].push(volumeConfig)
       } else {
+        if (!service.volumes) {
+          service.volumes = []
+        }
         service.volumes.push([volume.src, volume.dest, 'delegated'].join(':'))
       }
     })

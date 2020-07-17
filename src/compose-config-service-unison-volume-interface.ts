@@ -2,7 +2,7 @@
  * Describes unison mount element.
  */
 
-export default interface UnisonVolume {
+export default interface ComposeConfigServiceUnisonVolume {
   'target_platforms': Array<string>,
   'src': string,
   'dest': string,

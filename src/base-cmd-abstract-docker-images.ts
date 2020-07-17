@@ -2,7 +2,7 @@ import {flags} from '@oclif/command'
 import {execSync} from 'child_process'
 
 import BaseCmd from './base-cmd-abstract'
-import CeDevConfig from './ce-dev-config-interface'
+import ComposeConfig from './compose-config-interface'
 
 export default abstract class DockerImagesCmd extends BaseCmd {
   static flags = {
@@ -36,7 +36,7 @@ export default abstract class DockerImagesCmd extends BaseCmd {
    * @var
    * Docker compose content parsed from yaml.
    */
-  protected composeConfig: CeDevConfig
+  protected composeConfig: ComposeConfig
 
   /**
    * @var
@@ -63,7 +63,7 @@ export default abstract class DockerImagesCmd extends BaseCmd {
     super(argv, config)
     const {flags} = this.parse(DockerImagesCmd)
     this.composeTemplate = this.getPathFromRelative(flags.template)
-    this.composeConfig = this.LoadComposeConfig(this.composeTemplate) as CeDevConfig
+    this.composeConfig = this.LoadComposeConfig(this.composeTemplate)
     if (flags.username) {
       this.dockerUsername = flags.username
     }

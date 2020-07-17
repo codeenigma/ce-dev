@@ -2,10 +2,10 @@ import {Command} from '@oclif/command'
 import {execSync} from 'child_process'
 import ux from 'cli-ux'
 
-import CeDevComposeConfig from './ce-dev-config-interface'
 import CeDevControllerManager from './ce-dev-controller-manager'
 import CeDevProjectConfig from './ce-dev-project-config-interface'
 import ComposeConfig from './compose-config-interface'
+import UserConfig from './user-config-interface'
 const {spawnSync} = require('child_process')
 const fs = require('fs')
 const fspath = require('path')
@@ -52,7 +52,26 @@ export default abstract class BaseCmd extends Command {
     provision: [],
     deploy: [],
     urls: [],
-    unison: {}
+    unison: {},
+    ssh_hosts: [],
+    version: '1.x'
+  }
+
+  /**
+   * @var
+   * Path to the user config file.
+   */
+  protected userConfigFilePath = fspath.resolve(this.config.configDir + '/preferences-1.x.yml')
+
+  /**
+   * @var
+   * User preferences.
+   */
+  protected UserConfig: UserConfig = {
+    docker_bin: this.config.platform === 'linux' ? 'sudo docker' : 'docker',
+    docker_compose_bin: this.config.platform === 'linux' ? 'sudo docker-compose' : 'docker-compose',
+    ssh_user: process.env.USER as string,
+    ssh_key: process.env.HOME as string + '/.ssh/id_rsa.pub'
   }
 
   /**
@@ -77,7 +96,6 @@ export default abstract class BaseCmd extends Command {
    */
   public constructor(argv: string[], config: any) {
     super(argv, config)
-    this.rootDir = process.cwd()
     let gitRoot = spawnSync('git', ['rev-parse', '--show-toplevel']).stdout.toString().trim()
     if (fs.existsSync(gitRoot) && fs.lstatSync(gitRoot).isDirectory()) {
       this.rootDir = gitRoot
@@ -85,12 +103,6 @@ export default abstract class BaseCmd extends Command {
     let ceDevDir = this.rootDir + '/ce-dev'
     if (fs.existsSync(ceDevDir) && fs.lstatSync(ceDevDir).isDirectory()) {
       this.ceDevDir = ceDevDir
-    }
-    if (this.config.platform === 'linux') {
-      this.dockerBin = 'sudo docker'
-    }
-    if (this.config.platform === 'linux') {
-      this.dockerComposeBin = 'sudo docker-compose'
     }
     this.activeComposeFilePath = this.ceDevDir + '/docker-compose.yml'
     // Create data dir if needed.
@@ -102,6 +114,14 @@ export default abstract class BaseCmd extends Command {
     if (fs.existsSync(this.activeProjectInfoFilePath)) {
       this.activeProjectInfo = this.parseYaml(this.activeProjectInfoFilePath)
     }
+    if (fs.existsSync(this.activeProjectInfoFilePath)) {
+      this.activeProjectInfo = this.parseYaml(this.activeProjectInfoFilePath)
+    }
+    if (fs.existsSync(this.userConfigFilePath)) {
+      this.UserConfig = this.parseYaml(this.userConfigFilePath)
+    }
+    this.dockerBin = this.UserConfig.docker_bin
+    this.dockerComposeBin = this.UserConfig.docker_compose_bin
     this.dockerRegistry = this.activeProjectInfo.registry
     this.controllerManager = new CeDevControllerManager(this.dockerBin, this.dockerComposeBin, this.config)
     this.ensureController()
@@ -156,6 +176,9 @@ export default abstract class BaseCmd extends Command {
 
   protected saveActiveProjectInfo() {
     this.writeYaml(this.activeProjectInfoFilePath, this.activeProjectInfo)
+  }
+  protected saveUserConfig() {
+    this.writeYaml(this.userConfigFilePath, this.UserConfig)
   }
 
   /**
@@ -216,7 +239,7 @@ export default abstract class BaseCmd extends Command {
    * @param file
    * Path to a file to parse
    */
-  protected LoadComposeConfig(file: string): CeDevComposeConfig | ComposeConfig {
+  protected LoadComposeConfig(file: string): ComposeConfig {
     //@todo Check config is valid.
     let composeConfig = this.parseYaml(file) as ComposeConfig
     return composeConfig
@@ -267,21 +290,6 @@ export default abstract class BaseCmd extends Command {
       this.error('No active docker-compose.yml file found. You must generate one first with `ce-dev init`.')
       this.exit(1)
     }
-  }
-
-  /**
-   * Match numeric user ids with hosts.
-   */
-  protected ensureOwnership(containerName: string) {
-    let uid = 1000
-    let gid = 1000
-    if (this.config.platform === 'linux') {
-      uid = process.getuid()
-      gid = process.getgid()
-    }
-    ux.action.start('Ensuring file ownership')
-    execSync(this.dockerBin + ' exec ' + containerName + ' /bin/sh /opt/ce-dev-ownership.sh ' + uid.toString() + ' ' + gid.toString(), {stdio: 'inherit'})
-    ux.action.stop()
   }
 
 }

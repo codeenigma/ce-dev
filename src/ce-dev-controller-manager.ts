@@ -1,7 +1,7 @@
 import {IConfig} from '@oclif/config'
 import {execSync} from 'child_process'
 
-import ComposeConfig from './compose-config-interface'
+import ComposeConfigBare from './compose-config-bare-interface'
 
 const fs = require('fs')
 const fspath = require('path')
@@ -112,7 +112,7 @@ export default class CeDevControllerManager {
     fs.writeFileSync(file.trim(), content)
   }
 
-  private getControllerConfig(): ComposeConfig {
+  private getControllerConfig(): ComposeConfigBare {
     return {
       version: '3.7',
       services: {
@@ -152,7 +152,7 @@ export default class CeDevControllerManager {
     }
   }
 
-  private getNetworkConfig(): ComposeConfig {
+  private getNetworkConfig(): ComposeConfigBare {
     return {
       version: '3.7',
       networks: {

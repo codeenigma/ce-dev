@@ -3,7 +3,7 @@ import {execSync} from 'child_process'
 import ux from 'cli-ux'
 
 import BaseCmd from '../base-cmd-abstract'
-import CeDevConfig from '../ce-dev-config-interface'
+import ComposeConfig from '../compose-config-interface'
 
 const fspath = require('path')
 export default class BuildCmd extends BaseCmd {
@@ -39,7 +39,7 @@ export default class BuildCmd extends BaseCmd {
    * @var
    * Docker compose content parsed from yaml.
    */
-  private readonly composeConfig: CeDevConfig
+  private readonly composeConfig: ComposeConfig
 
   /**
    * @inheritdoc
@@ -50,7 +50,7 @@ export default class BuildCmd extends BaseCmd {
     this.composeTemplate = this.getPathFromRelative(flags.template)
     //@todo normalize path for destination.
     this.composeDest = fspath.join(this.ceDevDir, flags.destination)
-    this.composeConfig = this.LoadComposeConfig(this.composeTemplate) as CeDevConfig
+    this.composeConfig = this.LoadComposeConfig(this.composeTemplate) as ComposeConfig
   }
   /**
    * @inheritdoc

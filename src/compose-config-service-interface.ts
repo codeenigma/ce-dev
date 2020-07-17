@@ -1,4 +1,4 @@
-
+import ComposeConfigServiceCeDev from './compose-config-service-ce-dev-interface'
 /**
  * Describes a docker compose "service" element.
  */
@@ -13,5 +13,6 @@ export default interface ComposeConfigService {
   'hostname'?: string
   'extra_hosts'?: Array<string>
   'cap_add'?: Array<string>
-  'command'?: Array<string>
+  'command'?: Array<string>,
+  'x-ce_dev'?: ComposeConfigServiceCeDev
 }
