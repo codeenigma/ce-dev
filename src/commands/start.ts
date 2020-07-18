@@ -81,7 +81,7 @@ export default class StartCmd extends BaseCmd {
 
   private ensureAliases(): void {
     if (this.config.platform !== 'darwin') {
-      // return
+      return
     }
     if (!this.composeConfig.services) {
       return
