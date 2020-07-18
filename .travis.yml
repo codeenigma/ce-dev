@@ -16,7 +16,6 @@ jobs:
   - stage: Lint
     os: linux
     script: yarn eslint src
-    if: branch != 1.x
   - stage: Docker Images (build)
     os: linux
     script: /bin/sh docker-images/export.sh latest
