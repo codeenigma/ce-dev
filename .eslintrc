@@ -10,6 +10,7 @@
     "jsdoc/require-returns-type": 0,
     "sort-imports": 1,
     "@typescript-eslint/explicit-function-return-type": 1,
-    "@typescript-eslint/ban-ts-ignore": 0
+    "@typescript-eslint/ban-ts-ignore": 0,
+    "no-console": 1
   }
 }

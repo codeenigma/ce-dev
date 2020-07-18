@@ -85,6 +85,17 @@ export default class IPManager {
   }
 
   /**
+   * Mac OS only. Creates a loopback alias.
+   *
+   * @param ip
+   * IP to create the alias with.
+   */
+  public createInterfaceAlias(ip: string): void {
+    // @todo check for existing.
+    execSync('sudo ifconfig lo0 alias ' + ip)
+  }
+
+  /**
    * Gather base subnet.
    *
    * @returns

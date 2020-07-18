@@ -126,6 +126,7 @@ export default class InitCmd extends BaseCmd {
   private injectContainersNetworking(): void {
     const ipManager = new IPManager(this.dockerBin, this.config)
     for (const service of Object.values(this.composeConfig.services)) {
+      const ip = ipManager.getAvailableIP()
       // Manually configured, we do nothing.
       if (service.networks instanceof Object) {
         continue
@@ -139,11 +140,11 @@ export default class InitCmd extends BaseCmd {
       service.networks = {
         ce_dev: {
           aliases: host_aliases,
-          ipv4_address: ipManager.getAvailableIP(),
+          ipv4_address: ip,
         },
       }
       if (this.config.platform === 'darwin') {
-        this.assignContainerPortForwarding(service)
+        this.assignContainerPortForwarding(service, ip)
       }
     }
     // Add general network.
@@ -164,15 +165,16 @@ export default class InitCmd extends BaseCmd {
    *
    * @param service
    * Service definition.
-   *
+   * @param ip
+   * IP to associate with.
    */
-  private assignContainerPortForwarding(service: ComposeConfigService): void {
+  private assignContainerPortForwarding(service: ComposeConfigService, ip: string): void {
     if (Array.isArray(service.expose)) {
       if (Array.isArray(service.ports) === false) {
         service.ports = []
       }
       service.expose.forEach(port => {
-        service.ports?.push([port, port].join(':'))
+        service.ports?.push([ip, port, port].join(':'))
       })
       service.ports = [...new Set(service.ports)]
     }

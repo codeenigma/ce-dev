@@ -1,8 +1,9 @@
 import BaseCmd from '../base-cmd-abstract'
+import ComposeConfigBare from '../compose-config-bare-interface'
+import IPManager from '../ip-manager'
 import {execSync} from 'child_process'
 import {flags} from '@oclif/command'
 import ux from 'cli-ux'
-
 const fs = require('fs')
 const readline = require('readline')
 
@@ -54,20 +55,45 @@ export default class StartCmd extends BaseCmd {
   private readonly delimiterEnd = '######### CE-DEV ### END ### DO NOT EDIT MANUALLY ABOVE'
 
   /**
+   * @member
+   * Docker compose content parsed from yaml.
+   */
+  private readonly composeConfig: ComposeConfigBare
+
+  /**
    * @inheritdoc
    */
   public constructor(argv: string[], config: any) {
     super(argv, config)
     this.ensureActiveComposeFile()
+    this.composeConfig = this.loadComposeConfig(this.activeComposeFilePath)
   }
 
   /**
    * @inheritdoc
    */
   async run(): Promise<any> {
+    this.ensureAliases()
     this.up()
     this.updateHostsFile()
     this.performStartTasks()
+  }
+
+  private ensureAliases(): void {
+    if (this.config.platform !== 'darwin') {
+      // return
+    }
+    if (!this.composeConfig.services) {
+      return
+    }
+    const ipManager = new IPManager(this.dockerBin, this.config)
+    for (const service of Object.values(this.composeConfig.services)) {
+      if (service.networks && Object.prototype.hasOwnProperty.call(service.networks, 'ce_dev')) {
+        // @ts-ignore
+        const ip = service.networks.ce_dev.ipv4_address
+        ipManager.createInterfaceAlias(ip)
+      }
+    }
   }
 
   /**
@@ -76,7 +102,7 @@ export default class StartCmd extends BaseCmd {
    * @param containerName
    * Name of a container.
    */
-  protected ensureOwnership(containerName: string): void {
+  private ensureOwnership(containerName: string): void {
     let uid = 1000
     let gid = 1000
     if (this.config.platform === 'linux') {
@@ -94,7 +120,7 @@ export default class StartCmd extends BaseCmd {
    * @param containerName
    * Container name.
    */
-  protected generateSSHConfig(containerName: string): void {
+  private generateSSHConfig(containerName: string): void {
     ux.action.start('Generate SSH config')
     // Grab back existing file.
     const existing = execSync(this.dockerBin + ' exec ' + containerName + ' cat /home/ce-dev/.ssh/config').toString()
@@ -146,24 +172,18 @@ export default class StartCmd extends BaseCmd {
    * Gather running containers.
    */
   private gatherRunningContainers(): void {
-    const running = execSync(this.dockerBin + ' ps --quiet').toString()
+    const running = execSync(this.dockerBin + ' ps -q --filter network=ce_dev').toString()
     const runningContainers = running.split('\n').filter(item => {
       return (item.length)
     })
     runningContainers.forEach(containerName => {
-      let ip = '127.0.0.1'
-      if (this.config.platform === 'linux') {
-        ip = execSync(this.dockerBin + ' inspect ' + containerName + ' --format {{.NetworkSettings.Networks.ce_dev.IPAddress}}').toString().trim()
-      }
-      // @todo Need a better check.
-      if (ip !== '<no value>') {
-        const aliasesString = execSync(this.dockerBin + ' inspect ' + containerName + ' --format={{.NetworkSettings.Networks.ce_dev.Aliases}}').toString().trim()
-        const aliases = aliasesString.split(/[[\] ]/).filter(Boolean)
-        console.log(aliases)
-        aliases.forEach(alias => {
-          this.runningHosts.set(alias.toString(), ip)
-        })
-      }
+      const ip = execSync(this.dockerBin + ' inspect ' + containerName + ' --format {{.NetworkSettings.Networks.ce_dev.IPAddress}}').toString().trim()
+      const aliasesString = execSync(this.dockerBin + ' inspect ' + containerName + ' --format={{.NetworkSettings.Networks.ce_dev.Aliases}}').toString().trim()
+      const aliases = aliasesString.split(/[[\] ]/).filter(Boolean)
+
+      aliases.forEach(alias => {
+        this.runningHosts.set(alias.toString(), ip)
+      })
     })
   }
 
