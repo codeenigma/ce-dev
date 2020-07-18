@@ -3,13 +3,17 @@ import AnsibleCmd from '../base-cmd-ansible-abstract'
 
 export default class DeployCmd extends AnsibleCmd {
   static description = 'Setup an app with Ansible playbooks.'
+
   static examples = [
     '$ ce-dev deploy example-app',
   ]
 
   protected ansibleProjectPlaybooksPath = '/home/ce-dev/projects-playbooks/deploy'
+
   protected ansibleScriptsPath = '/home/ce-dev/ce-deploy'
+
   protected ansibleScript = 'scripts/deploy.sh'
+
   /**
    * @inheritdoc
    */
@@ -17,6 +21,7 @@ export default class DeployCmd extends AnsibleCmd {
     super(argv, config)
     this.ansiblePaths = this.activeProjectInfo.deploy
   }
+
   protected getCommandParameters(ansiblePath: string): string {
     const workspace = this.ansibleProjectPlaybooksPath
     const repo = this.activeProjectInfo.project_name

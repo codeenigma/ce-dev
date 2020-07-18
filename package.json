@@ -20,12 +20,17 @@
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.22.2",
-    "@oclif/tslint": "^3.1.1",
     "@types/inquirer": "^6.5.0",
     "@types/node": "^10.17.21",
+    "@typescript-eslint/parser": "^3.6.1",
+    "eslint": "^7.4.0",
+    "eslint-config-oclif": "^3.1.0",
+    "eslint-config-oclif-typescript": "^0.2.0",
+    "eslint-plugin-jsdoc": "^29.2.0",
+    "eslint-plugin-oclif": "^0.1.0",
     "globby": "^10.0.2",
+    "prettier": "^2.0.5",
     "ts-node": "^8.10.1",
-    "tslint": "^5.20.1",
     "typescript": "^3.8.3"
   },
   "engines": {

@@ -3,7 +3,7 @@
  */
 
 export default interface CeDevProjectConfigHostSSH {
-  'host': string,
-  'user': string,
-  'src_key': string
+  'host': string;
+  'user': string;
+  'src_key': string;
 }

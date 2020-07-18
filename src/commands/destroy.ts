@@ -7,15 +7,17 @@ import ComposeConfig from '../compose-config-interface'
 
 export default class DestroyCmd extends BaseCmd {
   static description = 'Destroy project\'s containers using docker-compose kill.'
+
   static examples = [
     '$ ce-dev destroy',
   ]
+
   static flags = {
-    help: flags.help({char: 'h'})
+    help: flags.help({char: 'h'}),
   }
 
   /**
-   * @var
+   * @member
    * Docker compose content parsed from yaml.
    */
   private readonly composeConfig: ComposeConfig

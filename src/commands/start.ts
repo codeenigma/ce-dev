@@ -9,41 +9,47 @@ const readline = require('readline')
 
 export default class StartCmd extends BaseCmd {
   static description = 'Spin up containers using docker-compose and update /etc/hosts file.'
+
   static examples = [
     '$ ce-dev start',
   ]
+
   static flags = {
-    help: flags.help({char: 'h'})
+    help: flags.help({char: 'h'}),
   }
 
   /**
-   * @var
+   * @member
    * Hostnames/IP pairs.
    */
   private readonly runningHosts: Map<string, string> = new Map()
+
   /**
-   * @var
+   * @member
    * File path to host file.
    */
   private readonly hostsFile = '/etc/hosts'
 
   /**
-   * @var
+   * @member
    * File path to tmp host file.
    */
   private readonly tmpHostsFile: string = this.config.cacheDir + '/etcHosts'
+
   /**
-   * @var
+   * @member
    * File path to tmp ssh config file.
    */
   private readonly tmpSSHConfigFile: string = this.config.cacheDir + '/sshConfig'
+
   /**
-   * @var
+   * @member
    * Delimiter marker for managed entries.
    */
   private readonly delimiterStart = '######### CE-DEV ### START ### DO NOT EDIT MANUALLY BELOW'
+
   /**
-   * @var
+   * @member
    * Delimiter marker for managed entries.
    */
   private readonly delimiterEnd = '######### CE-DEV ### END ### DO NOT EDIT MANUALLY ABOVE'
@@ -64,8 +70,11 @@ export default class StartCmd extends BaseCmd {
     this.updateHostsFile()
     this.performStartTasks()
   }
+
   /**
    * Match numeric user ids  with hosts.
+   *
+   * @param containerName
    */
   protected ensureOwnership(containerName: string) {
     let uid = 1000
@@ -78,22 +87,25 @@ export default class StartCmd extends BaseCmd {
     execSync(this.dockerBin + ' exec ' + containerName + ' /bin/sh /opt/ce-dev-ownership.sh ' + uid.toString() + ' ' + gid.toString(), {stdio: 'inherit'})
     ux.action.stop()
   }
+
   /**
    * Generate SSH Config.
+   *
+   * @param containerName
    * @todo Change how we handle this, as it works only for one project running at a time.
    */
   protected generateSSHConfig(containerName: string) {
     ux.action.start('Generate SSH config')
     // Grab back existing file.
     const existing = execSync(this.dockerBin + ' exec ' + containerName + ' cat /home/ce-dev/.ssh/config').toString()
-    let config: Array<string> = []
+    const config: Array<string> = []
     this.activeProjectInfo.ssh_hosts.forEach(host => {
-      let dest = '/dev/shm/' + host.host
-      let entry = [
+      const dest = '/dev/shm/' + host.host
+      const entry = [
         'Host ' + host.host,
         'User ' + host.user,
         'IdentityFile ' + dest,
-        ''
+        '',
       ]
       config.push(...entry)
       execSync(this.dockerBin + ' cp ' + host.src_key + ' ' + containerName + ':' + '/tmp/' + host.host, {stdio: 'inherit'})
@@ -109,7 +121,7 @@ export default class StartCmd extends BaseCmd {
    * Wrapper around docker-compose.
    */
   private up() {
-    let running = this.getProjectRunningContainers()
+    const running = this.getProjectRunningContainers()
     if (running.length) {
       ux.action.start('Project containers are already running, stopping.')
       execSync(this.dockerComposeBin + ' -p ' + this.activeProjectInfo.project_name + ' stop', {cwd: this.ceDevDir, stdio: 'inherit'})
@@ -141,19 +153,19 @@ export default class StartCmd extends BaseCmd {
     runningContainers.forEach(containerName => {
       let ip = '127.0.0.1'
       if (this.config.platform === 'linux') {
-        ip = execSync(this.dockerBin + ' inspect ' + containerName + ' --format={{.NetworkSettings.Networks.ce_dev.IPAddress}}').toString().trim()
+        ip = execSync(this.dockerBin + ' inspect ' + containerName + ' --format {{.NetworkSettings.Networks.ce_dev.IPAddress}}').toString().trim()
       }
-      //@todo Need a better check.
+      // @todo Need a better check.
       if (ip !== '<no value>') {
-        let aliasesString = execSync(this.dockerBin + ' inspect ' + containerName + ' --format={{.NetworkSettings.Networks.ce_dev.Aliases}}').toString().trim()
-        let aliases = aliasesString.split(/[\[\]\ ]/).filter(Boolean)
+        const aliasesString = execSync(this.dockerBin + ' inspect ' + containerName + ' --format={{.NetworkSettings.Networks.ce_dev.Aliases}}').toString().trim()
+        const aliases = aliasesString.split(/[\[\]\ ]/).filter(Boolean)
         aliases.forEach(alias => {
           this.runningHosts.set(alias.toString(), ip)
         })
       }
     })
-
   }
+
   /**
    * Write hosts information.
    */
@@ -162,7 +174,7 @@ export default class StartCmd extends BaseCmd {
     const lines: Array<string> = []
     const lineReader = readline.createInterface({
       input: fs.createReadStream(this.hostsFile),
-      crlfDelay: Infinity
+      crlfDelay: Infinity,
     })
     lineReader.on('line', (line: string) => {
       if (line.indexOf(this.delimiterStart) === 0) {
@@ -189,7 +201,7 @@ export default class StartCmd extends BaseCmd {
 
   private performStartTasks() {
     const running = this.getProjectRunningContainersCeDev()
-    if (running.length < 1) {
+    if (running.length === 0) {
       return
     }
     running.forEach(containerName => {
@@ -198,6 +210,7 @@ export default class StartCmd extends BaseCmd {
       this.generateSSHConfig(containerName)
     })
   }
+
   private triggerUnison(containerName: string) {
     if (this.activeProjectInfo.unison[containerName]) {
       ux.action.start('Trigger Unison file synchronisation')

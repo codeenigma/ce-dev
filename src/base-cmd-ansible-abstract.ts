@@ -8,36 +8,40 @@ const fspath = require('path')
 const fs = require('fs')
 
 export default abstract class AnsibleCmd extends BaseCmd {
-    /**
-     * @var
-     * Operation, either provision or deploy.
-     */
-  protected ansiblePaths: Array<string> = []
-    /**
-     * @var
-     * Path on the container to main scripts.
-     */
-  protected ansibleScriptsPath = ''
-    /**
-     * @var
-     * Path on the container to playbooks.
-     */
-  protected ansibleProjectPlaybooksPath = ''
   /**
-   * @var
+   * @member
+   * Operation, either provision or deploy.
+   */
+  protected ansiblePaths: Array<string> = []
+
+  /**
+   * @member
+   * Path on the container to main scripts.
+   */
+  protected ansibleScriptsPath = ''
+
+  /**
+   * @member
+   * Path on the container to playbooks.
+   */
+  protected ansibleProjectPlaybooksPath = ''
+
+  /**
+   * @member
    * Relative path to the script to call.
    */
   protected ansibleScript = ''
+
   /**
-   * @var
+   * @member
    * Docker compose content parsed from yaml.
    */
   private readonly composeConfig: ComposeConfig
 
-    /**
-     * @var
-     * File path to tmp host file.
-     */
+  /**
+   * @member
+   * File path to tmp host file.
+   */
   private readonly tmpHostsFile: string = ''
 
   /**
@@ -57,6 +61,7 @@ export default abstract class AnsibleCmd extends BaseCmd {
     this.populateAnsibleHosts()
     this.play()
   }
+
   /**
    *
    */
@@ -69,7 +74,7 @@ export default abstract class AnsibleCmd extends BaseCmd {
       execSync(this.dockerBin + ' cp ' + src + ' ce_dev_controller:' + dest)
       const script = fspath.join(this.ansibleScriptsPath, this.ansibleScript)
       const cmd = script + ' ' + this.getCommandParameters(ansiblePath)
-      execSync(this.dockerBin + ' exec -t --workdir ' + this.ansibleScriptsPath + ' --user ce-dev ce_dev_controller ' + cmd , {stdio: 'inherit'})
+      execSync(this.dockerBin + ' exec -t --workdir ' + this.ansibleScriptsPath + ' --user ce-dev ce_dev_controller ' + cmd, {stdio: 'inherit'})
     })
   }
 
@@ -89,5 +94,4 @@ export default abstract class AnsibleCmd extends BaseCmd {
       execSync(this.dockerBin + ' exec -t ce_dev_controller chown -R ce-dev:ce-dev ' + this.ansibleScriptsPath + '/hosts/hosts')
     }
   }
-
 }

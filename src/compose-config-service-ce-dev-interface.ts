@@ -4,6 +4,6 @@ import ComposeConfigServiceUnisonVolume from './compose-config-service-unison-vo
  */
 
 export default interface ComposeConfigServiceCeDev {
-  'host_aliases': [string] | []
-  'unison': Array<ComposeConfigServiceUnisonVolume>
+  'host_aliases': [string] | [];
+  'unison': Array<ComposeConfigServiceUnisonVolume>;
 }

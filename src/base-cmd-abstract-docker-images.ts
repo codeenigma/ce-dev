@@ -10,7 +10,7 @@ export default abstract class DockerImagesCmd extends BaseCmd {
     template: flags.string({
       char: 't',
       description: 'Path to a docker-compose template file, relative to the project root. WARNING: this must match the original one the project was constructed with.',
-      default: 'ce-dev.compose.prebuilt.yml'
+      default: 'ce-dev.compose.prebuilt.yml',
     }),
     username: flags.string({
       char: 'u',
@@ -23,35 +23,35 @@ export default abstract class DockerImagesCmd extends BaseCmd {
     anonymous: flags.boolean({
       char: 'a',
       description: 'Do not prompt for login credentials.',
-    })
+    }),
   }
 
   /**
-   * @var
+   * @member
    * Absolute path to the Compose file template.
    */
   protected composeTemplate = ''
 
   /**
-   * @var
+   * @member
    * Docker compose content parsed from yaml.
    */
   protected composeConfig: ComposeConfig
 
   /**
-   * @var
+   * @member
    * Docker repository username.
    */
   protected dockerUsername = ''
 
   /**
-   * @var
+   * @member
    * Docker repository password.
    */
   protected dockerPassword = ''
 
   /**
-   * @var
+   * @member
    * Wether to prompt for a login.
    */
   protected dockerLogin = true
@@ -89,5 +89,4 @@ export default abstract class DockerImagesCmd extends BaseCmd {
     }
     execSync(cmd, {stdio: 'inherit'})
   }
-
 }

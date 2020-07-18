@@ -1,0 +1,15 @@
+{
+  "extends": [
+    "oclif",
+    "oclif-typescript",
+    "plugin:jsdoc/recommended"
+  ],
+  "rules": {
+    "valid-jsdoc": 0,
+    "jsdoc/require-param-type": 0,
+    "jsdoc/require-returns-type": 0,
+    "sort-imports": 1,
+    "@typescript-eslint/explicit-function-return-type": 1,
+    "@typescript-eslint/ban-ts-ignore": 0
+  }
+}

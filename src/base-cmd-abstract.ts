@@ -1,49 +1,55 @@
+import CeDevControllerManager from './controller-manager'
+import CeDevProjectConfig from './ce-dev-project-config-interface'
 import {Command} from '@oclif/command'
+import ComposeConfig from './compose-config-interface'
+import UserConfig from './user-config-interface'
+import YamlParser from './yaml-parser'
 import {execSync} from 'child_process'
 import ux from 'cli-ux'
 
-import CeDevControllerManager from './ce-dev-controller-manager'
-import CeDevProjectConfig from './ce-dev-project-config-interface'
-import ComposeConfig from './compose-config-interface'
-import UserConfig from './user-config-interface'
 const {spawnSync} = require('child_process')
 const fs = require('fs')
 const fspath = require('path')
-const yaml = require('js-yaml')
 
 export default abstract class BaseCmd extends Command {
   /**
-   * @var
+   * @member
    * Project root
    */
   protected rootDir: string = process.cwd()
+
   /**
-   * @var
+   * @member
    * Inner ce-dev dir.
    */
   protected ceDevDir = ''
+
   /**
-   * @var
+   * @member
    * Docker executable path.
    */
   protected dockerBin = 'docker'
+
   /**
-   * @var
+   * @member
    * Docker-compose executable path.
    */
   protected dockerComposeBin = 'docker-compose'
+
   /**
-   * @var
+   * @member
    * Path to the active docker-compose.yml file.
    */
   protected activeComposeFilePath = ''
+
   /**
-   * @var
+   * @member
    * Path to the active ansible info file.
    */
   protected activeProjectInfoFilePath = ''
+
   /**
-   * @var
+   * @member
    * Project info.
    */
   protected activeProjectInfo: CeDevProjectConfig = {
@@ -54,39 +60,45 @@ export default abstract class BaseCmd extends Command {
     urls: [],
     unison: {},
     ssh_hosts: [],
-    version: '1.x'
+    version: '1.x',
   }
 
   /**
-   * @var
+   * @member
    * Path to the user config file.
    */
-  protected userConfigFilePath = fspath.resolve(this.config.configDir + '/preferences-1.x.yml')
+  protected userConfigFilePath = fspath.resolve(
+    this.config.configDir + '/preferences-1.x.yml',
+  )
 
   /**
-   * @var
+   * @member
    * User preferences.
    */
   protected UserConfig: UserConfig = {
     docker_bin: this.config.platform === 'linux' ? 'sudo docker' : 'docker',
-    docker_compose_bin: this.config.platform === 'linux' ? 'sudo docker-compose' : 'docker-compose',
+    docker_compose_bin:
+      this.config.platform === 'linux' ?
+        'sudo docker-compose' :
+        'docker-compose',
     ssh_user: process.env.USER as string,
-    ssh_key: process.env.HOME as string + '/.ssh/id_rsa.pub'
+    ssh_key: (process.env.HOME as string) + '/.ssh/id_rsa',
   }
 
   /**
-   * @var
+   * @member
    * Docker repository to use.
    */
   protected dockerRegistry = ''
+
   /**
-   * @var
+   * @member
    * Network range.
    */
   protected network = ''
 
   /**
-   * @var
+   * @member
    * Docker compose content.
    */
   private readonly controllerManager: CeDevControllerManager
@@ -96,21 +108,25 @@ export default abstract class BaseCmd extends Command {
    */
   public constructor(argv: string[], config: any) {
     super(argv, config)
-    let gitRoot = spawnSync('git', ['rev-parse', '--show-toplevel']).stdout.toString().trim()
+    const gitRoot = spawnSync('git', ['rev-parse', '--show-toplevel'])
+    .stdout.toString()
+    .trim()
     if (fs.existsSync(gitRoot) && fs.lstatSync(gitRoot).isDirectory()) {
       this.rootDir = gitRoot
     }
-    let ceDevDir = this.rootDir + '/ce-dev'
+    const ceDevDir = this.rootDir + '/ce-dev'
     if (fs.existsSync(ceDevDir) && fs.lstatSync(ceDevDir).isDirectory()) {
       this.ceDevDir = ceDevDir
     }
     this.activeComposeFilePath = this.ceDevDir + '/docker-compose.yml'
     // Create data dir if needed.
-    let config_path = fspath.resolve(this.config.dataDir + '/' + this.rootDir)
+    const config_path = fspath.resolve(this.config.dataDir + '/' + this.rootDir)
     if (fs.existsSync(config_path) === false) {
       fs.mkdirSync(config_path, {recursive: true})
     }
-    this.activeProjectInfoFilePath = fspath.resolve(config_path + '/project.yml')
+    this.activeProjectInfoFilePath = fspath.resolve(
+      config_path + '/project.yml',
+    )
     if (fs.existsSync(this.activeProjectInfoFilePath)) {
       this.activeProjectInfo = this.parseYaml(this.activeProjectInfoFilePath)
     }
@@ -123,11 +139,15 @@ export default abstract class BaseCmd extends Command {
     this.dockerBin = this.UserConfig.docker_bin
     this.dockerComposeBin = this.UserConfig.docker_compose_bin
     this.dockerRegistry = this.activeProjectInfo.registry
-    this.controllerManager = new CeDevControllerManager(this.dockerBin, this.dockerComposeBin, this.config)
+    this.controllerManager = new CeDevControllerManager(
+      this.dockerBin,
+      this.dockerComposeBin,
+      this.config,
+    )
     this.ensureController()
   }
 
-  protected ensureController() {
+  protected ensureController(): void {
     if (this.controllerManager.networkExists() === false) {
       this.log('Creating private network...')
       this.controllerManager.networkStart()
@@ -140,33 +160,38 @@ export default abstract class BaseCmd extends Command {
 
   /**
    * Stop the global controller container.
+   *
    */
-  protected stopControllerContainer() {
+  protected stopControllerContainer(): void {
     ux.action.start('Stopping controller container')
     this.controllerManager.controllerStop()
     ux.action.stop()
   }
+
   /**
    * Pull controller latest image.
+   *
    */
-  protected pullControllerContainer() {
+  protected pullControllerContainer(): void {
     this.controllerManager.pullImage()
   }
 
   /**
    * Try to "fix" relative paths based on git repo root.
+   *
    * @param target Relative (or absolute) path to a file.
+   * @returns string
    */
   protected getPathFromRelative(target: string): string {
     const paths = [
       target,
       process.cwd() + '/' + target,
       this.rootDir + '/' + target,
-      this.ceDevDir + '/' + target
+      this.ceDevDir + '/' + target,
     ]
     let exists = ''
     paths.forEach(path => {
-      let absolutePath = fspath.resolve(path.trim())
+      const absolutePath = fspath.resolve(path.trim())
       if (fs.existsSync(absolutePath)) {
         exists = absolutePath
       }
@@ -174,107 +199,90 @@ export default abstract class BaseCmd extends Command {
     return exists
   }
 
-  protected saveActiveProjectInfo() {
-    this.writeYaml(this.activeProjectInfoFilePath, this.activeProjectInfo)
+  protected saveActiveProjectInfo(): void {
+    YamlParser.writeYaml(this.activeProjectInfoFilePath, this.activeProjectInfo)
   }
-  protected saveUserConfig() {
-    this.writeYaml(this.userConfigFilePath, this.UserConfig)
+
+  protected saveUserConfig(): void {
+    YamlParser.writeYaml(this.userConfigFilePath, this.UserConfig, true)
   }
 
   /**
    * Get path relative to repo root.
-   * @param target Absolute path to a file/dir.
    * Note: no check of existence of passed path.
+   *
+   * @param target Absolute path to a file/dir.
+   * @returns Path relative to the root of the project.
    */
   protected getRelativePath(target: string): string {
     return fspath.relative(this.rootDir, target)
   }
 
   /**
-   * Parse a YAML file.
-   * @param file
-   * Path to a file to parse
-   */
-  protected parseYaml(file: string): any {
-    if (fs.existsSync(file.trim()) === false) {
-      this.error('File ' + file + ' could not be found.')
-      this.exit(1)
-    }
-    try {
-      let doc = yaml.safeLoad(fs.readFileSync(file.trim(), 'utf8'))
-      return doc
-    } catch (e) {
-      this.error(e)
-      this.exit(1)
-    }
-    // @todo Convenient but dirty.
-    // We are actually cheating here, an we don't always
-    // return but exit midway in case of error.
-    return {}
-  }
-
-  /**
-   * Dump structure as YAML to a file.
-   * @param file
-   * Path to a file to write to
-   * @param data
-   * Data to write to.
-   */
-  protected writeYaml(file: string, data: any) {
-    if (fs.existsSync(fspath.dirname(file.trim())) === false) {
-      this.error('File ' + file + ' could not be found.')
-      this.exit(1)
-    }
-    try {
-      let content = yaml.safeDump(data, {lineWidth: 1000})
-      fs.writeFileSync(file.trim(), content)
-    } catch (e) {
-      this.error(e)
-      this.exit(1)
-    }
-  }
-
-  /**
    * Ensure compose config is valid.
+   *
    * @param file
    * Path to a file to parse
+   * @returns Parsed docker-compose declaration.
    */
-  protected LoadComposeConfig(file: string): ComposeConfig {
-    //@todo Check config is valid.
-    let composeConfig = this.parseYaml(file) as ComposeConfig
+  protected loadComposeConfig(file: string): ComposeConfig {
+    // @todo Check config is valid.
+    const composeConfig = this.parseYaml(file) as ComposeConfig
     return composeConfig
   }
 
   /**
    * Gather project's containers that are actually running.
+   *
+   * @returns Array
    */
   protected getProjectRunningContainers(): Array<string> {
-    const config: ComposeConfig = this.LoadComposeConfig(this.activeComposeFilePath)
+    const config: ComposeConfig = this.loadComposeConfig(
+      this.activeComposeFilePath,
+    )
     const projectContainers: Array<string> = []
     if (config.services) {
-      for (let service of Object.values(config.services)) {
-        projectContainers.push('/' + service.container_name as string)
+      for (const service of Object.values(config.services)) {
+        projectContainers.push(('/' + service.container_name) as string)
       }
     }
     const running = execSync(this.dockerBin + ' ps --quiet').toString()
     const runningContainers = running.split('\n').filter(item => {
-      if (item.length < 1) {
+      if (item.length === 0) {
         return false
       }
-      let name = execSync(this.dockerBin + ' inspect ' + item + ' --format={{.Name}}').toString().trim()
-      return (projectContainers.indexOf(name) > -1)
+      const name = execSync(
+        this.dockerBin + ' inspect ' + item + ' --format={{.Name}}',
+      )
+      .toString()
+      .trim()
+      return projectContainers.indexOf(name) > -1
     })
     return runningContainers
   }
+
   /**
    * Gather project's containers that are build from ce-dev base image.
+   *
+   * @returns an array of container names.
    */
   protected getProjectRunningContainersCeDev(): Array<string> {
     const running: Array<string> = this.getProjectRunningContainers()
     const ceDev: Array<string> = []
     running.forEach(containerName => {
-      let image = execSync(this.dockerBin + ' inspect ' + containerName + ' --format={{.Config.Image}}').toString().trim()
-      let labels = execSync(this.dockerBin + ' inspect ' + image + ' --format={{.Config.Labels}}').toString().trim()
+      const image = execSync(
+        this.dockerBin +
+          ' inspect ' +
+          containerName +
+          ' --format={{.Config.Image}}',
+      )
+      .toString()
+      .trim()
+      const labels = execSync(
+        this.dockerBin + ' inspect ' + image + ' --format={{.Config.Labels}}',
+      )
+      .toString()
+      .trim()
       if (labels.indexOf('ce-dev-1.x:') > 0) {
         ceDev.push(containerName)
       }
@@ -285,11 +293,22 @@ export default abstract class BaseCmd extends Command {
   /**
    * Check that we have a generated compose file, or exit.
    */
-  protected ensureActiveComposeFile() {
+  protected ensureActiveComposeFile(): void {
     if (fs.existsSync(this.activeComposeFilePath) === false) {
-      this.error('No active docker-compose.yml file found. You must generate one first with `ce-dev init`.')
-      this.exit(1)
+      this.error(
+        'No active docker-compose.yml file found. You must generate one first with `ce-dev init`.',
+      )
     }
   }
 
+  /**
+   * Parse a YAML file.
+   *
+   * @param file
+   * Path to a file to parse
+   * @returns Parsed YAML.
+   */
+  protected parseYaml(file: string): any {
+    return YamlParser.parseYaml(file)
+  }
 }
