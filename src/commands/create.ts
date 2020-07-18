@@ -1,8 +1,8 @@
-import {flags} from '@oclif/command'
-import {execSync} from 'child_process'
 import * as inquirer from 'inquirer'
 
 import BaseCmd from '../base-cmd-abstract'
+import {execSync} from 'child_process'
+import {flags} from '@oclif/command'
 
 const fs = require('fs')
 const fspath = require('path')
@@ -57,7 +57,7 @@ export default class CreateCmd extends BaseCmd {
   /**
    * @inheritdoc
    */
-  async run() {
+  async run(): Promise<any> {
     const {flags} = this.parse(CreateCmd)
     let project = flags.project
     if (!project) {
@@ -100,16 +100,16 @@ export default class CreateCmd extends BaseCmd {
     this.copyProject()
   }
 
-  private copyTemplates() {
+  private copyTemplates(): void {
     execSync(this.dockerBin + ' cp ' + this.templatesDir + ' ce_dev_controller:/home/ce-dev/')
   }
 
-  private play() {
+  private play(): void {
     const vars = '\'{"project_name":"' + this.projectName + '","project_type":"' + this.templateName + '"}\''
     execSync(this.dockerBin + ' exec -t --user ce-dev ce_dev_controller ansible-playbook /home/ce-dev/templates/create.yml --extra-vars=' + vars)
   }
 
-  private copyProject() {
+  private copyProject(): void {
     fs.renameSync(fspath.join(this.config.cacheDir, this.projectName), this.projectDestination)
   }
 }

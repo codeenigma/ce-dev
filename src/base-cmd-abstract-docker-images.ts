@@ -1,8 +1,7 @@
-import {flags} from '@oclif/command'
-import {execSync} from 'child_process'
-
 import BaseCmd from './base-cmd-abstract'
 import ComposeConfig from './compose-config-interface'
+import {execSync} from 'child_process'
+import {flags} from '@oclif/command'
 
 export default abstract class DockerImagesCmd extends BaseCmd {
   static flags = {
@@ -63,7 +62,7 @@ export default abstract class DockerImagesCmd extends BaseCmd {
     super(argv, config)
     const {flags} = this.parse(DockerImagesCmd)
     this.composeTemplate = this.getPathFromRelative(flags.template)
-    this.composeConfig = this.LoadComposeConfig(this.composeTemplate)
+    this.composeConfig = this.loadComposeConfig(this.composeTemplate)
     if (flags.username) {
       this.dockerUsername = flags.username
     }
@@ -78,7 +77,7 @@ export default abstract class DockerImagesCmd extends BaseCmd {
   /**
    * Login to Docker repository.
    */
-  protected login() {
+  protected login(): void {
     this.log('Login to repository ' + this.dockerRegistry + '.')
     let cmd = this.dockerBin + ' login ' + this.dockerRegistry
     if (this.dockerUsername.length > 0) {

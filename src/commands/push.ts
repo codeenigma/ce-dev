@@ -1,7 +1,7 @@
+import DockerImagesCmd from '../base-cmd-abstract-docker-images'
 import {execSync} from 'child_process'
 import ux from 'cli-ux'
 
-import DockerImagesCmd from '../base-cmd-abstract-docker-images'
 export default class PushCmd extends DockerImagesCmd {
   static description = 'Push images referenced in a compose file to a remote repository.'
 
@@ -12,7 +12,7 @@ export default class PushCmd extends DockerImagesCmd {
   /**
    * @inheritdoc
    */
-  async run() {
+  async run(): Promise<any> {
     if (this.dockerLogin) {
       this.login()
     }
@@ -22,7 +22,7 @@ export default class PushCmd extends DockerImagesCmd {
   /**
    * Push generated images.
    */
-  private push() {
+  private push(): void {
     for (const name of Object.keys(this.composeConfig.services)) {
       const containerName = this.composeConfig['x-ce_dev'].project_name + '-' + name
       ux.action.start('Pushing image ' + containerName)

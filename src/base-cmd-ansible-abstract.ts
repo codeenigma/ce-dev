@@ -1,8 +1,6 @@
-
-import {execSync} from 'child_process'
-
 import BaseCmd from './base-cmd-abstract'
 import ComposeConfig from './compose-config-interface'
+import {execSync} from 'child_process'
 
 const fspath = require('path')
 const fs = require('fs')
@@ -10,7 +8,7 @@ const fs = require('fs')
 export default abstract class AnsibleCmd extends BaseCmd {
   /**
    * @member
-   * Operation, either provision or deploy.
+   * Operation to perform, either provision or deploy.
    */
   protected ansiblePaths: Array<string> = []
 
@@ -49,14 +47,14 @@ export default abstract class AnsibleCmd extends BaseCmd {
    */
   public constructor(argv: string[], config: any) {
     super(argv, config)
-    this.composeConfig = this.LoadComposeConfig(this.activeComposeFilePath)
+    this.composeConfig = this.loadComposeConfig(this.activeComposeFilePath)
     this.tmpHostsFile = this.config.cacheDir + '/AnsibleHosts'
   }
 
   /**
    * @inheritdoc
    */
-  async run() {
+  async run(): Promise<any> {
     this.ensureActiveComposeFile()
     this.populateAnsibleHosts()
     this.play()
@@ -65,7 +63,7 @@ export default abstract class AnsibleCmd extends BaseCmd {
   /**
    *
    */
-  protected play() {
+  protected play(): void {
     this.ansiblePaths.forEach(ansiblePath => {
       const src = fspath.dirname(ansiblePath)
       const dest = this.ansibleProjectPlaybooksPath + fspath.dirname(src)
@@ -85,7 +83,7 @@ export default abstract class AnsibleCmd extends BaseCmd {
   /**
    * Inject Ansible hosts file onto the controller.
    */
-  protected populateAnsibleHosts() {
+  protected populateAnsibleHosts(): void {
     this.log('Rebuilding Ansible hosts information on the controller.')
     if (this.composeConfig.services) {
       const hosts = Object.keys(this.composeConfig.services).join('\n')

@@ -1,7 +1,7 @@
+import DockerImagesCmd from '../base-cmd-abstract-docker-images'
 import {execSync} from 'child_process'
 import ux from 'cli-ux'
 
-import DockerImagesCmd from '../base-cmd-abstract-docker-images'
 export default class PullCmd extends DockerImagesCmd {
   static description = 'Pull images referenced in a compose file from a remote repository.'
 
@@ -12,7 +12,7 @@ export default class PullCmd extends DockerImagesCmd {
   /**
    * @inheritdoc
    */
-  async run() {
+  async run(): Promise<any> {
     if (this.dockerLogin) {
       this.login()
     }
@@ -22,7 +22,7 @@ export default class PullCmd extends DockerImagesCmd {
   /**
    * Push generated images.
    */
-  private pull() {
+  private pull(): void {
     this.pullControllerContainer()
     for (const service of Object.values(this.composeConfig.services)) {
       if (service.image) {

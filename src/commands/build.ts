@@ -1,9 +1,9 @@
-import {flags} from '@oclif/command'
-import {execSync} from 'child_process'
-import ux from 'cli-ux'
-
 import BaseCmd from '../base-cmd-abstract'
 import ComposeConfig from '../compose-config-interface'
+import YamlParser from '../yaml-parser'
+import {execSync} from 'child_process'
+import {flags} from '@oclif/command'
+import ux from 'cli-ux'
 
 const fspath = require('path')
 export default class BuildCmd extends BaseCmd {
@@ -60,7 +60,7 @@ export default class BuildCmd extends BaseCmd {
   /**
    * @inheritdoc
    */
-  async run() {
+  async run(): Promise<any> {
     this.commit()
     this.generateCompose()
   }
@@ -68,7 +68,7 @@ export default class BuildCmd extends BaseCmd {
   /**
    * Commit containers as base images.
    */
-  private commit() {
+  private commit(): void {
     for (const name of Object.keys(this.composeConfig.services)) {
       const containerName = this.composeConfig['x-ce_dev'].project_name + '-' + name
       ux.action.start('Committing container ' + containerName + ' as a new image.')
@@ -80,13 +80,13 @@ export default class BuildCmd extends BaseCmd {
   /**
    * Generate derivative compose file.
    */
-  private generateCompose() {
+  private generateCompose(): void {
     ux.action.start('Generating new compose file ' + this.composeDest + '.')
     for (const [name, service] of Object.entries(this.composeConfig.services)) {
       const containerName = this.composeConfig['x-ce_dev'].project_name + '-' + name
       service.image = this.dockerRegistry + '/' + containerName + ':latest'
     }
-    writeYaml(this.composeDest, this.composeConfig)
+    YamlParser.writeYaml(this.composeDest, this.composeConfig)
     ux.action.stop()
   }
 }

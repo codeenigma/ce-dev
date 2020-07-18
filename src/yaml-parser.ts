@@ -39,7 +39,7 @@ export default class YamlParser {
    * @param createNonExistingParentDir
    * Creates the overarching parent dir if it doesn't exist.
    */
-  public static writeYaml(file: string, data: any, createNonExistingParentDir = false) {
+  public static writeYaml(file: string, data: any, createNonExistingParentDir = false): void {
     if (fs.existsSync(fspath.dirname(file.trim())) === false) {
       if (createNonExistingParentDir) {
         fs.mkdirSync(fspath.dirname(file.trim()))

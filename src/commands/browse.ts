@@ -1,6 +1,5 @@
-import ux from 'cli-ux'
-
 import BaseCmd from '../base-cmd-abstract'
+import ux from 'cli-ux'
 
 export default class BrowseCmd extends BaseCmd {
   static description = 'Open preset URL(s) in a browser'
@@ -12,7 +11,7 @@ export default class BrowseCmd extends BaseCmd {
   /**
    * @inheritdoc
    */
-  async run() {
+  async run(): Promise<any> {
     this.activeProjectInfo.urls.forEach(async url => {
       await ux.open(url)
     })

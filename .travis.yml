@@ -8,11 +8,15 @@ node_js:
 before_install:
  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
 install:
-- npm install
+- yarn install
 script:
 - oclif-dev pack
 jobs:
   include:
+  - stage: Lint
+    os: linux
+    script: yarn eslint src
+    if: branch != 1.x
   - stage: Docker Images (build)
     os: linux
     script: /bin/sh docker-images/export.sh latest

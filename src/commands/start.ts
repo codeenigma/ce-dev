@@ -1,8 +1,7 @@
-import {flags} from '@oclif/command'
-import {execSync} from 'child_process'
-import ux from 'cli-ux'
-
 import BaseCmd from '../base-cmd-abstract'
+import {execSync} from 'child_process'
+import {flags} from '@oclif/command'
+import ux from 'cli-ux'
 
 const fs = require('fs')
 const readline = require('readline')
@@ -20,7 +19,7 @@ export default class StartCmd extends BaseCmd {
 
   /**
    * @member
-   * Hostnames/IP pairs.
+   * Pairs of Hostnames/IP.
    */
   private readonly runningHosts: Map<string, string> = new Map()
 
@@ -65,7 +64,7 @@ export default class StartCmd extends BaseCmd {
   /**
    * @inheritdoc
    */
-  async run() {
+  async run(): Promise<any> {
     this.up()
     this.updateHostsFile()
     this.performStartTasks()
@@ -75,8 +74,9 @@ export default class StartCmd extends BaseCmd {
    * Match numeric user ids  with hosts.
    *
    * @param containerName
+   * Name of a container.
    */
-  protected ensureOwnership(containerName: string) {
+  protected ensureOwnership(containerName: string): void {
     let uid = 1000
     let gid = 1000
     if (this.config.platform === 'linux') {
@@ -92,9 +92,9 @@ export default class StartCmd extends BaseCmd {
    * Generate SSH Config.
    *
    * @param containerName
-   * @todo Change how we handle this, as it works only for one project running at a time.
+   * Container name.
    */
-  protected generateSSHConfig(containerName: string) {
+  protected generateSSHConfig(containerName: string): void {
     ux.action.start('Generate SSH config')
     // Grab back existing file.
     const existing = execSync(this.dockerBin + ' exec ' + containerName + ' cat /home/ce-dev/.ssh/config').toString()
@@ -108,7 +108,7 @@ export default class StartCmd extends BaseCmd {
         '',
       ]
       config.push(...entry)
-      execSync(this.dockerBin + ' cp ' + host.src_key + ' ' + containerName + ':' + '/tmp/' + host.host, {stdio: 'inherit'})
+      execSync(this.dockerBin + ' cp ' + host.src_key + ' ' + containerName + ':/tmp/' + host.host, {stdio: 'inherit'})
       execSync(this.dockerBin + ' exec -t ' + containerName + ' mv /tmp/' + host.host + ' ' + dest, {stdio: 'inherit'})
     })
     fs.writeFile(this.tmpSSHConfigFile, existing + config.join('\n') + '\n', () => {
@@ -120,9 +120,9 @@ export default class StartCmd extends BaseCmd {
   /**
    * Wrapper around docker-compose.
    */
-  private up() {
+  private up(): void {
     const running = this.getProjectRunningContainers()
-    if (running.length) {
+    if (running.length > 0) {
       ux.action.start('Project containers are already running, stopping.')
       execSync(this.dockerComposeBin + ' -p ' + this.activeProjectInfo.project_name + ' stop', {cwd: this.ceDevDir, stdio: 'inherit'})
       ux.action.stop()
@@ -135,7 +135,7 @@ export default class StartCmd extends BaseCmd {
   /**
    * Update the /etc/hosts file with container informations.
    */
-  private updateHostsFile() {
+  private updateHostsFile(): void {
     ux.action.start('Updating /etc/hosts file')
     this.gatherRunningContainers()
     this.generateHostsFile()
@@ -145,7 +145,7 @@ export default class StartCmd extends BaseCmd {
   /**
    * Gather running containers.
    */
-  private gatherRunningContainers() {
+  private gatherRunningContainers(): void {
     const running = execSync(this.dockerBin + ' ps --quiet').toString()
     const runningContainers = running.split('\n').filter(item => {
       return (item.length)
@@ -158,7 +158,8 @@ export default class StartCmd extends BaseCmd {
       // @todo Need a better check.
       if (ip !== '<no value>') {
         const aliasesString = execSync(this.dockerBin + ' inspect ' + containerName + ' --format={{.NetworkSettings.Networks.ce_dev.Aliases}}').toString().trim()
-        const aliases = aliasesString.split(/[\[\]\ ]/).filter(Boolean)
+        const aliases = aliasesString.split(/[[\] ]/).filter(Boolean)
+        console.log(aliases)
         aliases.forEach(alias => {
           this.runningHosts.set(alias.toString(), ip)
         })
@@ -169,7 +170,7 @@ export default class StartCmd extends BaseCmd {
   /**
    * Write hosts information.
    */
-  private generateHostsFile() {
+  private generateHostsFile(): void {
     let write = true
     const lines: Array<string> = []
     const lineReader = readline.createInterface({
@@ -199,7 +200,7 @@ export default class StartCmd extends BaseCmd {
     })
   }
 
-  private performStartTasks() {
+  private performStartTasks(): void {
     const running = this.getProjectRunningContainersCeDev()
     if (running.length === 0) {
       return
@@ -211,7 +212,7 @@ export default class StartCmd extends BaseCmd {
     })
   }
 
-  private triggerUnison(containerName: string) {
+  private triggerUnison(containerName: string): void {
     if (this.activeProjectInfo.unison[containerName]) {
       ux.action.start('Trigger Unison file synchronisation')
       this.activeProjectInfo.unison[containerName].forEach(volume => {

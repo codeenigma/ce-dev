@@ -1,8 +1,8 @@
-import {flags} from '@oclif/command'
-import {execSync} from 'child_process'
 import * as inquirer from 'inquirer'
 
 import BaseCmd from '../base-cmd-abstract'
+import {execSync} from 'child_process'
+import {flags} from '@oclif/command'
 
 export default class ShellCmd extends BaseCmd {
   static description = 'Open a shell session on the given container.'
@@ -23,7 +23,7 @@ export default class ShellCmd extends BaseCmd {
     },
   ]
 
-  async run() {
+  async run(): Promise<any> {
     this.ensureActiveComposeFile()
     const {args} = this.parse(ShellCmd)
     let container = args.container
