@@ -102,7 +102,46 @@ export default class IPManager {
    * Base subnet.
    */
   private getNetBase(): string {
-    const gw = execSync(this.dockerBin + ' network inspect ce_dev --format "{{range .IPAM.Config}}{{.Gateway}}{{end}}"').toString().trim()
-    return gw.substr(0, gw.length - 2)
+    if (this.networkExists()) {
+      const gw = execSync(this.dockerBin + ' network inspect ce_dev --format "{{range .IPAM.Config}}{{.Gateway}}{{end}}"').toString().trim()
+      return gw.substr(0, gw.length - 2)
+    }
+    return this.getAvailableSubnet()
+  }
+
+  /**
+   * Check if our network is up and running.
+   *
+   * @returns
+   * True if network exists, else false.
+   */
+  private networkExists(): boolean {
+    const existing = execSync(
+      this.dockerBin + ' network ls | grep -w ce_dev | wc -l',
+    )
+    .toString()
+    .trim()
+    if (existing === '0') {
+      return false
+    }
+    return true
+  }
+
+  /**
+   * Constructs an newly incremented subnet base.
+   *
+   * @returns
+   * A base subnet string.
+   */
+  public getAvailableSubnet(): string {
+    for (let i = 18; i <= 31; i++) {
+      const subnet = '172.' + i + '.0'
+      const existing = execSync('sudo ifconfig | grep ' + subnet + ' | wc -l').toString().trim()
+      console.log(existing)
+      if (existing === '0') {
+        return subnet
+      }
+    }
+    throw new Error('Could not assign an available Subnet range.')
   }
 }
