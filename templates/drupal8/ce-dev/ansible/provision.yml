@@ -17,7 +17,7 @@
             access_log:  "/var/log/nginx-access.log"
             error_log:  "/var/log/nginx-error.log"
             error_log_level:  "notice"
-            webroot:  "/home/ce-dev/deploy/live.{{ project_name }}_local/web"
+            webroot:  "/home/ce-dev/deploy/live.local/web"
             project_type:  "drupal8"
             ssl_certificate: "/etc/nginx/ssl/ssl_self_signed/{{ domain_name }}.crt"
             ssl_certificate_key: "/etc/nginx/ssl/ssl_self_signed/{{ domain_name }}.key"
