@@ -1,11 +1,14 @@
 version: "3.7"
 x-ce_dev:
+  version: 1.x
   registry: localhost:5000
   project_name: {{ project_name }}
   provision: 
     - ce-dev/ansible/provision.yml
   deploy: 
     - ce-dev/ansible/deploy.yml
+  urls:
+    - https://www.{{ project_name }}.local
 services:
   web:
     image: codeenigma/ce-dev-1.x:latest
