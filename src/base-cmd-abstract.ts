@@ -283,7 +283,7 @@ export default abstract class BaseCmd extends Command {
       )
       .toString()
       .trim()
-      if (labels.indexOf('ce-dev-1.x:') > 0) {
+      if (labels.indexOf('ce-dev-1.x:') > -1) {
         ceDev.push(containerName)
       }
     })
