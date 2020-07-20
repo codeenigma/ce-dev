@@ -18,6 +18,7 @@ You'll need docker-compose (and docker) on a Mac or Linux host.
 <!-- toc -->
 * [Requirements](#requirements)
 * [Install](#install)
+* [Quickstart](#quickstart)
 * [Commands](#commands)
 * [Troubleshooting](#troubleshooting)
 <!-- tocstop -->
@@ -45,6 +46,7 @@ To tear it all down and start again:
 * [`ce-dev autocomplete [SHELL]`](#ce-dev-autocomplete-shell)
 * [`ce-dev browse`](#ce-dev-browse)
 * [`ce-dev build`](#ce-dev-build)
+* [`ce-dev config`](#ce-dev-config)
 * [`ce-dev create`](#ce-dev-create)
 * [`ce-dev deploy`](#ce-dev-deploy)
 * [`ce-dev destroy`](#ce-dev-destroy)
@@ -117,6 +119,23 @@ EXAMPLE
 ```
 
 _See code: [src/commands/build.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/build.ts)_
+
+## `ce-dev config`
+
+Configure global user preferences.
+
+```
+USAGE
+  $ ce-dev config
+
+OPTIONS
+  -g, --global  Update global config instead of project one
+
+EXAMPLE
+  $ ce-dev config
+```
+
+_See code: [src/commands/config.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/config.ts)_
 
 ## `ce-dev create`
 
