@@ -9,6 +9,9 @@ x-ce_dev:
 services:
   web:
     image: codeenigma/ce-dev-1.x:latest
+    expose:
+      - 443
+      - 80
     x-ce_dev:
       host_aliases:
         - www.{{ project_name }}.local
