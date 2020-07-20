@@ -122,9 +122,9 @@ export default class ControllerManager {
     )
     let uid = 1000
     let gid = 1000
-    if (this.config.platform === 'linux') {
-      uid = process.getuid()
-      gid = process.getgid()
+    uid = process.getuid()
+    if (process.getgid() > 1000) {
+      gid = process.getegid()
     }
     execSync(
       this.dockerBin +

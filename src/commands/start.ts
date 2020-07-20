@@ -105,9 +105,9 @@ export default class StartCmd extends BaseCmd {
   private ensureOwnership(containerName: string): void {
     let uid = 1000
     let gid = 1000
-    if (this.config.platform === 'linux') {
-      uid = process.getuid()
-      gid = process.getgid()
+    uid = process.getuid()
+    if (process.getgid() > 1000) {
+      gid = process.getegid()
     }
     ux.action.start('Ensuring file ownership')
     execSync(this.dockerBin + ' exec ' + containerName + ' /bin/sh /opt/ce-dev-ownership.sh ' + uid.toString() + ' ' + gid.toString(), {stdio: 'inherit'})
