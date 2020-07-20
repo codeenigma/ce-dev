@@ -76,18 +76,14 @@ export default class ControllerManager {
    * Start our network.
    */
   public networkStart(): void {
-    YamlParser.writeYaml(this.networkComposeFile, this.getNetworkConfig())
-    execSync(this.dockerBin + ' network create ce_dev --attachable', {
+    const ipManager = new IPManager(this.dockerBin, this.config)
+    const base = ipManager.getNetBase()
+    const gw = base + '.1'
+    const subnet = base + '.0/24'
+    execSync(this.dockerBin + ' network create ce_dev --attachable --gateway ' + gw + ' --subnet ' + subnet, {
       cwd: this.config.dataDir,
       stdio: 'inherit',
     })
-    execSync(
-      this.dockerComposeBin +
-        ' -f ' +
-        this.networkComposeFile +
-        ' -p ce_dev up -d',
-      {cwd: this.config.dataDir, stdio: 'inherit'},
-    )
   }
 
   /**
@@ -120,9 +116,8 @@ export default class ControllerManager {
         ' -p ce_dev_controller up -d',
       {cwd: this.config.dataDir, stdio: 'inherit'},
     )
-    let uid = 1000
+    const uid = process.getuid()
     let gid = 1000
-    uid = process.getuid()
     if (process.getgid() > 1000) {
       gid = process.getegid()
     }
@@ -186,6 +181,7 @@ export default class ControllerManager {
       networks: {
         ce_dev: {
           external: true,
+          name: 'ce_dev',
         },
       },
       volumes: {
@@ -200,18 +196,6 @@ export default class ControllerManager {
         },
         ce_dev_nvm_node: {
           name: 'ce_dev_nvm_node',
-        },
-      },
-    }
-  }
-
-  private getNetworkConfig(): ComposeConfigBare {
-    return {
-      version: '3.7',
-      networks: {
-        ce_dev: {
-          name: 'ce_dev',
-          driver: 'bridge',
         },
       },
     }

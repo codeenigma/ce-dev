@@ -101,7 +101,7 @@ export default class IPManager {
    * @returns
    * Base subnet.
    */
-  private getNetBase(): string {
+  public getNetBase(): string {
     if (this.networkExists()) {
       const gw = execSync(this.dockerBin + ' network inspect ce_dev --format "{{range .IPAM.Config}}{{.Gateway}}{{end}}"').toString().trim()
       return gw.substr(0, gw.length - 2)
@@ -133,11 +133,10 @@ export default class IPManager {
    * @returns
    * A base subnet string.
    */
-  public getAvailableSubnet(): string {
+  private getAvailableSubnet(): string {
     for (let i = 18; i <= 31; i++) {
       const subnet = '172.' + i + '.0'
       const existing = execSync('sudo ifconfig | grep ' + subnet + ' | wc -l').toString().trim()
-      console.log(existing)
       if (existing === '0') {
         return subnet
       }

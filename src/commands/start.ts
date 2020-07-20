@@ -103,9 +103,8 @@ export default class StartCmd extends BaseCmd {
    * Name of a container.
    */
   private ensureOwnership(containerName: string): void {
-    let uid = 1000
+    const uid = process.getuid()
     let gid = 1000
-    uid = process.getuid()
     if (process.getgid() > 1000) {
       gid = process.getegid()
     }
