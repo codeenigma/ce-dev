@@ -20,7 +20,7 @@ export default class PullCmd extends DockerImagesCmd {
   }
 
   /**
-   * Push generated images.
+   * Pull custom generated images.
    */
   private pull(): void {
     this.pullControllerContainer()
