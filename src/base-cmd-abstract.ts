@@ -243,20 +243,15 @@ export default abstract class BaseCmd extends Command {
     const projectContainers: Array<string> = []
     if (config.services) {
       for (const service of Object.values(config.services)) {
-        projectContainers.push(('/' + service.container_name) as string)
+        projectContainers.push(service.container_name as string)
       }
     }
-    const running = execSync(this.dockerBin + ' ps --quiet').toString()
+    const running = execSync(this.dockerBin + ' ps --quiet --format={{.Names}}').toString()
     const runningContainers = running.split('\n').filter(item => {
       if (item.length === 0) {
         return false
       }
-      const name = execSync(
-        this.dockerBin + ' inspect ' + item + ' --format={{.Name}}',
-      )
-      .toString()
-      .trim()
-      return projectContainers.indexOf(name) > -1
+      return projectContainers.indexOf(item) > -1
     })
     return runningContainers
   }
