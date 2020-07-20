@@ -58,6 +58,7 @@ export default class InitCmd extends BaseCmd {
     this.generateCompose()
     this.removePrivateProperties()
     YamlParser.writeYaml(this.activeComposeFilePath, this.composeConfig)
+    this.log('Generated docker-compose file: ' + this.activeComposeFilePath)
   }
 
   /**

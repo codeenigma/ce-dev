@@ -16,14 +16,15 @@ services:
       host_aliases:
         - www.{{ project_name }}.local
       unison:
-      - src: ../
-        dest: /home/ce-dev/deploy/live.local
-        target_platforms:
-          - darwin
-        ignore:
-          - Name vendor
-          - Name node_modules
-          - Path */sites/*/files
+        - src: ../
+          dest: /home/ce-dev/deploy/live.local
+          target_platforms:
+            - darwin
+            - linux
+          ignore:
+            - Name vendor
+            - Name node_modules
+            - Path */sites/*/files
   db:
     image: mariadb
     environment:

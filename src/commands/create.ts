@@ -1,5 +1,5 @@
 import * as inquirer from 'inquirer'
-
+import ux from 'cli-ux'
 import BaseCmd from '../base-cmd-abstract'
 import {execSync} from 'child_process'
 import {flags} from '@oclif/command'
@@ -95,9 +95,11 @@ export default class CreateCmd extends BaseCmd {
       destination = response.destination
     }
     this.projectDestination = destination as string
+    ux.action.start('Generating project from template')
     this.copyTemplates()
     this.play()
     this.copyProject()
+    ux.action.stop('Project ' + this.projectName + ' created at ' + this.projectDestination)
   }
 
   private copyTemplates(): void {
