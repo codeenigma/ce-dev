@@ -10,15 +10,6 @@ Local Stack wrapper tool
 
 ***WARNING: WIP - Future changes won't be backward compatible***
 
-# Requirements
-You'll need docker-compose (and docker) on a Mac or Linux host.
-
-# Install
-- Download the latest release from your platform at https://github.com/codeenigma/ce-dev/releases
-- Extract where convenient (eg /opt or your $HOME)
-- Add ce-dev/bin/ce-dev to your $PATH in your .bashrc/.zshrc or symlink it to /usr/local/bin.
-
-
 <!-- toc -->
 * [Requirements](#requirements)
 * [Install](#install)
@@ -26,6 +17,15 @@ You'll need docker-compose (and docker) on a Mac or Linux host.
 * [Commands](#commands)
 * [Troubleshooting](#troubleshooting)
 <!-- tocstop -->
+
+
+# Requirements
+You'll need docker-compose (and docker) on a Mac or Linux host.
+
+# Install
+- Download the latest release from your platform at https://github.com/codeenigma/ce-dev/releases
+- Extract where convenient (eg /opt or your $HOME)
+- Add ce-dev/bin/ce-dev to your $PATH in your .bashrc/.zshrc or symlink it to /usr/local/bin.
 
 # Quickstart
 
