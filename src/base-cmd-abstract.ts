@@ -38,6 +38,12 @@ export default abstract class BaseCmd extends Command {
 
   /**
    * @member
+   * MKCERT executable path.
+   */
+  protected mkcertBin = 'mkcert'
+
+  /**
+   * @member
    * Path to the active docker-compose.yml file.
    */
   protected activeComposeFilePath = ''
@@ -81,6 +87,7 @@ export default abstract class BaseCmd extends Command {
       this.config.platform === 'linux' ?
         'sudo docker-compose' :
         'docker-compose',
+    mkcert_bin: 'mkcert',
     ssh_user: process.env.USER as string,
     ssh_key: (process.env.HOME as string) + '/.ssh/id_rsa',
   }
@@ -138,11 +145,13 @@ export default abstract class BaseCmd extends Command {
     }
     this.dockerBin = this.UserConfig.docker_bin
     this.dockerComposeBin = this.UserConfig.docker_compose_bin
+    this.mkcertBin = this.UserConfig.mkcert_bin
     this.dockerRegistry = this.activeProjectInfo.registry
     this.controllerManager = new CeDevControllerManager(
+      this.config,
       this.dockerBin,
       this.dockerComposeBin,
-      this.config,
+      this.mkcertBin,
     )
     this.ensureController()
   }
@@ -176,6 +185,13 @@ export default abstract class BaseCmd extends Command {
    */
   protected generateCertificate(domain: string): void {
     this.controllerManager.generateCertificate(domain)
+  }
+
+  /**
+   * Installs CA for mkcerts on the host.
+   */
+  protected installCertificateAuth(): void {
+    this.controllerManager.installCertificateAuth()
   }
 
   /**

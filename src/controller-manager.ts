@@ -3,6 +3,9 @@ import {IConfig} from '@oclif/config'
 import IPManager from './ip-manager'
 import YamlParser from './yaml-parser'
 import {execSync} from 'child_process'
+import ux from 'cli-ux'
+
+const fs = require('fs')
 const fspath = require('path')
 
 export default class ControllerManager {
@@ -17,6 +20,12 @@ export default class ControllerManager {
    * Docker-compose executable path.
    */
   private readonly dockerComposeBin: string = 'docker-compose'
+
+  /**
+   * @member
+   * Mkcert executable path.
+   */
+  private readonly mkcertBin: string = 'mkcert'
 
   /**
    * @member
@@ -37,12 +46,14 @@ export default class ControllerManager {
   private readonly controllerComposeFile: string
 
   public constructor(
+    config: IConfig,
     dockerBin: string,
     dockerComposeBin: string,
-    config: IConfig,
+    mkcertBin: string,
   ) {
     this.dockerBin = dockerBin
     this.dockerComposeBin = dockerComposeBin
+    this.mkcertBin = mkcertBin
     this.config = config
     this.controllerComposeFile = fspath.join(
       this.config.dataDir,
@@ -76,7 +87,7 @@ export default class ControllerManager {
    * Start our network.
    */
   public networkStart(): void {
-    const ipManager = new IPManager(this.dockerBin, this.config)
+    const ipManager = new IPManager(this.config, this.dockerBin)
     const base = ipManager.getNetBase()
     const gw = base + '.1'
     const subnet = base + '.0/24'
@@ -116,6 +127,8 @@ export default class ControllerManager {
         ' -p ce_dev_controller up -d',
       {cwd: this.config.dataDir, stdio: 'inherit'},
     )
+    // Ensure uid/gid.
+    ux.action.start('Ensure user UID match those on the host')
     const uid = process.getuid()
     let gid = 1000
     if (process.getgid() > 1000) {
@@ -129,12 +142,26 @@ export default class ControllerManager {
         gid.toString(),
       {stdio: 'inherit'},
     )
+    ux.action.stop()
+    // Regenerate SSH keys.
+    ux.action.start('Regenerate containers SSH key')
     execSync(
       this.dockerBin + ' exec ce_dev_controller /bin/sh /opt/ce-dev-ssh.sh',
     )
+    ux.action.stop()
+    // Ensure file perms.
+    ux.action.start('Ensure file ownership')
+    execSync(
+      this.dockerBin + ' exec ce_dev_controller chown -R ce-dev:ce-dev /home/ce-dev',
+    )
+    ux.action.stop()
+    // Ensure CA.
+    ux.action.start('Generate/renew CA certificate for SSL')
     execSync(
       this.dockerBin + ' exec --user ce-dev ce_dev_controller /usr/local/bin/mkcert -install',
+      {stdio: ['ignore', 'ignore', 'pipe']},
     )
+    ux.action.stop()
   }
 
   /**
@@ -159,8 +186,37 @@ export default class ControllerManager {
    */
   public generateCertificate(domain: string): void {
     execSync(
-      this.dockerBin + ' exec --user ce-dev ce_dev_controller /usr/local/bin/mkcert ' + domain,
+      this.dockerBin + ' exec --workdir /home/ce-dev/.local/share/mkcert --user ce-dev ce_dev_controller /usr/local/bin/mkcert ' + domain,
+      {stdio: ['ignore', 'ignore', 'pipe']},
     )
+  }
+
+  /**
+   * Installs CA for mkcerts on the host.
+   */
+  public installCertificateAuth(): void {
+    const currentCert = fspath.resolve(this.config.cacheDir + '/rootCA.pem')
+    const existingCert = fspath.resolve(this.config.dataDir + '/rootCA.pem')
+    // Copy new (or possibly new) cert.
+    execSync(
+      this.dockerBin + ' cp ce_dev_controller:/home/ce-dev/.local/share/mkcert/rootCA.pem ' + currentCert,
+    )
+    // Check if we have a new certs.
+    if (fs.existsSync(existingCert)) {
+      const currentCertBuffer = fs.readFileSync(currentCert)
+      const existingCertBuffer = fs.readFileSync(existingCert)
+      if (currentCertBuffer.equals(existingCertBuffer)) {
+        return
+      }
+    }
+    // New/changed certs.
+    ux.action.start('Install mkcert CA on the host.')
+    fs.renameSync(currentCert, existingCert)
+    process.env.CAROOT = this.config.dataDir
+    execSync(
+      this.mkcertBin + ' -install', {env: process.env},
+    )
+    ux.action.stop()
   }
 
   /**
@@ -173,7 +229,7 @@ export default class ControllerManager {
   }
 
   private getControllerConfig(): ComposeConfigBare {
-    const ipManager = new IPManager(this.dockerBin, this.config)
+    const ipManager = new IPManager(this.config, this.dockerBin)
     return {
       version: '3.7',
       services: {

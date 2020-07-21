@@ -59,6 +59,7 @@ export default class InitCmd extends BaseCmd {
     this.generateCompose()
     this.removePrivateProperties()
     YamlParser.writeYaml(this.activeComposeFilePath, this.composeConfig)
+    this.installCertificateAuth()
     this.log('Generated docker-compose file: ' + this.activeComposeFilePath)
   }
 
@@ -126,7 +127,7 @@ export default class InitCmd extends BaseCmd {
    * Inject a fixed ip to containers and amend networking accordingly.
    */
   private injectContainersNetworking(): void {
-    const ipManager = new IPManager(this.dockerBin, this.config)
+    const ipManager = new IPManager(this.config, this.dockerBin)
     for (const service of Object.values(this.composeConfig.services)) {
       const ip = ipManager.getAvailableIP()
       // Manually configured, we do nothing.
@@ -342,6 +343,9 @@ export default class InitCmd extends BaseCmd {
       external: true,
     }
     this.composeConfig.volumes.ce_dev_nvm_node = {
+      external: true,
+    }
+    this.composeConfig.volumes.ce_dev_mkcert = {
       external: true,
     }
   }

@@ -37,7 +37,7 @@ export default class IPManager {
    */
   private readonly netBase: string
 
-  public constructor(dockerBin: string, config: IConfig) {
+  public constructor(config: IConfig, dockerBin: string) {
     this.dockerBin = dockerBin
     this.config = config
     this.NetworkConfigFilePath = fspath.resolve(this.config.dataDir + '/ip.yml')

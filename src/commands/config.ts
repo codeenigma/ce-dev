@@ -51,6 +51,12 @@ export default class ConfigCmd extends BaseCmd {
         default: this.UserConfig.docker_compose_bin,
       },
       {
+        name: 'mkcert_bin',
+        message: 'MKCert command/binary',
+        type: 'input',
+        default: this.UserConfig.mkcert_bin,
+      },
+      {
         name: 'ssh_user',
         message: 'Default SSH username for external hosts',
         type: 'input',

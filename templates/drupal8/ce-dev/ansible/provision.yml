@@ -1,5 +1,3 @@
----
-
 - hosts: {{ project_name }}-web
   become: yes
   vars:
@@ -19,11 +17,10 @@
             error_log_level:  "notice"
             webroot:  "/home/ce-dev/deploy/live.local/web"
             project_type:  "drupal8"
-            ssl_certificate: "/etc/nginx/ssl/ssl_self_signed/{{ domain_name }}.crt"
-            ssl_certificate_key: "/etc/nginx/ssl/ssl_self_signed/{{ domain_name }}.key"
+            ssl_certificate: "{{ _ce_dev_mkcert_base}}/{{ domain_name }}.pem"
+            ssl_certificate_key: "{{ _ce_dev_mkcert_base}}/{{ domain_name }}-key.pem"
             https_redirect: no
             ratelimitingcrawlers: no
-            ssl_handling: ssl_selfsigned
             is_default: yes
             servers:
               - port: 80

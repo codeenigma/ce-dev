@@ -1,4 +1,3 @@
-
 import AnsibleCmd from '../base-cmd-ansible-abstract'
 
 export default class ProvisionCmd extends AnsibleCmd {
@@ -23,7 +22,12 @@ export default class ProvisionCmd extends AnsibleCmd {
     const repo = this.activeProjectInfo.project_name
     const ownBranch = '1.x'
     const configBranch = '1.x'
-    const cmd = '--own-branch ' + ownBranch + ' --config-branch ' + configBranch + ' --workspace ' + workspace + ' --repo ' + repo + ' --branch ce-dev --playbook ' + ansiblePath + ' --ansible-extra-vars \'{"is_local":"yes"}\''
+    let cmd = '--own-branch ' + ownBranch
+    cmd +=  ' --config-branch ' + configBranch
+    cmd += ' --workspace ' + workspace
+    cmd += ' --repo ' + repo
+    cmd += ' --branch ce-dev --playbook ' + ansiblePath
+    cmd += ' --ansible-extra-vars \'{"is_local":"yes", "_ce_dev_mkcert_base":"/home/ce-dev/.local/share/mkcert"}\''
     return cmd
   }
 }

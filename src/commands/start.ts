@@ -86,7 +86,7 @@ export default class StartCmd extends BaseCmd {
     if (!this.composeConfig.services) {
       return
     }
-    const ipManager = new IPManager(this.dockerBin, this.config)
+    const ipManager = new IPManager(this.config, this.dockerBin)
     for (const service of Object.values(this.composeConfig.services)) {
       if (service.networks && Object.prototype.hasOwnProperty.call(service.networks, 'ce_dev')) {
         // @ts-ignore
