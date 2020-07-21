@@ -9,6 +9,7 @@ RUN \
     wget \
     ocaml-native-compilers && \
   cd /tmp/ && \
+  wget https://github.com/FiloSottile/mkcert/releases/download/v1.4.1/mkcert-v1.4.1-linux-amd64 -O mkcert && \
   wget https://github.com/bcpierce00/unison/archive/v2.51.2.tar.gz && \
   tar -xzvf v2.51.2.tar.gz && \
   cd /tmp/unison-2.51.2 && \
@@ -97,6 +98,7 @@ RUN \
     /var/log/* \
     /tmp/*
 
+COPY --from=unison /tmp/mkcert /usr/local/bin/
 COPY --from=unison /tmp/unison-2.51.2/src/unison /usr/local/bin/
 COPY --from=unison /tmp/unison-2.51.2/src/unison-fsmonitor /usr/local/bin
 COPY ./ce-dev-ownership.sh /opt/
@@ -106,7 +108,8 @@ COPY ./unison-startup.sh /opt/
 
 RUN \
   mkdir -p /home/ce-dev/deploy/live.local /home/ce-dev/.composer/cache /home/ce-dev/.nvm/versions/node && \
-  chown -R ce-dev:ce-dev /home/ce-dev
+  chown -R ce-dev:ce-dev /home/ce-dev && \
+  chmod +x /usr/local/bin/*
 
 RUN \
   systemctl mask --   \
