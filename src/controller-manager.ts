@@ -132,6 +132,9 @@ export default class ControllerManager {
     execSync(
       this.dockerBin + ' exec ce_dev_controller /bin/sh /opt/ce-dev-ssh.sh',
     )
+    execSync(
+      this.dockerBin + ' exec --user ce-dev ce_dev_controller /usr/local/bin/mkcert -install',
+    )
   }
 
   /**
@@ -146,6 +149,18 @@ export default class ControllerManager {
     if (existing !== '0') {
       execSync(this.dockerBin + ' stop ce_dev_controller')
     }
+  }
+
+  /**
+   * Generate an SSL certificate.
+   *
+   * @param domain
+   * Domain/host name.
+   */
+  public generateCertificate(domain: string): void {
+    execSync(
+      this.dockerBin + ' exec --user ce-dev ce_dev_controller /usr/local/bin/mkcert ' + domain,
+    )
   }
 
   /**
@@ -173,6 +188,7 @@ export default class ControllerManager {
           },
           volumes: [
             'ce_dev_ssh:/home/ce-dev/.ssh',
+            'ce_dev_mkcert:/home/ce-dev/.local/share/mkcert',
             '/sys/fs/cgroup:/sys/fs/cgroup:ro',
             this.config.cacheDir + ':/home/ce-dev/.ce-dev-cache',
           ],
@@ -187,6 +203,9 @@ export default class ControllerManager {
       volumes: {
         ce_dev_ssh: {
           name: 'ce_dev_ssh',
+        },
+        ce_dev_mkcert: {
+          name: 'ce_dev_mkcert',
         },
         ce_dev_apt_cache: {
           name: 'ce_dev_apt_cache',

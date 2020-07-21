@@ -7,6 +7,7 @@ import IPManager from '../ip-manager'
 import UnisonVolumeContainer from '../ce-dev-project-config-unison-volume-interface'
 import YamlParser from '../yaml-parser'
 import {flags} from '@oclif/command'
+import ux from 'cli-ux'
 
 inquirer.registerPrompt('fuzzypath', require('inquirer-fuzzy-path'))
 export default class InitCmd extends BaseCmd {
@@ -69,7 +70,7 @@ export default class InitCmd extends BaseCmd {
     this.injectContainersSSH()
     this.injectContainersHostname()
     this.injectContainersSysFs()
-    this.injectCacheVolumes()
+    this.injectCommonVolumes()
     this.injectUnisonVolumes()
   }
 
@@ -136,6 +137,10 @@ export default class InitCmd extends BaseCmd {
       if (service['x-ce_dev'] && service['x-ce_dev'].host_aliases) {
         service['x-ce_dev'].host_aliases.forEach(alias => {
           host_aliases.push(alias)
+          // Generate a matching SSL certificate.
+          ux.action.start('Generating SSL certificate for ' + alias)
+          this.generateCertificate(alias)
+          ux.action.stop()
         })
       }
       service.networks = {
@@ -307,7 +312,7 @@ export default class InitCmd extends BaseCmd {
   /**
    * Inject volumes.
    */
-  private injectCacheVolumes(): void {
+  private injectCommonVolumes(): void {
     for (const service of Object.values(this.composeConfig.services)) {
       if (service['x-ce_dev']) {
         if (!service.volumes) {
@@ -322,6 +327,7 @@ export default class InitCmd extends BaseCmd {
         service.volumes.push('ce_dev_apt_cache:/var/cache/apt/archives')
         service.volumes.push('ce_dev_composer_cache:/home/ce-dev/.composer/cache')
         service.volumes.push('ce_dev_nvm_node:/home/ce-dev/.nvm/versions/node')
+        service.volumes.push('ce_dev_mkcert:/home/ce-dev/.local/share/mkcert')
         // @todo npm/yarn
         service.volumes = [...new Set(service.volumes)]
       }

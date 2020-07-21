@@ -13,6 +13,7 @@ export default class PullCmd extends DockerImagesCmd {
    * @inheritdoc
    */
   async run(): Promise<any> {
+    this.pullControllerContainer()
     if (this.dockerLogin) {
       this.login()
     }
@@ -23,7 +24,6 @@ export default class PullCmd extends DockerImagesCmd {
    * Pull custom generated images.
    */
   private pull(): void {
-    this.pullControllerContainer()
     for (const service of Object.values(this.composeConfig.services)) {
       if (service.image) {
         ux.action.start('Pulling image ' + service.image)

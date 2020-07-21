@@ -98,7 +98,7 @@ RUN \
     /var/log/* \
     /tmp/*
 
-COPY --from=unison /tmp/mkcert /usr/local/bin/
+COPY --from=unison /tmp/mkcert /usr/local/bin/mkcert
 COPY --from=unison /tmp/unison-2.51.2/src/unison /usr/local/bin/
 COPY --from=unison /tmp/unison-2.51.2/src/unison-fsmonitor /usr/local/bin
 COPY ./ce-dev-ownership.sh /opt/

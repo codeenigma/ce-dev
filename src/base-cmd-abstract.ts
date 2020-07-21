@@ -169,6 +169,16 @@ export default abstract class BaseCmd extends Command {
   }
 
   /**
+   * Generate an SSL certificate.
+   *
+   * @param domain
+   * Domain/host name.
+   */
+  protected generateCertificate(domain: string): void {
+    this.controllerManager.generateCertificate(domain)
+  }
+
+  /**
    * Pull controller latest image.
    *
    */
