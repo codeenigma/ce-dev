@@ -105,7 +105,7 @@ COPY ./unison.sh /opt/
 COPY ./unison-startup.sh /opt/
 
 RUN \
-  wget https://github.com/FiloSottile/mkcert/releases/download/v1.4.1/mkcert-v1.4.1-linux-amd64 -O mkcert && \
+  wget https://github.com/FiloSottile/mkcert/releases/download/v1.4.1/mkcert-v1.4.1-linux-amd64 -O /usr/local/bin/mkcert && \
   mkdir -p /home/ce-dev/deploy/live.local /home/ce-dev/.composer/cache /home/ce-dev/.nvm/versions/node && \
   chown -R ce-dev:ce-dev /home/ce-dev && \
   chmod +x /usr/local/bin/*
