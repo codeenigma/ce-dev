@@ -13,12 +13,12 @@ ensure_user_ids(){
   fi
   if [ "$OLD_UID" != "$1" ]; then
     usermod -u "$1" ce-dev
-    chown -R --from="$OLD_UID" "$1" /
+    chown -R --from="$OLD_UID" "$1" /var
     echo "User ID changed to $1."
   fi
   if [ "$OLD_GID" != "$2" ]; then
     groupmod -g "$2" ce-dev
-    chown -R --from=":$OLD_GID" ":$2" /
+    chown -R --from=":$OLD_GID" ":$2" /var
     echo "Group ID changed to $2."
   fi
   if [ -d /.x-ce-dev ]; then

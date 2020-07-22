@@ -21,7 +21,7 @@
               domain: "{{ domain_name }}"
               cert: "{{ _ce_dev_mkcert_base}}/{{ domain_name }}.pem"
               key: "{{ _ce_dev_mkcert_base}}/{{ domain_name }}-key.pem"
-              handling: "selfsigned"
+              handling: "unmanaged"
             ratelimitingcrawlers: no
             is_default: yes
             servers:

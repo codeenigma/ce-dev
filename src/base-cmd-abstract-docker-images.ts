@@ -23,6 +23,11 @@ export default abstract class DockerImagesCmd extends BaseCmd {
       char: 'a',
       description: 'Do not prompt for login credentials.',
     }),
+    registry: flags.string({
+      char: 'r',
+      description: 'Docker registry to use. This overrides the one defined in the source compose template.',
+      default: '',
+    }),
   }
 
   /**
@@ -71,6 +76,9 @@ export default abstract class DockerImagesCmd extends BaseCmd {
     }
     if (flags.anonymous) {
       this.dockerLogin = false
+    }
+    if (flags.registry.length > 0) {
+      this.dockerRegistry = flags.registry
     }
   }
 

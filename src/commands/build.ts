@@ -25,6 +25,11 @@ export default class BuildCmd extends BaseCmd {
       description: 'Path to the output docker-compose file, relative to the project ce-dev folder.',
       default: 'ce-dev.compose.prebuilt.yml',
     }),
+    registry: flags.string({
+      char: 'r',
+      description: 'Docker registry to use. This overrides the one defined in the source compose template.',
+      default: '',
+    }),
   }
 
   /**
@@ -54,7 +59,10 @@ export default class BuildCmd extends BaseCmd {
     this.composeTemplate = this.getPathFromRelative(flags.template)
     // @todo normalize path for destination.
     this.composeDest = fspath.join(this.ceDevDir, flags.destination)
-    this.composeConfig = this.loadComposeConfig(this.composeTemplate) as ComposeConfig
+    this.composeConfig = this.loadComposeConfig(this.composeTemplate)
+    if (flags.registry.length > 0) {
+      this.dockerRegistry = flags.registry
+    }
   }
 
   /**

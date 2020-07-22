@@ -2,11 +2,16 @@ addons:
   apt:
     packages:
     - p7zip-full
+    - libnss3-tools
+    - wget
 language: node_js
 node_js:
 - 10
 before_install:
  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+ - wget https://github.com/FiloSottile/mkcert/releases/download/v1.4.1/mkcert-v1.4.1-linux-amd64 -O /tmp/mkcert
+ - sudo mv /tmp/mkcert /usr/local/bin
+ - sudo chmod +x /usr/local/bin/mkcert
 install:
 - yarn install
 script:
@@ -16,11 +21,19 @@ jobs:
   - stage: Lint
     os: linux
     script: yarn eslint src
-  - stage: Docker Images (build)
+  - stage: Docker Base Images (build)
     os: linux
     script: /bin/sh docker-images/export.sh latest
     if: branch != 1.x
-  - stage: Docker Images (push)
+  - stage: Example Images (test)
+    os: linux
+    script: /bin/sh templates/test.sh
+    if: branch != 1.x
+  - stage: Example Images (push)
+    os: linux
+    script: /bin/sh templates/test.sh --push
+    if: branch = 1.x
+  - stage: Docker Base Images (push)
     os: linux
     script: /bin/sh docker-images/export.sh latest --push
     if: branch = 1.x
