@@ -14,13 +14,14 @@ before_install:
  - sudo chmod +x /usr/local/bin/mkcert
 install:
 - yarn install
-script:
-- oclif-dev pack
 jobs:
   include:
   - stage: Lint
     os: linux
     script: yarn eslint src
+  - stage: Pack
+    os: linux
+    script: oclif-dev pack
   - stage: Docker Base Images (build)
     os: linux
     script: /bin/sh docker-images/export.sh latest
@@ -29,13 +30,13 @@ jobs:
     os: linux
     script: /bin/sh templates/test.sh
     if: branch != 1.x
-  - stage: Example Images (push)
-    os: linux
-    script: /bin/sh templates/test.sh --push
-    if: branch = 1.x
   - stage: Docker Base Images (push)
     os: linux
     script: /bin/sh docker-images/export.sh latest --push
+    if: branch = 1.x
+  - stage: Example Images (push)
+    os: linux
+    script: /bin/sh templates/test.sh --push
     if: branch = 1.x
   - stage: Binary Releases
     os: linux

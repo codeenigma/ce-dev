@@ -57,7 +57,7 @@ for PROJECT in $PROJECTS; do
  create_project "$PROJECT"
  test_project "$PROJECT"
  build_project "$PROJECT"
- if [ "$2" = "--push" ]; then
+ if [ -n "$2" ] && [ "$2" = "--push" ]; then
   push_project "$PROJECT"
  fi
 done

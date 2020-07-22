@@ -1,8 +1,9 @@
 import * as inquirer from 'inquirer'
-import ux from 'cli-ux'
+
 import BaseCmd from '../base-cmd-abstract'
 import {execSync} from 'child_process'
 import {flags} from '@oclif/command'
+import ux from 'cli-ux'
 
 const fs = require('fs')
 const fspath = require('path')
