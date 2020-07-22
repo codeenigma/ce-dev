@@ -62,7 +62,6 @@ export default class IPManager {
         return item.length
       })
       const assigned: Array<string> = []
-      console.log(filtered)
       filtered.forEach(containerID => {
         assigned.push(execSync(this.dockerBin + ' inspect --format "{{.NetworkSettings.Networks.ce_dev.IPAMConfig.IPv4Address}}" ' + containerID).toString().trim())
       })
