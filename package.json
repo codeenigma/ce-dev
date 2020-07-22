@@ -59,7 +59,6 @@
   },
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
-    "posttest": "tslint -p . -t stylish",
     "prepack": "rm -rf lib && tsc -b && oclif-dev manifest",
     "readme": "oclif-dev readme",
     "test": "echo NO TESTS",
