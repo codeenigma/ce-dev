@@ -17,9 +17,11 @@
             error_log_level:  "notice"
             webroot:  "/home/ce-dev/deploy/live.local/web"
             project_type:  "drupal8"
-            ssl_certificate: "{{ _ce_dev_mkcert_base}}/{{ domain_name }}.pem"
-            ssl_certificate_key: "{{ _ce_dev_mkcert_base}}/{{ domain_name }}-key.pem"
-            https_redirect: no
+            ssl:
+              domain: "{{ domain_name }}"
+              cert: "{{ _ce_dev_mkcert_base}}/{{ domain_name }}.pem"
+              key: "{{ _ce_dev_mkcert_base}}/{{ domain_name }}-key.pem"
+              handling: "selfsigned"
             ratelimitingcrawlers: no
             is_default: yes
             servers:
