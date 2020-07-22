@@ -1,6 +1,6 @@
 #!/bin/sh
 # Test project creation and pre-build image.
-set -eu
+set -e
 PROJECTS="blank drupal8"
 
 # Common processing.
@@ -48,7 +48,7 @@ build_project(){
 # @param $1
 # Project name.
 push_project(){
-  cd
+  cdecho
   cd "$1"
   $CE_DEV_BIN push --registry codeenigma
 }
@@ -57,7 +57,7 @@ for PROJECT in $PROJECTS; do
  create_project "$PROJECT"
  test_project "$PROJECT"
  build_project "$PROJECT"
- if [ -n "$2" ] && [ "$2" = "--push" ]; then
+ if [ -n "$1" ] && [ "$1" = "--push" ]; then
   push_project "$PROJECT"
  fi
 done
