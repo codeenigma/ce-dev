@@ -10,7 +10,7 @@ curl -L "$RELEASE" -o ce-dev.tar.gz
 tar xvfz ce-dev.tar.gz
 echo "Moving binaries to /opt. This requires sudo privileges..."
 if [ -d /opt/ce-dev ]; then
-  sudo rm /opt/ce-dev
+  sudo rm -rf /opt/ce-dev
 fi
 sudo mv "$WORK_DIR/ce-dev" "/opt/"
 sudo chmod +x /opt/ce-dev/bin/ce-dev
