@@ -40,10 +40,7 @@ jobs:
         - /bin/sh docker-images/export.sh latest
         - /bin/sh templates/prebuild.sh
     - name: Build and publish
-      on:
-        branch: 1.x
-        tags: true
-        repo: codeenigma/ce-dev
+      if: branch = 1.x
       os: linux
       language: node_js
       node_js: 12
@@ -59,11 +56,11 @@ jobs:
         - sudo mv /tmp/mkcert /usr/local/bin
         - sudo chmod +x /usr/local/bin/mkcert
       script:
-        - yarn oclif-dev pack
         - - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
         - /bin/sh docker-images/export.sh latest --push
         - - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
         - /bin/sh templates/prebuild.sh --push
+        - yarn oclif-dev pack
       deploy:
         edge: true
         provider: releases
@@ -73,3 +70,6 @@ jobs:
         file_glob: true
         overwrite: true
         cleanup: false
+        on:
+          tags: true
+          repo: codeenigma/ce-dev
