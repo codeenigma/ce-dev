@@ -60,10 +60,11 @@ jobs:
         - wget https://github.com/FiloSottile/mkcert/releases/download/v1.4.1/mkcert-v1.4.1-linux-amd64 -O /tmp/mkcert
         - sudo mv /tmp/mkcert /usr/local/bin
         - sudo chmod +x /usr/local/bin/mkcert
-        - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
       script:
         - yarn oclif-dev pack
+        - - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
         - /bin/sh docker-images/export.sh latest --push
+        - - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
         - /bin/sh templates/prebuild.sh --push
       deploy:
         edge: true
