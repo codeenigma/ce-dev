@@ -9,6 +9,7 @@ cd "$OWN_DIR" || exit 1
 OWN_DIR=$(git rev-parse --show-toplevel)
 cd "$OWN_DIR" || exit 1
 OWN_DIR=$(pwd -P)
+WORK_DIR=$(mktemp -d)
 
 # ce-dev "binary"
 CE_DEV_BIN="$OWN_DIR/bin/run"
@@ -17,9 +18,8 @@ CE_DEV_BIN="$OWN_DIR/bin/run"
 # @param $1
 # Project name.
 create_project(){
-  cd
-  $CE_DEV_BIN create --destination="$(pwd)/$1" --project="$1" --template="$1"
-  cd "$1"
+  $CE_DEV_BIN create --destination="$WORK_DIR/$1" --project="$1" --template="$1"
+  cd "$WORK_DIR/$1"
   $CE_DEV_BIN init
   $CE_DEV_BIN start
   $CE_DEV_BIN provision
@@ -30,8 +30,7 @@ create_project(){
 # @param $1
 # Project name.
 test_project(){
-  cd
-  cd "$1"
+  cd "$WORK_DIR/$1"
   echo "$1"
 }
 
@@ -39,8 +38,7 @@ test_project(){
 # @param $1
 # Project name.
 build_project(){
-  cd
-  cd "$1"
+  cd "$WORK_DIR/$1"
   $CE_DEV_BIN build --registry codeenigma
 }
 
@@ -48,7 +46,7 @@ build_project(){
 # @param $1
 # Project name.
 push_project(){
-  cd "$1"
+  cd "$WORK_DIR/$1"
   $CE_DEV_BIN push --registry codeenigma
 }
 
