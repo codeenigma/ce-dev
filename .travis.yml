@@ -19,12 +19,17 @@ jobs:
       node_js: 12
     - name: Pack
       os: linux
+      addons:
+        apt:
+          packages:
+          - p7zip-full      
       script: yarn oclif-dev pack
       language: node_js
       node_js: 12
     - name: Build and test
       os: linux
-      language: c
+      language: node_js
+      node_js: 12
       addons:
         apt:
           packages:
