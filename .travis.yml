@@ -43,7 +43,7 @@ jobs:
         - sudo chmod +x /usr/local/bin/mkcert
       script: 
         - /bin/sh docker-images/export.sh latest
-        - /bin/sh templates/test.sh
+        - /bin/sh templates/prebuild.sh
     - name: Build and publish
       if: branch = 1.x
       os: linux
@@ -64,7 +64,7 @@ jobs:
       script:
         - yarn oclif-dev pack
         - /bin/sh docker-images/export.sh latest --push
-        - /bin/sh templates/test.sh --push
+        - /bin/sh templates/prebuild.sh --push
       deploy:
         edge: true
         provider: releases
