@@ -48,7 +48,6 @@ build_project(){
 # @param $1
 # Project name.
 push_project(){
-  cdecho
   cd "$1"
   $CE_DEV_BIN push --registry codeenigma
 }
