@@ -40,7 +40,10 @@ jobs:
         - /bin/sh docker-images/export.sh latest
         - /bin/sh templates/prebuild.sh
     - name: Build and publish
-      if: branch = 1.x
+      on:
+        branch: 1.x
+        tags: true
+        repo: codeenigma/ce-dev
       os: linux
       language: node_js
       node_js: 12
@@ -70,6 +73,3 @@ jobs:
         file_glob: true
         overwrite: true
         cleanup: false
-        on:
-          tags: true
-          repo: codeenigma/ce-dev
