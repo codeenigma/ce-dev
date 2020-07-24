@@ -63,8 +63,16 @@ curl -sL https://raw.githubusercontent.com/codeenigma/ce-dev/1.x/install/linux.s
 
 ## Mac
 ### Requirements
-#### Docker
+#### Docker Desktop
 Follow the installation instructions from https://docs.docker.com/engine/install/.
+
+Be sure to allow enough resources for it to run smoothly. There's no magic rule, and it will depends on your host and needs, but we found the following to be decent defaults:
+- Be generous on RAM, but do not allocate it all for Docker. If you do not set a limit and you run a resource hungry service, everything, including processes on the hosts (think Electron apps, Chrome and the like, and by cascade the Docker processes themselves) will end up swapping and being ultra slow. 8GB or 10GB out of 16GB should be reasonable values.
+- Do not throttle CPU usage (ie, allocate them all). Or, go the other way round and allocate only one. This seems contradictory, but it looks like it behave diffently based on your hardware and/or OS version. In certain cases, containers seem to be unable to make use of more than one core anyway, so allocating more than one ends up being counter-productive as it will impede processes on the host.
+- Make sure you have enough disk space allocated for the VM Disk image. This again will vary on usage, but with a dozen of projects that have a 10GB database each, you're already well over 100GB. On the other hand, ***you can always grow the virtual disk afterward, but you can NOT shrink it without destroying all containers and volumes***, so you can start small and grow it as needed if you encounter some "no space left on device/disk full" errors.
+
+[![Docker Desktop setting pane](uploads/docker-mac-settings.png)](uploads/docker-mac-settings.png)
+
 #### Docker Compose
 Docker Compose is bundled with Docker Desktop already.
 
