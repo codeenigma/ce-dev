@@ -21,7 +21,7 @@ jobs:
       language: node_js
       node_js: 12
     - name: Build and test
-      if: [ $(git branch --show-current) = '1.x.' ]
+      if: branch != '1.x.'
       os: linux
       language: node_js
       node_js: 12
@@ -40,7 +40,6 @@ jobs:
         - /bin/sh docker-images/export.sh latest
         - /bin/sh templates/prebuild.sh
     - name: Build and publish
-      if: branch = 1.x
       os: linux
       language: node_js
       node_js: 12
@@ -51,6 +50,9 @@ jobs:
           - libnss3-tools
           - wget
       install:
+        - git fetch
+        - git checkout 1.x
+        - git reset --hard
         - yarn install
         - wget https://github.com/FiloSottile/mkcert/releases/download/v1.4.1/mkcert-v1.4.1-linux-amd64 -O /tmp/mkcert
         - sudo mv /tmp/mkcert /usr/local/bin
