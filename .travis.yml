@@ -50,9 +50,6 @@ jobs:
           - libnss3-tools
           - wget
       install:
-        - git fetch
-        - git checkout 1.x
-        - git reset --hard
         - yarn install
         - wget https://github.com/FiloSottile/mkcert/releases/download/v1.4.1/mkcert-v1.4.1-linux-amd64 -O /tmp/mkcert
         - sudo mv /tmp/mkcert /usr/local/bin
