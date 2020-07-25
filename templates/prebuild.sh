@@ -47,7 +47,7 @@ build_project(){
 # Project name.
 push_project(){
   cd "$WORK_DIR/$1"
-  $CE_DEV_BIN push -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" --registry codeenigma
+  $CE_DEV_BIN push --anonymous --registry codeenigma
 }
 
 for PROJECT in $PROJECTS; do
