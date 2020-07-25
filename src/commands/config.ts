@@ -1,7 +1,6 @@
 import * as inquirer from 'inquirer'
 
 import BaseCmd from '../base-cmd-abstract'
-import {flags} from '@oclif/command'
 
 inquirer.registerPrompt('fuzzypath', require('inquirer-fuzzy-path'))
 export default class ConfigCmd extends BaseCmd {
@@ -10,14 +9,6 @@ export default class ConfigCmd extends BaseCmd {
   static examples = [
     '$ ce-dev config ',
   ]
-
-  static flags = {
-    global: flags.boolean({
-      char: 'g',
-      description: 'Update global config instead of project one',
-      default: false,
-    }),
-  }
 
   async run(): Promise<any> {
     const prompts = this.globalConfig()
