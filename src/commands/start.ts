@@ -125,7 +125,7 @@ export default class StartCmd extends BaseCmd {
     const existing = execSync(this.dockerBin + ' exec ' + containerName + ' cat /home/ce-dev/.ssh/config').toString()
     const config: Array<string> = []
     this.activeProjectInfo.ssh_hosts.forEach(host => {
-      const dest = '/tmp/' + host.host
+      const dest = '/dev/shm/' + host.host
       const entry = [
         'Host ' + host.host,
         'User ' + host.user,
@@ -133,7 +133,8 @@ export default class StartCmd extends BaseCmd {
         '',
       ]
       config.push(...entry)
-      execSync(this.dockerBin + ' cp ' + host.src_key + ' ' + containerName + ':' + dest, {stdio: 'inherit'})
+      execSync(this.dockerBin + ' cp ' + host.src_key + ' ' + containerName + ':/tmp/' + host.host, {stdio: 'inherit'})
+      execSync(this.dockerBin + ' exec ' + containerName + ' mv /tmp/' + host.host + ' ' + dest, {stdio: 'inherit'})
     })
     fs.writeFile(this.tmpSSHConfigFile, existing + config.join('\n') + '\n', () => {
       execSync(this.dockerBin + ' cp ' + this.tmpSSHConfigFile + ' ' + containerName + ':/home/ce-dev/.ssh/config', {stdio: 'inherit'})
