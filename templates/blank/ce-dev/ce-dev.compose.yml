@@ -17,6 +17,7 @@ services:
         dest: /home/ce-dev/deploy/live.local
         target_platforms:
           - darwin
+          - linux
         ignore:
           - Name vendor
           - Name node_modules

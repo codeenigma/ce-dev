@@ -20,8 +20,8 @@
         dest: "/home/ce-dev/.ce-dev-cache/{{ project_name }}/ce-dev/ce-dev.compose.yml"
     - name: Generate docker-compose prebuilt template.
       template:
-        src: "{{ project_type }}/ce-dev/ce-dev.compose.yml"
-        dest: "/home/ce-dev/.ce-dev-cache/{{ project_name }}/ce-dev/ce-dev.compose.yml"
+        src: "{{ project_type }}/ce-dev/ce-dev.compose.prebuilt.yml"
+        dest: "/home/ce-dev/.ce-dev-cache/{{ project_name }}/ce-dev/ce-dev.compose.prebuilt.yml"
     - name: Generate provision playbook.
       template:
         src: "{{ project_type }}/ce-dev/ansible/provision.yml"

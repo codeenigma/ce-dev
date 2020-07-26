@@ -1,0 +1,23 @@
+version: '3.7'
+x-ce_dev:
+  registry: 'localhost:5000'
+  project_name: {{ project_name }}
+  provision:
+    - ce-dev/ansible/provision.yml
+  deploy:
+    - ce-dev/ansible/deploy.yml
+  urls: []
+  version: 1.x
+services:
+  {{ project_name }}:
+    image: 'codeenigma/blank-blank:latest'
+    x-ce_dev:
+      unison:
+        - src: ../
+          dest: /home/ce-dev/deploy/live.local
+          target_platforms:
+            - darwin
+            - linux
+          ignore:
+            - Name vendor
+            - Name node_modules
