@@ -1,7 +1,7 @@
 &nbsp;
-- [Home](home)
+- [Home](/home)
   - [Install](/install)
   - [Commands](/commands)
   - [Troubleshooting](/troubleshooting)
-  - [SSH](ssh)
-  - [User config](userconfig)
+  - [SSH](/ssh)
+  - [User config](/userconfig)
