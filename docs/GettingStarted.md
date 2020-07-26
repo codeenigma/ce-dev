@@ -44,7 +44,7 @@ What happened is:
 - updated the /etc/hosts file on your laptop
 You should now have two new running containers (check with `docker ps`), hello-db and hello-web. If you `cat /etc/hosts` you should also see matching entries for those.
 
-We know need to configure the containers.
+We now need to configure the containers.
 ```
 ce-dev provision
 ```
