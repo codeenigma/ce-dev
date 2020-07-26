@@ -9,8 +9,7 @@ export default class UpdateCmd extends BaseCmd {
   ]
 
   async run(): Promise<any> {
-    execSync(this.dockerBin + ' image pull codeenigma/ce-dev-controller-1.x', {stdio: 'inherit'})
-    execSync(this.dockerBin + ' image pull codeenigma/ce-dev-1.x:latest', {stdio: 'inherit'})
-    execSync('curl -sL https://raw.githubusercontent.com/codeenigma/ce-dev/1.x/install/' + this.config.platform + '.sh | /bin/sh', {stdio: 'inherit'})
+    this.pullControllerContainer()
+    execSync('curl -sL https://raw.githubusercontent.com/codeenigma/ce-dev/1.x/install.sh | /bin/sh -s -- ' + this.config.platform, {stdio: 'inherit'})
   }
 }

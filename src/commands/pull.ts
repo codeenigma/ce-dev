@@ -13,7 +13,6 @@ export default class PullCmd extends DockerImagesCmd {
    * @inheritdoc
    */
   async run(): Promise<any> {
-    this.pullControllerContainer()
     if (this.dockerLogin) {
       this.login()
     }

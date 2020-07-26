@@ -3,6 +3,7 @@
 * [`ce-dev autocomplete [SHELL]`](#ce-dev-autocomplete-shell)
 * [`ce-dev browse`](#ce-dev-browse)
 * [`ce-dev build`](#ce-dev-build)
+* [`ce-dev clean`](#ce-dev-clean)
 * [`ce-dev config`](#ce-dev-config)
 * [`ce-dev create`](#ce-dev-create)
 * [`ce-dev deploy`](#ce-dev-deploy)
@@ -15,6 +16,7 @@
 * [`ce-dev shell [CONTAINER]`](#ce-dev-shell-container)
 * [`ce-dev start`](#ce-dev-start)
 * [`ce-dev stop`](#ce-dev-stop)
+* [`ce-dev update`](#ce-dev-update)
 
 ## `ce-dev autocomplete [SHELL]`
 
@@ -51,7 +53,7 @@ EXAMPLE
   $ ce-dev browse
 ```
 
-_See code: [src/commands/browse.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/browse.ts)_
+_See code: [src/commands/browse.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.25/src/commands/browse.ts)_
 
 ## `ce-dev build`
 
@@ -77,7 +79,24 @@ EXAMPLE
   $ ce-dev build --template example.compose.yml
 ```
 
-_See code: [src/commands/build.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/build.ts)_
+_See code: [src/commands/build.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.25/src/commands/build.ts)_
+
+## `ce-dev clean`
+
+Remove unused Docker artifacts (volumes, images).
+
+```
+USAGE
+  $ ce-dev clean
+
+OPTIONS
+  -q, --quiet  Non-interactive, do not prompt for container deletion choice.
+
+EXAMPLE
+  $ ce-dev clean
+```
+
+_See code: [src/commands/clean.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.25/src/commands/clean.ts)_
 
 ## `ce-dev config`
 
@@ -87,14 +106,11 @@ Configure global user preferences.
 USAGE
   $ ce-dev config
 
-OPTIONS
-  -g, --global  Update global config instead of project one
-
 EXAMPLE
   $ ce-dev config
 ```
 
-_See code: [src/commands/config.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/config.ts)_
+_See code: [src/commands/config.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.25/src/commands/config.ts)_
 
 ## `ce-dev create`
 
@@ -117,7 +133,7 @@ EXAMPLE
   $ ce-dev create --template drupal8 --project myproject
 ```
 
-_See code: [src/commands/create.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/create.ts)_
+_See code: [src/commands/create.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.25/src/commands/create.ts)_
 
 ## `ce-dev deploy`
 
@@ -131,7 +147,7 @@ EXAMPLE
   $ ce-dev deploy example-app
 ```
 
-_See code: [src/commands/deploy.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/deploy.ts)_
+_See code: [src/commands/deploy.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.25/src/commands/deploy.ts)_
 
 ## `ce-dev destroy`
 
@@ -148,7 +164,7 @@ EXAMPLE
   $ ce-dev destroy
 ```
 
-_See code: [src/commands/destroy.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/destroy.ts)_
+_See code: [src/commands/destroy.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.25/src/commands/destroy.ts)_
 
 ## `ce-dev help [COMMAND]`
 
@@ -185,7 +201,7 @@ EXAMPLE
   $ ce-dev init --template example.compose.yml
 ```
 
-_See code: [src/commands/init.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/init.ts)_
+_See code: [src/commands/init.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.25/src/commands/init.ts)_
 
 ## `ce-dev provision`
 
@@ -196,7 +212,7 @@ USAGE
   $ ce-dev provision
 ```
 
-_See code: [src/commands/provision.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/provision.ts)_
+_See code: [src/commands/provision.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.25/src/commands/provision.ts)_
 
 ## `ce-dev pull`
 
@@ -224,7 +240,7 @@ EXAMPLE
   $ ce-dev pull --template example.compose.yml
 ```
 
-_See code: [src/commands/pull.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/pull.ts)_
+_See code: [src/commands/pull.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.25/src/commands/pull.ts)_
 
 ## `ce-dev push`
 
@@ -252,7 +268,7 @@ EXAMPLE
   $ ce-dev push --template example.compose.yml
 ```
 
-_See code: [src/commands/push.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/push.ts)_
+_See code: [src/commands/push.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.25/src/commands/push.ts)_
 
 ## `ce-dev shell [CONTAINER]`
 
@@ -272,7 +288,7 @@ EXAMPLE
   $ ce-dev shell example-app
 ```
 
-_See code: [src/commands/shell.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/shell.ts)_
+_See code: [src/commands/shell.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.25/src/commands/shell.ts)_
 
 ## `ce-dev start`
 
@@ -289,7 +305,7 @@ EXAMPLE
   $ ce-dev start
 ```
 
-_See code: [src/commands/start.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/start.ts)_
+_See code: [src/commands/start.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.25/src/commands/start.ts)_
 
 ## `ce-dev stop`
 
@@ -306,5 +322,19 @@ EXAMPLE
   $ ce-dev stop
 ```
 
-_See code: [src/commands/stop.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.11/src/commands/stop.ts)_
+_See code: [src/commands/stop.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.25/src/commands/stop.ts)_
+
+## `ce-dev update`
+
+Update base images and ce-dev cli.
+
+```
+USAGE
+  $ ce-dev update
+
+EXAMPLE
+  $ ce-dev update
+```
+
+_See code: [src/commands/update.ts](https://github.com/codeenigma/ce-dev/blob/v1.0.25/src/commands/update.ts)_
 <!-- commandsstop -->
