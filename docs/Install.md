@@ -57,7 +57,7 @@ sudo sysctl -p # Or better yet, reboot.
 ### Install
 To install ce-dev itself, use this one-liner:
 ```
-curl -sL https://raw.githubusercontent.com/codeenigma/ce-dev/1.x/install/linux.sh | /bin/sh
+curl -sL https://raw.githubusercontent.com/codeenigma/ce-dev/1.x/install.sh | /bin/sh -s -- darwin
 ```
 *note for the "I don't trust your install script" crowd out there... 1. Just follow the link to see what this script does. 2. If you don't trust the install script, why would you trust the rest of the program in the first place?*
 
@@ -89,6 +89,6 @@ Make sure to restart your browsers after installing.
 ### Install
 To install ce-dev itself, use this one-liner:
 ```
-curl -sL https://raw.githubusercontent.com/codeenigma/ce-dev/1.x/install/darwin.sh | /bin/sh
+curl -sL https://raw.githubusercontent.com/codeenigma/ce-dev/1.x/install.sh | /bin/sh -s -- darwin
 ```
 *note for the “I don’t trust your install script” crowd out there… 1. Just follow the link to see what this script does. 2. If you don’t trust the install script, why would you trust the rest of the program in the first place?*
