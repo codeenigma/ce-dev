@@ -1,7 +1,7 @@
 &nbsp;
 - [Home](/home)
   - [Install](/install)
-  - [Getting started](gettingstarted)
+  - [Getting started](/gettingstarted)
   - [Commands](/commands)
   - [Troubleshooting](/troubleshooting)
   - [SSH](/ssh)
