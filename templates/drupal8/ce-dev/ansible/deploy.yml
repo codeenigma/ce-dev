@@ -26,6 +26,7 @@
             sanitize_command: "sql-sanitize"
             # Remove after initial pass, to avoid reinstalling Drupal.
             force_install: yes
+            base_url: "https://{{ domain_name }}"
     # Composer command to run.
     - composer:
         command: install
