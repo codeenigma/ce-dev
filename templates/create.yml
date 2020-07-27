@@ -2,12 +2,10 @@
 
 - hosts: localhost
 
-  vars:
-
   tasks:
     - name: Create target directory.
       synchronize:
-        src: "{{ project_type }}"
+        src: "{{ project_type }}/"
         dest: "/home/ce-dev/.ce-dev-cache/{{ project_name }}"
     - name: Init git repo.
       command: git init
