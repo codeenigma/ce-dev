@@ -8,7 +8,7 @@
 ensure_user_ids(){
   OLD_UID="$(id -u ce-dev)"
   OLD_GID="$(id -g ce-dev)"
-  if [ "$OLD_UID" = "$1" ] && [ "$OLD_GID" != "$2" ]; then
+  if [ "$OLD_UID" = "$1" ] && [ "$OLD_GID" = "$2" ]; then
     return
   fi
   if [ "$OLD_UID" != "$1" ]; then
