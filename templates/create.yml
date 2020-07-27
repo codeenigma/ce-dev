@@ -6,10 +6,9 @@
 
   tasks:
     - name: Create target directory.
-      file:
-        path: "/home/ce-dev/.ce-dev-cache/{{ project_name }}/ce-dev/ansible"
-        state: directory
-        recurse: yes    
+      synchronize:
+        src: "{{ project_type }}"
+        dest: "/home/ce-dev/.ce-dev-cache/{{ project_name }}"
     - name: Init git repo.
       command: git init
       args:
@@ -34,11 +33,3 @@
       template:
         src: "{{ project_type }}/ce-dev/ansible/deploy.yml"
         dest: "/home/ce-dev/.ce-dev-cache/{{ project_name }}/ce-dev/ansible/deploy.yml"
-    - name: Generate project gitignore file.
-      template:
-        src: "{{ project_type }}/gitignore.j2"
-        dest: "/home/ce-dev/.ce-dev-cache/{{ project_name }}/.gitignore"
-    - name: Generate ce-dev gitignore file.
-      template:
-        src: "gitignore.j2"
-        dest: "/home/ce-dev/.ce-dev-cache/{{ project_name }}/ce-dev/.gitignore"
