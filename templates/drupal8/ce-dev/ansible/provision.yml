@@ -35,6 +35,8 @@
     - php:
         version:
           - 7.4
+        cli:
+          memory_limit: -1
 {% endraw %}
   tasks:
     - apt:
