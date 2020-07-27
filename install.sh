@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-LATEST=$(curl --silent "https://api.github.com/repos/codeenigma/ce-dev/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")')
+LATEST=$( curl --silent "https://api.github.com/repos/codeenigma/ce-dev/releases/latest" | grep tag_name | cut -d \" -f 4)
 PLATFORM="$1"
 RELEASE=https://github.com/codeenigma/ce-dev/releases/download/$LATEST/ce-dev-v$LATEST-$PLATFORM-x64.tar.gz
 WORK_DIR=$(mktemp -d)
