@@ -66,3 +66,7 @@ We're now ready to go and start using our newly spinned up instance:
 ce-dev browse
 ```
 That should open https://www.hello.local in a new browser's tab, with a fresh Drupal instance.
+```
+ce-dev shell
+```
+Will open a shell in the 'web' container. You can then `cd ~/deploy/live.local` and run a `drush uli` to grab a login link.
