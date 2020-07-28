@@ -68,7 +68,7 @@ export default abstract class AnsibleCmd extends BaseCmd {
       const src = fspath.dirname(ansiblePath)
       const dest = this.ansibleProjectPlaybooksPath + fspath.dirname(src)
       this.log('Copy Ansible configuration')
-      execSync(this.dockerBin + ' exec -t --user ce-dev ce_dev_controller mkdir -p ' + dest)
+      execSync(this.dockerBin + ' exec -t --user ce-dev ce_dev_controller mkdir -p ' + dest + ' && rm -rf ' + dest + '/*')
       execSync(this.dockerBin + ' cp ' + src + ' ce_dev_controller:' + dest)
       const script = fspath.join(this.ansibleScriptsPath, this.ansibleScript)
       const cmd = script + ' ' + this.getCommandParameters(ansiblePath)
