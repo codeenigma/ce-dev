@@ -54,7 +54,7 @@ We have used Ansible to [provision](provision) the running containers:
 
 So, we have running containers, with the needed software installed and configured, but we still need one last step:
 ```
-ce-deploy
+ce-dev deploy
 ```
 We have used Ansible (again) to [setup the application](deploy). In short, we've basically done
 - composer install

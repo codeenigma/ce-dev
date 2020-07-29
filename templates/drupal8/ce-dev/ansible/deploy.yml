@@ -49,7 +49,7 @@
     - composer # Composer install step.
     - database_backup # This is still needed to generate credentials.
     - config_generate # Generates settings.php
-#    - database_sync # Grab database from a remote server.
+#    - sync/database_sync # Grab database from a remote server.
     - database_apply # Run drush updb and config import.
     - _exit # Some common housekeeping.
 {% endraw %}
