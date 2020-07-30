@@ -55,9 +55,9 @@ jobs:
         - sudo mv /tmp/mkcert /usr/local/bin
         - sudo chmod +x /usr/local/bin/mkcert
       script:
-        - - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - /bin/sh docker-images/export.sh latest --push
-        - - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - /bin/sh templates/prebuild.sh --push
         - yarn oclif-dev pack
       deploy:
