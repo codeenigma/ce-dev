@@ -23,7 +23,7 @@ jobs:
       language: node_js
       node_js: 12
     - name: Build and test
-      if: branch != '1.x.'
+      if: branch != '1.x'
       os: linux
       language: node_js
       node_js: 12
@@ -74,8 +74,8 @@ jobs:
         on:
           tags: true
           repo: codeenigma/ce-dev
-    - name: Update documentation.
-      if: branch = '1.x.'
+    - name: Documentation.
+      if: branch = '1.x'
       addons:
         apt:
           packages:
