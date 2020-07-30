@@ -91,7 +91,7 @@ jobs:
         - cd
         - git clone https://github.com/codeenigma/wikis2pages.git
         - cd wikis2pages
-        - /bin/sh init.sh https://$GITHUB_TOKEN@github.com/codeenigma/ce-dev.git
+        - /bin/sh init.sh https://$GITHUB_TOKEN@github.com/codeenigma/ce-dev.git 1.x
         - /bin/sh set-current.sh ce-dev-travis
         - docker exec --user ce-dev --workdir /home/ce-dev/deploy/live.local wikis2pages-hugo hugo
         - /bin/sh .travis-push.sh
