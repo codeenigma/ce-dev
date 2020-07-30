@@ -90,7 +90,7 @@ jobs:
       script: 
         - cd
         - git clone https://github.com/codeenigma/wikis2pages.git
-        - cd wiki2pages
+        - cd wikis2pages
         - /bin/sh init.sh https://$GITHUB_TOKEN@github.com/codeenigma/wikis2pages-demo.git
         - /bin/sh set-current.sh ce-dev-travis
         - docker exec --user ce-dev --workdir /home/ce-dev/deploy/live.local wikis2pages-hugo hugo
