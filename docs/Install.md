@@ -19,7 +19,7 @@ Follow the installation instructions for your distro from https://docs.docker.co
 Most setup instructions you will find online instruct you to [add your user to the "docker" group](https://docs.docker.com/engine/install/linux-postinstall/) to be able to call docker as a standard user.
 There is a [non-neglectable risk](https://docs.docker.com/engine/security/security/#docker-daemon-attack-surface) with that approach, even though it is far more convenient than being prompted for your password each and every step.
 
-By default, ce-dev will assume you went the "safe" way and use `sudo docker` or `sudo docker-compose`, but you can change that in your [global configuration](config).
+By default, ce-dev will assume you went the "safe" way and use `sudo docker` or `sudo docker-compose`, but you can change that in your [global configuration](userconfig).
 
 #### Docker Compose
 
