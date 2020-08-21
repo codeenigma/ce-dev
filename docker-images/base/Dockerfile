@@ -4,10 +4,10 @@ RUN \
   export DEBIAN_FRONTEND=noninteractive && \
   apt-get update && \
   apt-get install -y -o Dpkg::Options::="--force-confnew" \
-    p7zip-full \
-    build-essential \
-    wget \
-    ocaml-native-compilers && \
+  p7zip-full \
+  build-essential \
+  wget \
+  ocaml-native-compilers && \
   cd /tmp/ && \
   wget https://github.com/bcpierce00/unison/archive/v2.51.2.tar.gz && \
   tar -xzvf v2.51.2.tar.gz && \
@@ -22,20 +22,20 @@ RUN \
   apt-get update && \
   apt-get dist-upgrade -y -o Dpkg::Options::="--force-confnew" && \
   apt-get install -y -o Dpkg::Options::="--force-confnew" \
-    apt-transport-https \
-    apt-utils \
-    aptitude \
-    bash \
-    curl \
-    dirmngr \ 
-    git \
-    gnupg \
-    rsync \
-    openssh-server \
-    sudo \
-    unzip \
-    vim \
-    wget && \
+  apt-transport-https \
+  apt-utils \
+  aptitude \
+  bash \
+  curl \
+  dirmngr \ 
+  git \
+  gnupg \
+  rsync \
+  openssh-server \
+  sudo \
+  unzip \
+  vim \
+  wget && \
   echo 'UseDNS no' >> /etc/ssh/sshd_config && \
   mkdir -p /var/run/sshd && \
   rm /usr/sbin/policy-rc.d && \
@@ -59,8 +59,8 @@ RUN \
 
 RUN \
   rm -f \
-    /etc/machine-id \
-    /var/lib/dbus/machine-id
+  /etc/machine-id \
+  /var/lib/dbus/machine-id
 RUN \
   set -x && \
   export DEBIAN_FRONTEND=noninteractive && \
@@ -93,9 +93,9 @@ RUN \
   wget && \
   apt-get clean  && \
   rm -rf \
-    /var/lib/apt/lists/* \
-    /var/log/* \
-    /tmp/*
+  /var/lib/apt/lists/* \
+  /var/log/* \
+  /tmp/*
 
 COPY --from=unison /tmp/unison-2.51.2/src/unison /usr/local/bin/
 COPY --from=unison /tmp/unison-2.51.2/src/unison-fsmonitor /usr/local/bin/
@@ -106,7 +106,7 @@ COPY ./unison-startup.sh /opt/
 
 RUN \
   wget https://github.com/FiloSottile/mkcert/releases/download/v1.4.1/mkcert-v1.4.1-linux-amd64 -O /usr/local/bin/mkcert && \
-  mkdir -p /home/ce-dev/deploy/live.local /home/ce-dev/.composer/cache /home/ce-dev/.nvm/versions/node && \
+  mkdir -p /home/ce-dev/deploy/live.local /home/ce-dev/.composer/cache /home/ce-dev/.nvm/versions/node /home/ce-dev/.local/share/mkcert && \
   chown -R ce-dev:ce-dev /home/ce-dev && \
   chmod +x /usr/local/bin/*
 
