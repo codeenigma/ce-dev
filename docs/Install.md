@@ -28,7 +28,7 @@ Follow the installation instruction for your distro from https://docs.docker.com
 #### mkcert
 
 Follow the instructions frow https://github.com/FiloSottile/mkcert#linux and make sure to have nss/certutil installed. Simplest is to use the precompiled binaries versions (last option on the list).
-On a successful install, running `mkcert install` should output something along the lines of:
+On a successful install, running `mkcert -install` should output something along the lines of:
 
 ```
 Using the local CA at "/home/XXX/.local/share/mkcert" ✨
@@ -102,7 +102,7 @@ Docker Compose is bundled with Docker Desktop already.
 #### mkcert
 
 Follow the instructions from https://github.com/FiloSottile/mkcert#macos and triple check nss/certutil installed. Simplest is to use the precompiled binaries versions (last option on the list).
-On a successful install, running `mkcert install` should output something along the lines of:
+On a successful install, running `mkcert -install` should output something along the lines of:
 
 ```
 Using the local CA at "/Users/XXX/.local/share/mkcert" ✨
