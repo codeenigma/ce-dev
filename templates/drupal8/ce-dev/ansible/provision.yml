@@ -37,6 +37,8 @@
           - 7.4
         cli:
           memory_limit: -1
+    - xdebug:
+        cli: true
 {% endraw %}
   tasks:
     - apt:
