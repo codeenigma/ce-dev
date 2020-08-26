@@ -15,7 +15,6 @@ services:
     expose:
       - 443
       - 80
-      - 9000
     x-ce_dev:
       host_aliases:
         - www.{{ project_name }}.local
