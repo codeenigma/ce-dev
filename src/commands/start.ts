@@ -110,6 +110,7 @@ export default class StartCmd extends BaseCmd {
     }
     ux.action.start('Ensuring file ownership')
     execSync(this.dockerBin + ' exec ' + containerName + ' /bin/sh /opt/ce-dev-ownership.sh ' + uid.toString() + ' ' + gid.toString(), {stdio: 'inherit'})
+    execSync(this.dockerBin + ' exec ' + containerName + ' chown -R ce-dev:ce-dev /home/ce-dev/.local', {stdio: 'inherit'})
     ux.action.stop()
   }
 
