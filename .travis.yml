@@ -9,7 +9,7 @@ jobs:
       os: linux
       install:
         - yarn install
-      script: 
+      script:
         - yarn eslint src
       language: node_js
       node_js: 12
@@ -18,7 +18,7 @@ jobs:
       addons:
         apt:
           packages:
-          - p7zip-full      
+            - p7zip-full
       script: yarn oclif-dev pack
       language: node_js
       node_js: 12
@@ -30,16 +30,16 @@ jobs:
       addons:
         apt:
           packages:
-          - p7zip-full
-          - libnss3-tools
-          - wget
+            - p7zip-full
+            - libnss3-tools
+            - wget
       install:
         - yarn install
         - wget https://github.com/FiloSottile/mkcert/releases/download/v1.4.1/mkcert-v1.4.1-linux-amd64 -O /tmp/mkcert
         - sudo mv /tmp/mkcert /usr/local/bin
         - sudo chmod +x /usr/local/bin/mkcert
-      script: 
-        - /bin/sh docker-images/export.sh latest
+      script:
+        - /bin/sh docker-images/export.sh latest || travis_terminate 1
         - /bin/sh templates/prebuild.sh
     - name: Build and publish
       os: linux
@@ -48,9 +48,9 @@ jobs:
       addons:
         apt:
           packages:
-          - p7zip-full
-          - libnss3-tools
-          - wget
+            - p7zip-full
+            - libnss3-tools
+            - wget
       install:
         - yarn install
         - wget https://github.com/FiloSottile/mkcert/releases/download/v1.4.1/mkcert-v1.4.1-linux-amd64 -O /tmp/mkcert
@@ -58,9 +58,9 @@ jobs:
         - sudo chmod +x /usr/local/bin/mkcert
       script:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        - /bin/sh docker-images/export.sh latest --push
+        - /bin/sh docker-images/export.sh latest --push || travis_terminate 1
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        - /bin/sh templates/prebuild.sh --push
+        - /bin/sh templates/prebuild.sh --push || travis_terminate 1
         - yarn oclif-dev pack
       deploy:
         edge: true
@@ -79,15 +79,15 @@ jobs:
       addons:
         apt:
           packages:
-          - p7zip-full
-          - libnss3-tools
-          - wget
+            - p7zip-full
+            - libnss3-tools
+            - wget
       install:
         - wget https://github.com/FiloSottile/mkcert/releases/download/v1.4.1/mkcert-v1.4.1-linux-amd64 -O /tmp/mkcert
         - sudo mv /tmp/mkcert /usr/local/bin
         - sudo chmod +x /usr/local/bin/mkcert
         - curl -sL https://raw.githubusercontent.com/codeenigma/ce-dev/1.x/install.sh | /bin/sh -s -- linux
-      script: 
+      script:
         - cd
         - git clone https://github.com/codeenigma/wikis2pages.git
         - cd wikis2pages
