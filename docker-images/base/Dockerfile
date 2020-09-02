@@ -103,6 +103,7 @@ COPY ./ce-dev-ownership.sh /opt/
 COPY ./ce-dev-ssh.sh /opt/
 COPY ./unison.sh /opt/
 COPY ./unison-startup.sh /opt/
+COPY ./procmailrc /etc/procmailrc
 
 RUN \
   wget https://github.com/FiloSottile/mkcert/releases/download/v1.4.1/mkcert-v1.4.1-linux-amd64 -O /usr/local/bin/mkcert && \
