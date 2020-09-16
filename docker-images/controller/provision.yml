@@ -4,6 +4,7 @@
   vars:
     - domain_name: example.com
     - _ce_provision_build_tmp_dir: /tmp
+    - _ce_provision_data_dir: /tmp
     - is_local: yes
     - env_type: utility
     - ce_deploy:
