@@ -24,7 +24,7 @@ done
 echo "done."
 
 cd "$WORK_DIR"
-echo "Fetching latest release..."
+echo "Fetching latest release... $RELEASE"
 curl --fail -L "$RELEASE" -o ce-dev.tar.gz
 echo "done."
 
