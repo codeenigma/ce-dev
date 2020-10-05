@@ -1,6 +1,6 @@
-import {IConfig} from '@oclif/config'
+import { IConfig } from '@oclif/config'
 import YamlParser from './yaml-parser'
-import {execSync} from 'child_process'
+import { execSync } from 'child_process'
 
 const fspath = require('path')
 /**
@@ -103,7 +103,7 @@ export default class IPManager {
    */
   public getNetBase(): string {
     if (this.networkExists()) {
-      const gw = execSync(this.dockerBin + ' network inspect ce_dev --format "{{range .IPAM.Config}}{{.Gateway}}{{end}}"').toString().trim()
+      const gw = execSync(this.dockerBin + ' network inspect ce_dev --format "{{range.IPAM.Config}}{{.Gateway}}{{end}}"').toString().trim()
       return gw.substr(0, gw.length - 2)
     }
     return this.getAvailableSubnet()
@@ -119,8 +119,8 @@ export default class IPManager {
     const existing = execSync(
       this.dockerBin + ' network ls | grep -w ce_dev | wc -l',
     )
-    .toString()
-    .trim()
+      .toString()
+      .trim()
     if (existing === '0') {
       return false
     }
