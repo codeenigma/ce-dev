@@ -23,11 +23,11 @@ export default class ProvisionCmd extends AnsibleCmd {
     const ownBranch = '1.x'
     const configBranch = '1.x'
     let cmd = '--own-branch ' + ownBranch
-    cmd +=  ' --config-branch ' + configBranch
+    cmd += ' --config-branch ' + configBranch
     cmd += ' --workspace ' + workspace
     cmd += ' --repo ' + repo
     cmd += ' --branch ce-dev --playbook ' + ansiblePath
-    cmd += ' --ansible-extra-vars \'{"is_local":"true", "_ce_dev_mkcert_base":"/home/ce-dev/.local/share/mkcert", "ce_dev_host_platform":"' + this.config.platform + '"}\''
+    cmd += ' --ansible-extra-vars \'{"is_local":"true","_ce_dev_mkcert_base":"/home/ce-dev/.local/share/mkcert","ce_dev_host_platform":"' + this.config.platform + '"}\''
     return cmd
   }
 }
