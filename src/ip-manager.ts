@@ -1,6 +1,6 @@
-import { IConfig } from '@oclif/config'
+import {IConfig} from '@oclif/config'
 import YamlParser from './yaml-parser'
-import { execSync } from 'child_process'
+import {execSync} from 'child_process'
 
 const fspath = require('path')
 /**
@@ -119,8 +119,8 @@ export default class IPManager {
     const existing = execSync(
       this.dockerBin + ' network ls | grep -w ce_dev | wc -l',
     )
-      .toString()
-      .trim()
+    .toString()
+    .trim()
     if (existing === '0') {
       return false
     }
