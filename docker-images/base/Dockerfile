@@ -58,7 +58,7 @@ RUN \
   set -x && \
   export DEBIAN_FRONTEND=noninteractive && \
   apt-get update && \
-  apt -t=buster-backports upgrade systemd && \
+  apt-get -y -o Dpkg::Options::="--force-confnew" -t=buster-backports upgrade systemd && \
   apt-get clean  && \
   rm -rf \
   /var/lib/apt/lists/* \
