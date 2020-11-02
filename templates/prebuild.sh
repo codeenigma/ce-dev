@@ -20,6 +20,7 @@ CE_DEV_BIN="$OWN_DIR/bin/run"
 create_project(){
   $CE_DEV_BIN create --destination="$WORK_DIR/$1" --project="$1" --template="$1"
   cd "$WORK_DIR/$1"
+  rm ce-dev/ce-dev.compose.prebuilt.yml
   $CE_DEV_BIN init
   $CE_DEV_BIN start
   $CE_DEV_BIN provision
