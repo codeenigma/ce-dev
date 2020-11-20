@@ -23,10 +23,10 @@ export default class DeployCmd extends AnsibleCmd {
 
   protected getCommandParameters(ansiblePath: string): string {
     const workspace = this.ansibleProjectPlaybooksPath
-    const repo = this.activeProjectInfo.project_name
+    const buildId = this.activeProjectInfo.project_name
     const ownBranch = '1.x'
     const configBranch = '1.x'
-    const cmd = '--own-branch ' + ownBranch + ' --config-branch ' + configBranch + ' --workspace ' + workspace + ' --repo ' + repo + ' --branch ce-dev --playbook ' + ansiblePath + ' --build-number 1 --previous-stable-build-number 1 --ansible-extra-vars \'{"is_local":"true"}\''
+    const cmd = '--own-branch ' + ownBranch + ' --config-branch ' + configBranch + ' --workspace ' + workspace + ' --build-id ' + buildId + ' --playbook ' + ansiblePath + ' --build-number 1 --previous-stable-build-number 1 --ansible-extra-vars \'{"is_local":"true"}\''
     return cmd
   }
 }
