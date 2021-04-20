@@ -1,0 +1,16 @@
+name: Lint the codebase
+
+# Run this workflow every time a new commit pushed to your repository
+on: pull_request
+
+jobs:
+  # See https://github.com/marketplace/actions/run-eslint
+  # ESLint now built in to GitHub Actions
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install modules
+        run: yarn
+      - name: Run ESLint
+        run: eslint ./src --ext .js,.jsx,.ts,.tsx
