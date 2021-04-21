@@ -22,11 +22,10 @@
 
 If you need to pull a release, follow these instructions:
 
-1. In the GitHub UI go to [Tags](https://github.com/codeenigma/ce-dev/tags), click the tag whose release you want to remove and delete it.
+1. Locally in your terminal on the `1.x` branch update the tags, e.g. `git pull --tags`
 
-2. Locally in your terminal on the `1.x` branch update the tags, e.g. `git pull --tags`
+2. Delete the tag locally, e.g. `git tag -d 1.2.4`
 
-3. Delete the tag locally, e.g. `git tag -d 1.2.4`
+3. Push the deletion up too, e.g. `git push --delete origin 1.2.4`
 
-4. Push that up too, e.g. `git push --tags`
-
+The deletion of the tag should also delete all trace of the release.
