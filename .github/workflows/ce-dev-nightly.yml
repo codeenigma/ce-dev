@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: '1.x'
-      - name: Install build, test and publish dependencies
+      - name: Install test dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y p7zip-full libnss3-tools wget
