@@ -2,9 +2,9 @@ name: Test image builds nightly
 
 # Run this workflow at 6:30 every day and on each PR
 on:
+  pull_request:
   schedule:
     - cron: '30 6 * * *'
-  pull_request
 
 jobs:
   build:
