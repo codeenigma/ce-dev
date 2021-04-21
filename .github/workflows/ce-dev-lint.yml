@@ -1,6 +1,6 @@
 name: Lint the codebase
 
-# Run this workflow every time a new commit pushed to your repository
+# Run this workflow every time a new PR is created
 on: pull_request
 
 jobs:
