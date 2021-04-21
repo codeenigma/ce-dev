@@ -1,0 +1,58 @@
+name: Build the ce-dev binaries and images
+
+# Run this workflow only on a push/merged PR to branch 1.x with valid tags
+on:
+  push:
+    tags:
+    - 1.*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install modules
+        run: yarn
+      # Uses https://oclif.io/
+      - name: Pack the JS
+        run: yarn oclif-dev pack
+      # We build mkcert from source because releases are broken
+      - name: Install build and publish dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y p7zip-full libnss3-tools wget
+          cd /tmp
+          wget https://golang.org/dl/go1.16.3.linux-amd64.tar.gz
+          sudo tar -C /usr/local -xzf go1.16.3.linux-amd64.tar.gz
+          export PATH=$PATH:/usr/local/go/bin
+          git clone https://github.com/FiloSottile/mkcert && cd mkcert
+          go build -ldflags "-X main.Version=$(git describe --tags)"
+          sudo mv ./mkcert /usr/local/bin && cd ../
+          sudo chmod +x /usr/local/bin/mkcert
+          rm -Rf mkcert
+      - name: Build and push Docker images
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+          /bin/sh docker-images/export.sh latest --push
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+          /bin/sh templates/prebuild.sh --push
+       # Uses https://github.com/marketplace/actions/gh-release
+       # Pack step places the build artifacts in ./dist
+      - name: Publish new ce-dev binaries
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/**/**
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and publish docs
+        run: |
+          curl -sL https://raw.githubusercontent.com/codeenigma/ce-dev/1.x/install.sh | /bin/sh -s -- linux
+          git clone https://github.com/codeenigma/wikis2pages.git
+          cd wikis2pages
+          /bin/sh init.sh https://${{ secrets.GITHUB_TOKEN }}@github.com/codeenigma/ce-dev.git 1.x
+          /bin/sh set-current.sh ce-dev-travis
+          docker exec --user ce-dev --workdir /home/ce-dev/deploy/live.local wikis2pages-hugo hugo
+          /bin/sh .github-actions-push.sh
+          cd /home/runner/wikis2pages/public/ce-dev-travis
+          git remote add ci https://${{ secrets.DOCS_GITHUB_TOKEN }}@github.com/codeenigma/ce-dev-docs.git
+          git push ci master
