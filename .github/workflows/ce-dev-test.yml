@@ -1,4 +1,4 @@
-name: Test image builds nightly
+name: Test image builds
 
 # Run this workflow at 6:30 every day and on each PR
 on:
@@ -13,6 +13,11 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: '1.x'
+      - name: Install modules
+        run: yarn
+      # Uses https://oclif.io/
+      - name: Pack the JS
+        run: yarn oclif-dev pack
       - name: Install test dependencies
         run: |
           sudo apt-get update
