@@ -1,16 +1,14 @@
 name: Build the ce-dev binaries and images
 
-# Run this workflow only on a push/merged PR with valid tags
+# Run this workflow only on a push/merged PR to branch 1.x with valid tags
 on:
   push:
     tags:
     - 1.*
-    - 2.*
 
 jobs:
   build:
-    if: ${{ github.event.pull_request.base.ref == '1.x' }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Install modules
@@ -18,13 +16,14 @@ jobs:
       # Uses https://oclif.io/
       - name: Pack the JS
         run: yarn oclif-dev pack
-      - name: Install build, test and publish dependencies
+      # We build mkcert from source because releases are broken
+      - name: Install build and publish dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y p7zip-full libnss3-tools wget
           cd /tmp
-          wget https://golang.org/dl/go1.15.8.linux-amd64.tar.gz
-          sudo tar -C /usr/local -xzf go1.15.8.linux-amd64.tar.gz
+          wget https://golang.org/dl/go1.16.3.linux-amd64.tar.gz
+          sudo tar -C /usr/local -xzf go1.16.3.linux-amd64.tar.gz
           export PATH=$PATH:/usr/local/go/bin
           git clone https://github.com/FiloSottile/mkcert && cd mkcert
           go build -ldflags "-X main.Version=$(git describe --tags)"
@@ -37,13 +36,14 @@ jobs:
           /bin/sh docker-images/export.sh latest --push
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
           /bin/sh templates/prebuild.sh --push
-       # Where are the zips generated on disk?
-       # How do we insist on a tag (e.g. 1.1.10)
-       # How do we get a tag listing like this? https://github.com/codeenigma/ce-dev/releases/tag/1.1.9
-#      - name: Publish new ce-dev binaries
-#        if: ${{ github.event.pull_request.base.ref == '1.x' }}
-#        run: |
-#          DEPLOY CODE HERE
+       # Uses https://github.com/marketplace/actions/gh-release
+       # Pack step places the build artifacts in ./dist
+      - name: Publish new ce-dev binaries
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/**/**
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and publish docs
         run: |
           curl -sL https://raw.githubusercontent.com/codeenigma/ce-dev/1.x/install.sh | /bin/sh -s -- linux

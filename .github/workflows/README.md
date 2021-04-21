@@ -1,5 +1,7 @@
 # GitHub Actions
 
+This document describes the current CI for the ce-dev project. The CI is written for GitHub Actions, the built in GitHub system for orchestration and automation. We operate three separate GitHub Actions workflows.
+
 ## ce-dev-build
 
 This builds the images and binaries, pushes the Docker containers to Docker Hub, pushes the binaries to a GitHub release and builds and commits the ce-dev documentation. It runs when someone accepts a PR for or pushes to the `1.x` branch and has added a valid tag in the format `1.*`.
@@ -8,7 +10,7 @@ This builds the images and binaries, pushes the Docker containers to Docker Hub,
 
 * The golang release needs keeping up to date (there's no 'latest' download we can use)
 * mkcert is built from source, initially because of a bad release but now it's like that we might as well keep it that way
-* If we start developing in a new version branch we will need to update the `on: push:` YAML in this workflow or it won't execute
+* If we start developing in a new version branch we will need to update the `on: push:` YAML in this workflow to allow the new tags or it won't execute
 
 ## ce-dev-lint
 
