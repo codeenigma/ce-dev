@@ -16,8 +16,10 @@ jobs:
       - name: Install modules
         run: yarn
       # Uses https://oclif.io/
+      # Not strictly necessary here, but ensures the packing works
       - name: Pack the JS
         run: yarn oclif-dev pack
+      # We build mkcert from source because releases are broken
       - name: Install test dependencies
         run: |
           sudo apt-get update
