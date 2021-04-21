@@ -7,7 +7,7 @@ jobs:
   # See https://github.com/marketplace/actions/run-eslint
   # ESLint now built in to GitHub Actions
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Install modules
