@@ -48,10 +48,12 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: dist/**/**
+          body_path: RELEASE
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and publish docs
         run: |
+          cd
           curl -sL https://raw.githubusercontent.com/codeenigma/ce-dev/1.x/install.sh | /bin/sh -s -- linux
           git clone https://github.com/codeenigma/wikis2pages.git
           cd wikis2pages
