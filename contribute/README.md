@@ -10,11 +10,13 @@
 
 4. Bump the version on line 4 to the number you want. If you are at version 1.2.3 you would bump it to 1.2.4 for a minor release or 1.3.0 for a major release. If you are introducing breaking change that will not be backward compatible you should use 2.0.0.
 
-5. Commit your change.
+5. Then edit the [`RELEASE`](https://github.com/codeenigma/ce-dev/blob/1.x/RELEASE) text file and describe the contents of this release (it will appear on the tag page in GitHub).
 
-6. Tag it with git, e.g. `git tag 1.2.4`
+6. Commit your changes.
 
-7. Push the branch back up with tags, e.g. `git push origin 1.x --tags`
+7. Tag it with git, e.g. `git tag 1.2.4`
+
+8. Push the branch back up with tags, e.g. `git push origin 1.x --tags`
 
 [GitHub Actions](https://github.com/codeenigma/ce-dev/actions) should now take care of the release for you.
 
