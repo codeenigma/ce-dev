@@ -31,6 +31,7 @@ jobs:
           sudo mv ./mkcert /usr/local/bin && cd ../
           sudo chmod +x /usr/local/bin/mkcert
           rm -Rf mkcert
+          mkdir -p ~/.config/ce-dev
           touch ~/.config/ce-dev/preferences-1.x.yml
           echo 'docker_bin: docker' > ~/.config/ce-dev/preferences-1.x.yml
           echo 'docker_compose_bin: docker-compose' >> ~/.config/ce-dev/preferences-1.x.yml
