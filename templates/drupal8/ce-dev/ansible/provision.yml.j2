@@ -1,7 +1,7 @@
 - hosts: {{ project_name }}-web
   become: yes
   vars:
-    - domain_name: www.{{ project_name }}.local
+    - _domain_name: www.{{ project_name }}.local
     - project_name: {{ project_name }}
     - mysql_client:
         host: {{ project_name }}-db
