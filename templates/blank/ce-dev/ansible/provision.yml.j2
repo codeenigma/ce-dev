@@ -4,6 +4,7 @@
   become: yes
   vars:
     - project_name: {{ project_name }}
+    - _domain_name: www.{{ project_name }}.local
   tasks:
     - apt:
         update_cache: yes
