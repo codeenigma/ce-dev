@@ -6,7 +6,7 @@
     - _ce_provision_build_tmp_dir: /tmp
     - _ce_provision_data_dir: /tmp
     - is_local: yes
-    - env_type: utility
+    - _env_type: utility
     - ce_deploy:
         own_repository: https://github.com/codeenigma/ce-deploy.git
         config_repository: https://github.com/codeenigma/ce-dev-ce-deploy-config.git
