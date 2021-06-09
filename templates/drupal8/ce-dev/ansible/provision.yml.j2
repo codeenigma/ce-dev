@@ -2,6 +2,7 @@
   become: yes
   vars:
     - _domain_name: www.{{ project_name }}.local
+    - _env_type: dev
     - project_name: {{ project_name }}
     - mysql_client:
         host: {{ project_name }}-db
@@ -37,6 +38,9 @@
           - 7.4
         cli:
           memory_limit: -1
+          _env_type: dev
+        fpm:
+          _env_type: dev
     - xdebug:
         cli: true
 {% endraw %}

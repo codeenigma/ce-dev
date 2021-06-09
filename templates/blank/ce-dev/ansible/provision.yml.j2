@@ -5,6 +5,7 @@
   vars:
     - project_name: {{ project_name }}
     - _domain_name: www.{{ project_name }}.local
+    - _env_type: dev
   tasks:
     - apt:
         update_cache: yes
