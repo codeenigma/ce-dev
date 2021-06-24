@@ -9,7 +9,7 @@ RUN \
   python3-pip \
   git && \
   apt-get clean  && \
-  pip3 install ansible boto3 && \i
+  pip3 install ansible boto3 && \
   rm -rf \
   /var/lib/apt/lists/* \
   /var/log/* \
