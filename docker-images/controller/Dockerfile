@@ -24,7 +24,7 @@ RUN \
   set -x && \
   export DEBIAN_FRONTEND=noninteractive && \  
   apt-get update && \
-  su - ce-dev -c "/usr/bin/ansible-playbook /home/ce-dev/ce-provision/provision.yml" && \
+  su - ce-dev -c "/usr/bin/local/ansible-playbook /home/ce-dev/ce-provision/provision.yml" && \
   rm /home/ce-dev/ce-provision/provision.yml && \
   apt-get clean  && \
   rm -rf \
