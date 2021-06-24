@@ -10,6 +10,7 @@ RUN \
   git && \
   apt-get clean  && \
   pip3 install ansible boto3 && \
+  update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \
   rm -rf \
   /var/lib/apt/lists/* \
   /var/log/* \
