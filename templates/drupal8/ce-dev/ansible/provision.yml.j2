@@ -12,16 +12,16 @@
     - env_type: dev
     - nginx:
         domains:
-          - server_name: "{{ domain_name }}"
+          - server_name: "{{ _domain_name }}"
             access_log:  "/var/log/nginx-access.log"
             error_log:  "/var/log/nginx-error.log"
             error_log_level:  "notice"
             webroot:  "/home/ce-dev/deploy/live.local/web"
             project_type:  "drupal8"
             ssl:
-              domain: "{{ domain_name }}"
-              cert: "{{ _ce_dev_mkcert_base}}/{{ domain_name }}.pem"
-              key: "{{ _ce_dev_mkcert_base}}/{{ domain_name }}-key.pem"
+              domain: "{{ _domain_name }}"
+              cert: "{{ _ce_dev_mkcert_base}}/{{ _domain_name }}.pem"
+              key: "{{ _ce_dev_mkcert_base}}/{{ _domain_name }}-key.pem"
               handling: "unmanaged"
             ratelimitingcrawlers: no
             is_default: yes
