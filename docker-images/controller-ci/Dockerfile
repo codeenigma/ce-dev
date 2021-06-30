@@ -28,7 +28,9 @@ RUN curl -Lo /usr/local/bin/gitlab-runner https://gitlab-runner-downloads.s3.ama
 
 RUN set -x && \
   export DEBIAN_FRONTEND=noninteractive && \
-  apt-get install -y bash ca-certificates git git-lfs && \
+  apt-get update && \
+  apt-get dist-upgrade -y -o Dpkg::Options::="--force-confnew" && \
+  apt-get install -y ca-certificates git-lfs && \
   apt-get clean  && \
   git lfs install --skip-repo
 
