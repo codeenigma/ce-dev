@@ -6,7 +6,6 @@ RUN \
   apt-get update && \
   apt-get dist-upgrade -y -o Dpkg::Options::="--force-confnew" && \
   apt-get install -y -o Dpkg::Options::="--force-confnew" \
-  python3-pip \
   git && \
   apt-get clean  && \
   pip3 install ansible boto3 && \

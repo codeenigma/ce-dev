@@ -39,6 +39,7 @@ RUN \
   python3-apt \
   python3-dev \
   python3-pycurl \
+  python3-pip \
   rsyslog \
   sudo \
   systemd \
