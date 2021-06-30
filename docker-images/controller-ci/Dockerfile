@@ -1,6 +1,6 @@
 # GitLab Runner controller based on
 # https://gitlab.com/tmaczukin-test-projects/fargate-driver-debian/-/blob/master/Dockerfile
-FROM codeenigma/ce-controller-1.x:latest
+FROM codeenigma/ce-dev-controller-1.x:latest
 
 # ---------------------------------------------------------------------
 # Install https://github.com/krallin/tini - a very small 'init' process
@@ -32,11 +32,14 @@ RUN set -x && \
   apt-get clean  && \
   git lfs install --skip-repo
 
-# -------------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------------------
 # Execute a startup script.
 # https://success.docker.com/article/use-a-script-to-initialize-stateful-container-data
 # for reference.
-# -------------------------------------------------------------------------------------
+#
+# Script from here:
+# https://gitlab.com/tmaczukin-test-projects/fargate-driver-debian/-/blob/master/docker-entrypoint.sh
+# ---------------------------------------------------------------------------------------------------
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
