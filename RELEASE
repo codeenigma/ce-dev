@@ -1,2 +1,2 @@
-1.1.10
-No real change, testing GitHub Actions and refreshing containers.
+1.1.11
+Upgrading containers to use Python3 and Ansible 2.11.x.
