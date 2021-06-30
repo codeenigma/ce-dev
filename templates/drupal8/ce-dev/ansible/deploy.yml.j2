@@ -8,7 +8,7 @@
     - build_type: local
     - _env_type: dev
 {% raw %}
-    - domain_name: www.{{ project_name }}.local
+    - _domain_name: www.{{ project_name }}.local
     # Path to your project root. This must match the "volume" set in the docker-compose template.
     - deploy_path: /home/ce-dev/deploy/live.local
     # This actually does not take any backup, but is needed to populate settings.php.
@@ -27,7 +27,7 @@
             sanitize_command: "sql-sanitize"
             # Remove after initial pass, to avoid reinstalling Drupal.
             force_install: yes
-            base_url: "https://{{ domain_name }}"
+            base_url: "https://{{ _domain_name }}"
     # Composer command to run.
     - composer:
         command: install

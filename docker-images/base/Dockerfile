@@ -36,9 +36,10 @@ RUN \
   openssh-server \
   postfix \
   procmail \
-  python-apt \
-  python-dev \
-  python-pycurl \
+  python3-apt \
+  python3-dev \
+  python3-pycurl \
+  python3-pip \
   rsyslog \
   sudo \
   systemd \
@@ -47,6 +48,7 @@ RUN \
   vim \
   wget && \
   apt-get clean  && \
+  update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \
   rm -rf \
   /var/lib/apt/lists/* \
   /var/log/* \
