@@ -45,14 +45,6 @@ if [ "$2" = "--push" ]; then
   docker image push "codeenigma/ce-dev-controller-1.x:$1"
 fi
 
-# Build controller image for CI.
-echo "Building controller image for CI"
-docker image build --compress "--label=ce-dev-controller-ci-1.x:$1" --no-cache=true -t "codeenigma/ce-dev-controller-ci-1.x:$1" "$OWN_DIR/controller-ci" || exit 1
-if [ "$2" = "--push" ]; then
-  echo "Publishing the image with docker image push codeenigma/ce-dev-controller-ci-1.x:$1"
-  docker image push "codeenigma/ce-dev-controller-ci-1.x:$1"
-fi
-
 # Build dind image.
 # echo "Building dind image"
 # sudo docker image build --compress "--label=ce-dev-dind-1.x:$1" --no-cache=true -t "codeenigma/ce-dev-dind-1.x:$1" "$OWN_DIR/dind" || exit 1
