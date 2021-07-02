@@ -19,11 +19,32 @@ RUN \
   pip3 install ansible boto3 && \
   git lfs install --skip-repo && \
   update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \
+  useradd -m controller && \
+  usermod -a -G controller ce-dev && \
+  mkdir -p /home/controller/.ssh && \
+  chmod -R 700 /home/controller/.ssh && \
+  echo "Host remotehost\n\tStrictHostKeyChecking no\n" >> /home/controller/.ssh/config && \
+  mkdir -p /home/ce-dev/.ssh && \
+  chmod -R 700 /home/ce-dev/.ssh && \
+  echo "Host remotehost\n\tStrictHostKeyChecking no\n" >> /home/ce-dev/.ssh/config && \
   rm -rf \
   /var/lib/apt/lists/* \
   /var/log/* \
   /tmp/*
 
+# The keys gets copied in place by before_script in .gitlab-ci.yml
+COPY id_rsa* /home/ce-dev/.ssh/
+COPY id_rsa* /home/controller/.ssh/
+
+RUN \
+  set -x && \
+  export DEBIAN_FRONTEND=noninteractive && \
+  chown -R ce-dev:ce-dev /home/ce-dev/.ssh && \
+  chmod 600 /home/ce-dev/.ssh/id_rsa && \
+  chmod 644 /home/ce-dev/.ssh/id_rsa.pub && \
+  chown -R controller:controller /home/controller/.ssh && \
+  chmod 600 /home/controller/.ssh/id_rsa && \
+  chmod 644 /home/controller/.ssh/id_rsa.pub
 
 RUN su - ce-dev -c "git clone --branch 1.x https://github.com/codeenigma/ce-provision.git /home/ce-dev/ce-provision"
 
@@ -33,7 +54,7 @@ RUN \
   set -x && \
   export DEBIAN_FRONTEND=noninteractive && \
   apt-get update && \
-  su - ce-dev -c "/usr/local/bin/ansible-playbook /home/ce-dev/ce-provision/provision.yml" && \
+  su - ce-dev -c "/usr/local/bin/ansible-playbook --extra-vars=\"{ansible_common_remote_group: controller}\" /home/ce-dev/ce-provision/provision.yml" && \
   rm /home/ce-dev/ce-provision/provision.yml && \
   apt-get clean  && \
   rm -rf \
