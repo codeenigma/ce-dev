@@ -14,8 +14,8 @@
         config_repository: https://github.com/codeenigma/ce-dev-ce-provision-config.git
         config_repository_branch: 1.x
         config_repository_skip_checkout: false
-        username: ce-dev
-        local_dir: /home/ce-dev/ce-provision
+        username: controller
+        local_dir: /home/controller/ce-provision
         groups: []
         galaxy_custom_requirements_file: ""
   roles:
