@@ -134,9 +134,10 @@ export default class IPManager {
    * A base subnet string.
    */
   private getAvailableSubnet(): string {
+    const ifconfig_command = this.config.platform === 'darwin' ? 'ifconfig' : 'ip a'
     for (let i = 18; i <= 31; i++) {
       const subnet = '172.' + i + '.0'
-      const existing = execSync('sudo ifconfig | grep ' + subnet + ' | wc -l').toString().trim()
+      const existing = execSync('sudo ' + ifconfig_command + ' | grep ' + subnet + ' | wc -l').toString().trim()
       if (existing === '0') {
         return subnet
       }
