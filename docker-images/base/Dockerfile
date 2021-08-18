@@ -1,4 +1,4 @@
-FROM debian:buster as unison
+FROM debian:11 as unison
 RUN \
   set -x && \
   export DEBIAN_FRONTEND=noninteractive && \
@@ -14,7 +14,7 @@ RUN \
   cd /tmp/unison-2.51.2 && \
   make
 
-FROM debian:buster
+FROM debian:11
 
 RUN \
   set -x && \
