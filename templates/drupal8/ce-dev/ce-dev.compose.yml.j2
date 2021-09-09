@@ -31,6 +31,8 @@ services:
       #       - Path */sites/*/files
     volumes:
       - ../:/home/ce-dev/deploy/live.local:delegated
+    cap_add:
+      - NET_ADMIN
   db:
     image: mariadb
     environment:
