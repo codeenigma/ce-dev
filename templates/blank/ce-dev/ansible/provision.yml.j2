@@ -1,7 +1,7 @@
 ---
 
 - hosts: {{ project_name }}-{{ project_name }}
-  become: yes
+  become: true
   vars:
     - project_name: {{ project_name }}
     - _domain_name: www.{{ project_name }}.local
@@ -10,7 +10,7 @@
         enable_vnc: true
   tasks:
     - apt:
-        update_cache: yes
+        update_cache: true
     - import_role:
         name: _meta/common_base
     - import_role:
