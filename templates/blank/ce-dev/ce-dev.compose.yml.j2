@@ -11,6 +11,8 @@ x-ce_dev:
 services:
   {{ project_name }}:
     image: codeenigma/ce-dev-1.x:latest
+    cap_add:
+      - NET_ADMIN
     x-ce_dev:
       unison:
       - src: ../

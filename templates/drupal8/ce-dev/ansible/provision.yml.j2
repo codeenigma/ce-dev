@@ -1,5 +1,5 @@
 - hosts: {{ project_name }}-web
-  become: yes
+  become: true
   vars:
     - _domain_name: www.{{ project_name }}.local
     - _env_type: dev
@@ -22,15 +22,15 @@
               cert: "{{ _ce_dev_mkcert_base}}/{{ _domain_name }}.pem"
               key: "{{ _ce_dev_mkcert_base}}/{{ _domain_name }}-key.pem"
               handling: "unmanaged"
-            ratelimitingcrawlers: no
-            is_default: yes
+            ratelimitingcrawlers: false
+            is_default: true
             servers:
               - port: 80
-                ssl: no
-                https_redirect: yes
+                ssl: false
+                https_redirect: true
               - port: 443
-                ssl: yes
-                https_redirect: no
+                ssl: true
+                https_redirect: false
             upstreams: []
     - php:
         version:
@@ -47,7 +47,7 @@
 {% endraw %}
   tasks:
     - apt:
-        update_cache: yes
+        update_cache: true
     - import_role:
         name: _meta/common_base
     - import_role:

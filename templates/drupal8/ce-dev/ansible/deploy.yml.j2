@@ -27,21 +27,21 @@
             config_sync_directory: "config/sync"
             sanitize_command: "sql-sanitize"
             # Remove after initial pass, to avoid reinstalling Drupal.
-            force_install: yes
+            force_install: true
             base_url: "https://{{ _domain_name }}"
     # Composer command to run.
     - composer:
         command: install
-        no_dev: no
+        no_dev: false
         working_dir: "{{ deploy_path }}"
-        apcu_autoloader: no
+        apcu_autoloader: false
   pre_tasks:
     # You can safely remove these steps once you have a working composer.json.
     - name: Download composer file.
       get_url:
         url: https://raw.githubusercontent.com/drupal/recommended-project/8.8.x/composer.json
         dest: "{{ deploy_path }}/composer.json"
-        force: no
+        force: false
     - name: Install drush.
       command: 
         cmd: composer require drush/drush
