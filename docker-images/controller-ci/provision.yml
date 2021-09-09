@@ -1,11 +1,11 @@
 ---
 - hosts: localhost
-  become: yes
+  become: true
   vars:
     - _domain_name: ci.example.com
     - _ce_provision_build_tmp_dir: /tmp
     - _ce_provision_data_dir: /tmp
-    - is_local: yes
+    - is_local: true
     - _env_type: utility
     - ce_provision:
         own_repository: https://github.com/codeenigma/ce-provision.git
