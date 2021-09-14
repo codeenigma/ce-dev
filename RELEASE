@@ -1,2 +1,2 @@
-1.1.14
-Updating the Drupal 8 template due to ce-deploy upstream changes.
+1.1.15
+Added frontail to the provision.yml files, for all the templates.
