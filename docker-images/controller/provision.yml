@@ -27,9 +27,6 @@
         groups: []
         galaxy_custom_requirements_file: ""
   tasks:
-    # ce_provision vars are in _init so must be loaded
-    - ansible.builtin.include_vars:
-        dir: "{{ role_path }}/../_init/defaults/main.yml"
     - ansible.builtin.import_role:
         name: ce_provision
     - ansible.builtin.import_role:
