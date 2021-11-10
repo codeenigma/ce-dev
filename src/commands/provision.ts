@@ -28,16 +28,16 @@ export default class ProvisionCmd extends AnsibleCmd {
 
   protected ansibleScript = 'scripts/provision.sh'
 
- /**
-  * @member
-  * Branch to pull ce-provision from.
-  */
+  /**
+    * @member
+    * Branch to pull ce-provision from.
+    */
   private readonly ownBranch: string
 
- /**
-  * @member
-  * Branch to pull ce-provision configuration from.
-  */
+  /**
+    * @member
+    * Branch to pull ce-provision configuration from.
+    */
   private readonly configBranch: string
 
   /**
