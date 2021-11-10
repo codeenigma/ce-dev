@@ -4,7 +4,7 @@ name: Build the ce-dev binaries and images
 on:
   push:
     tags:
-    - 1.*
+      - 1.*
 
 jobs:
   build:
