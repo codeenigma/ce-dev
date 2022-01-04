@@ -1,2 +1,2 @@
-1.1.15
-Added frontail to the provision.yml files, for all the templates.
+1.1.16
+Release to repackage ce-provision with latest Ansible Galaxy roles.
