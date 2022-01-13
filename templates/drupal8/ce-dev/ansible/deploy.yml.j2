@@ -44,7 +44,7 @@
         force: false
     - name: Install drush.
       command: 
-        cmd: composer require drush/drush
+        cmd: composer require drush/drush "^10.6.2"
         chdir: "{{ deploy_path }}"
   roles:
     - _init # Sets some variables the deploy scripts rely on.
