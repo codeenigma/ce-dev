@@ -51,16 +51,3 @@ jobs:
           body_path: RELEASE
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and publish docs
-        run: |
-          cd
-          curl -sL https://raw.githubusercontent.com/codeenigma/ce-dev/1.x/install.sh | /bin/sh -s -- linux
-          git clone https://github.com/codeenigma/wikis2pages.git
-          cd wikis2pages
-          /bin/sh init.sh https://${{ secrets.GITHUB_TOKEN }}@github.com/codeenigma/ce-dev.git 1.x
-          /bin/sh set-current.sh ce-dev-travis
-          docker exec --user ce-dev --workdir /home/ce-dev/deploy/live.local wikis2pages-hugo hugo
-          /bin/sh .github-actions-push.sh
-          cd /home/runner/wikis2pages/public/ce-dev-travis
-          git remote add ci https://${{ secrets.DOCS_GITHUB_TOKEN }}@github.com/codeenigma/ce-dev-docs.git
-          git push ci master
