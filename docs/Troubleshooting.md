@@ -24,3 +24,23 @@ sudo update-initramfs -c -k all
 ```
 
 They will take a while to run (about 10 minutes), but once complete reboot your machine and delete any created containers that velong to the ce_dev image. When you rebuild the ce-dev controller (by running any command) it should create fine.
+
+## VM Networking issue
+If you're running ce-dev from within a Virtual Machine (eg. KVM/qemu), Docker container network ports are only 'exposed' to the hypervisor (ie the VM), and are not published for external access.
+In order to access sites/files deployed by ce-dev, the ports needs to be published so that the Docker containers can be accessed from your workstation.
+After running ```ce-dev init``` (before ```ce-dev start```) edit the ~/project/ce-dev/docker-compose.yml
+
+Replace;
+```
+    expose:
+      - 443
+      - 80
+      - '22'
+```
+With;
+```
+    ports:
+      - '443:443'
+      - '80:80'
+      - '22'
+```
