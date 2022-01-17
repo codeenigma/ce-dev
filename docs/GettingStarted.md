@@ -69,4 +69,4 @@ That should open https://www.hello.local in a new browser's tab, with a fresh Dr
 ```
 ce-dev shell
 ```
-Will open a shell in the 'web' container. You can then `cd ~/deploy/live.local` and run a `drush uli` to grab a login link.
+Will open a shell in the 'web' container. You can then `cd ~/deploy/live.local` and run a `vendor/drush/drush/drush uli` to grab a login link.
