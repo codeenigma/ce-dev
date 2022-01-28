@@ -245,6 +245,9 @@ export default class ControllerManager {
           volumes: [
             'ce_dev_ssh:/home/ce-dev/.ssh',
             'ce_dev_mkcert:/home/ce-dev/.local/share/mkcert',
+            'ce_dev_apt_cache:/var/cache/apt/archives',
+            'ce_dev_composer_cache:/home/ce-dev/.composer/cache',
+            'ce_dev_nvm_node:/home/ce-dev/.nvm/versions/node',
             '/sys/fs/cgroup:/sys/fs/cgroup:ro',
             this.config.cacheDir + ':/home/ce-dev/.ce-dev-cache',
           ],
