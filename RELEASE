@@ -1,2 +1,2 @@
-1.1.17
-Release to repackage ce-dev to force d8 compatible drush version.
+1.1.18
+Release to repackage ce-dev to fix docker-compose v2 volumes issue and install clamav role.
