@@ -1,7 +1,7 @@
 {
   "name": "ce-dev",
   "description": "Local Stack wrapper tool",
-  "version": "1.1.17",
+  "version": "1.1.18",
   "author": " @pm98zz-c",
   "bin": {
     "ce-dev": "./bin/run"
