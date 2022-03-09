@@ -1,0 +1,39 @@
+version: '3.7'
+x-ce_dev:
+  version: 1.x
+  registry: 'localhost:5000'
+  project_name: {{ project_name }}
+  provision:
+    - ce-dev/ansible/provision.yml
+  deploy:
+    - ce-dev/ansible/deploy.yml
+  urls:
+    - 'https://www.{{ project_name }}.local'
+services:
+  web:
+    image: 'codeenigma/drupal8-web:latest'
+    expose:
+      - 443
+      - 80
+    x-ce_dev:
+      host_aliases:
+        - www.{{ project_name }}.local
+      # Uncomment and comment the "volumes" below to use Unison file sync.
+      # unison:
+      #   - src: ../
+      #     dest: /home/ce-dev/deploy/live.local
+      #     target_platforms:
+      #       - darwin
+      #       - linux
+      #     ignore:
+      #       - Name vendor
+      #       - Name node_modules
+      #       - Path */sites/*/files
+    volumes:
+      - ../:/home/ce-dev/deploy/live.local:delegated
+    cap_add:
+      - NET_ADMIN
+  db:
+    image: 'codeenigma/drupal8-db:latest'
+    environment:
+      MYSQL_ROOT_PASSWORD: ce-dev
