@@ -1,2 +1,2 @@
-1.1.18
-Release to repackage ce-dev to fix docker-compose v2 volumes issue and install clamav role.
+1.1.19
+Release to add the templates: Drupal 9 and Localgov
