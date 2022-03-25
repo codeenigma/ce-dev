@@ -1,0 +1,44 @@
+---
+# Template playbook for a local Drupal7 codebase.
+- hosts: {{ project_name }}-web
+  vars:
+    - project_name: {{ project_name }}
+    - project_type: drupal7
+    - webroot: .
+    - build_type: local
+    - _env_type: dev
+{% raw %}
+    - _domain_name: www.{{ project_name }}.local
+    # Path to your project root. This must match the "volume" set in the docker-compose template.
+    - deploy_path: /home/ce-dev/deploy/live.local
+    # This actually does not take any backup, but is needed to populate settings.php.
+    - mysql_backup:
+        handling: none
+        credentials_handling: manual
+    # A list of Drupal sites (for multisites).
+    - drupal:
+        sites:
+          - folder: "default"
+            public_files: "sites/default/files"
+            install_command: "-y si"
+            sanitize_command: "sql-sanitize"
+            # Remove after initial pass, to avoid reinstalling Drupal.
+            force_install: true
+            base_url: "https://{{ _domain_name }}"
+            revert_features_command: ""
+  pre_tasks:
+    - name: Unarchive drupal and use it.
+      ansible.builtin.unarchive:
+        src: https://ftp.drupal.org/files/projects/drupal-7.89.tar.gz
+        dest: "{{ deploy_path }}"
+        extra_opts:
+          - --strip-components=1
+        remote_src: yes
+  roles:
+    - _init # Sets some variables the deploy scripts rely on.
+    - database_backup # This is still needed to generate credentials.
+    - config_generate # Generates settings.php
+#    - sync/database_sync # Grab database from a remote server.
+    - database_apply # Run drush updb and config import.
+    - _exit # Some common housekeeping.
+{% endraw %}

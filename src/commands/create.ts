@@ -78,6 +78,7 @@ export default class CreateCmd extends BaseCmd {
         message: 'Template',
         type: 'list',
         choices: [
+          'drupal7',
           'drupal8',
           'drupal9',
           'localgov',
