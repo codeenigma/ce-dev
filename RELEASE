@@ -1,2 +1,2 @@
-1.1.19
-Release to add the templates: Drupal 9 and Localgov
+1.1.20
+No changes. A new tag to re-build the container image and fix the repo key for Chrome
