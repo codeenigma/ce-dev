@@ -40,6 +40,11 @@
           _env_type: dev
         fpm:
           _env_type: dev
+    # R62820: Add support for composer '2.x' for D9 projects.
+    - php_composer:
+        version: ''
+        version_branch: '--2'
+        keep_updated: true
     - xdebug:
         cli: true
     - lhci:
