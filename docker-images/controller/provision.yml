@@ -13,6 +13,8 @@
         own_repository_branch: 1.x
         config_repository_branch: 1.x
         username: ce-dev
+        new_user: true
+        key_name: id_rsa.pub
         local_dir: /home/ce-dev/ce-deploy
         groups: []
     - ce_provision:
@@ -23,6 +25,8 @@
         config_repository_branch: 1.x
         config_repository_skip_checkout: false
         username: ce-dev
+        new_user: true
+        key_name: id_rsa.pub
         local_dir: /home/ce-dev/ce-provision
         groups: []
         galaxy_custom_requirements_file: ""
