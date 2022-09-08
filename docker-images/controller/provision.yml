@@ -23,6 +23,7 @@
         config_repository_branch: 1.x
         config_repository_skip_checkout: false
         username: ce-dev
+        new_user: true # set to false if user already exists or is ephemeral, e.g. an LDAP user
         local_dir: /home/ce-dev/ce-provision
         groups: []
         galaxy_custom_requirements_file: ""
