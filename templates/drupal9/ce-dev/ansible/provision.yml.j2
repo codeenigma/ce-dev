@@ -49,6 +49,13 @@
     - lhci:
         enable_vnc: true
 {% endraw %}
+  pre_tasks:
+    # Debian has nodejs 12.x installed by default.
+    - name: Remove "node" package installed by default
+      ansible.builtin.apt:
+        name: nodejs
+        state: absent
+        purge: true
   tasks:
     - apt:
         update_cache: true
