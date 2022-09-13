@@ -53,7 +53,7 @@
       community.general.composer:
         command: require
         arguments: drush/drush:11.*
-        chdir: "{{ deploy_path }}"
+        working_dir: "{{ deploy_path }}"
   roles:
     - _init # Sets some variables the deploy scripts rely on.
     - composer # Composer install step.
