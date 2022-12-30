@@ -35,6 +35,9 @@
         no_dev: false
         working_dir: "{{ deploy_path }}"
         apcu_autoloader: false
+    - drush:
+        use_vendor: true
+    - drush_bin: "{{ deploy_path }}/vendor/drush/drush/drush"
     - cachetool_bin: "/usr/local/bin/cachetool"
   pre_tasks:
     # You can safely remove these steps once you have a working composer.json.
