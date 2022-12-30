@@ -17,6 +17,8 @@
         key_name: id_rsa.pub
         local_dir: /home/ce-dev/ce-deploy
         groups: []
+        galaxy_custom_requirements_file: ""
+        ce_provision_dir: /home/ce-dev/ce-provision
     - ce_provision:
         own_repository: https://github.com/codeenigma/ce-provision.git
         own_repository_branch: 1.x
