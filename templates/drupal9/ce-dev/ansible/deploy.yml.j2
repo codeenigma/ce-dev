@@ -42,6 +42,7 @@
         # Create a list of URLs to test with LHCI
         test_urls:
           - "https://{{ _domain_name }}"
+    - cachetool_bin: "/usr/local/bin/cachetool"
   pre_tasks:
     # You can safely remove these steps once you have a working composer.json.
     - name: Download composer file.
