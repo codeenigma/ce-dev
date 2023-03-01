@@ -35,6 +35,13 @@
         no_dev: false
         working_dir: "{{ deploy_path }}"
         apcu_autoloader: false
+    - drush:
+        use_vendor: true
+    - drush_bin: "{{ deploy_path }}/vendor/drush/drush/drush"
+    - lhci_run:
+        # Create a list of URLs to test with LHCI
+        test_urls:
+          - "https://{{ _domain_name }}"
   pre_tasks:
     # You can safely remove these steps once you have a working composer.json.
     - name: Download composer file.
@@ -55,7 +62,15 @@
     - composer # Composer install step.
     - database_backup # This is still needed to generate credentials.
     - config_generate # Generates settings.php
-#    - sync/database_sync # Grab database from a remote server.
+   #- sync/database_sync # Grab database from a remote server.
     - database_apply # Run drush updb and config import.
     - _exit # Some common housekeeping.
+    - lhci_run
+  post_tasks:
+    - name: "Symlink Drush"
+      ansible.builtin.file:
+        src: "{{ drush_bin }}"
+        dest: "/usr/local/bin/drush"
+        state: link
+      become: yes
 {% endraw %}

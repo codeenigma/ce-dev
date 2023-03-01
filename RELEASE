@@ -1,3 +1,6 @@
+1.1.24
+Added post_tasks to deploy.yml
+
 1.1.23
 Changed credentials_handling to manual, to generate ce-dev and root as user/password instead of a random string.
 Using vendor/drush as drush instead of the phar file.

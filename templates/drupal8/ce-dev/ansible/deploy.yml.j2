@@ -35,6 +35,9 @@
         no_dev: false
         working_dir: "{{ deploy_path }}"
         apcu_autoloader: false
+    - drush:
+        use_vendor: true
+    - drush_bin: "{{ deploy_path }}/vendor/drush/drush/drush"
   pre_tasks:
     # You can safely remove these steps once you have a working composer.json.
     - name: Download composer file.
@@ -43,7 +46,7 @@
         dest: "{{ deploy_path }}/composer.json"
         force: false
     - name: Install drush.
-      command: 
+      command:
         cmd: composer require drush/drush "^10.6.2"
         chdir: "{{ deploy_path }}"
   roles:
@@ -51,7 +54,14 @@
     - composer # Composer install step.
     - database_backup # This is still needed to generate credentials.
     - config_generate # Generates settings.php
-#    - sync/database_sync # Grab database from a remote server.
+    #- sync/database_sync # Grab database from a remote server.
     - database_apply # Run drush updb and config import.
     - _exit # Some common housekeeping.
+  post_tasks:
+    - name: "Symlink Drush"
+      ansible.builtin.file:
+        src: "{{ drush_bin }}"
+        dest: "/usr/local/bin/drush"
+        state: link
+      become: yes
 {% endraw %}

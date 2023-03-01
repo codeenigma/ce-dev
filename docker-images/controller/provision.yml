@@ -30,6 +30,7 @@
         local_dir: /home/ce-dev/ce-provision
         groups: []
         galaxy_custom_requirements_file: ""
+        galaxy_roles_directory: ""
   roles:
     - ce_provision
     - ce_deploy
