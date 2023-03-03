@@ -1,4 +1,4 @@
-FROM debian:buster as unison
+FROM debian:bullseye-slim as unison
 RUN \
   set -x && \
   export DEBIAN_FRONTEND=noninteractive && \
@@ -9,12 +9,12 @@ RUN \
   wget \
   ocaml-native-compilers && \
   cd /tmp/ && \
-  wget https://github.com/bcpierce00/unison/archive/v2.51.2.tar.gz && \
-  tar -xzvf v2.51.2.tar.gz && \
-  cd /tmp/unison-2.51.2 && \
+  wget https://github.com/bcpierce00/unison/archive/v2.51.5.tar.gz && \
+  tar -xzvf v2.51.5.tar.gz && \
+  cd /tmp/unison-2.51.5 && \
   make
 
-FROM debian:buster
+FROM debian:bullseye-slim
 
 RUN \
   set -x && \
@@ -30,7 +30,7 @@ RUN \
   binutils \
   cron \
   curl \
-  dirmngr \ 
+  dirmngr \
   gnupg \
   rsync \
   openssh-server \
@@ -55,17 +55,17 @@ RUN \
   /tmp/*
 
 # Temp workaround bug in system.d with kernel 5.8
-RUN \
-  echo 'deb http://deb.debian.org/debian buster-backports main' > /etc/apt/sources.list.d/backports.list && \
-  set -x && \
-  export DEBIAN_FRONTEND=noninteractive && \
-  apt-get update && \
-  apt-get -y -o Dpkg::Options::="--force-confnew" -t=buster-backports upgrade systemd && \
-  apt-get clean  && \
-  rm -rf \
-  /var/lib/apt/lists/* \
-  /var/log/* \
-  /tmp/*
+#RUN \
+#  echo 'deb http://deb.debian.org/debian buster-backports main' > /etc/apt/sources.list.d/backports.list && \
+#  set -x && \
+#  export DEBIAN_FRONTEND=noninteractive && \
+#  apt-get update && \
+#  apt-get -y -o Dpkg::Options::="--force-confnew" -t=buster-backports upgrade systemd && \
+#  apt-get clean  && \
+#  rm -rf \
+#  /var/lib/apt/lists/* \
+#  /var/log/* \
+#  /tmp/*
 
 RUN \
   echo 'UseDNS no' >> /etc/ssh/sshd_config && \
@@ -89,8 +89,8 @@ RUN \
   /etc/machine-id \
   /var/lib/dbus/machine-id
 
-COPY --from=unison /tmp/unison-2.51.2/src/unison /usr/local/bin/
-COPY --from=unison /tmp/unison-2.51.2/src/unison-fsmonitor /usr/local/bin/
+COPY --from=unison /tmp/unison-2.51.5/src/unison /usr/local/bin/
+COPY --from=unison /tmp/unison-2.51.5/src/unison-fsmonitor /usr/local/bin/
 COPY ./ce-dev-ownership.sh /opt/
 COPY ./ce-dev-ssh.sh /opt/
 COPY ./unison.sh /opt/
@@ -110,6 +110,6 @@ RUN \
 
 ENV container docker
 STOPSIGNAL SIGRTMIN+3
-VOLUME [ "/sys/fs/cgroup", "/run", "/run/lock", "/tmp" ]
+VOLUME [ "/run", "/run/lock", "/tmp" ]
 
 ENTRYPOINT ["/sbin/init"]
