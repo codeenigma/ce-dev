@@ -41,10 +41,10 @@ jobs:
           git clone https://github.com/codeenigma/wikis2pages.git
           cd wikis2pages
           /bin/bash init.sh https://${{ secrets.GITHUB_TOKEN }}@github.com/codeenigma/ce-dev.git 1.x
-          /bin/sh set-current.sh ce-dev-1.x
+          /bin/sh set-current.sh ce-dev-local
           docker exec --user ce-dev --workdir /home/ce-dev/deploy/live.local wikis2pages-hugo hugo
           /bin/sh .github-actions-push.sh
-          cd /home/runner/wikis2pages/public/ce-dev-1.x
+          cd /home/runner/wikis2pages/public/ce-dev-local
           git remote add ci https://${{ secrets.DOCS_GITHUB_TOKEN }}@github.com/codeenigma/ce-dev-docs.git
           git push ci master
         shell: bash
