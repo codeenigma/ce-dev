@@ -18,5 +18,8 @@
         local_dir: /home/controller/ce-provision
         groups: []
         galaxy_custom_requirements_file: ""
+        galaxy_roles_directory: "/home/{{ _ce_provision.username }}/.ansible/roles"
+        upgrade_galaxy:
+          enabled: false
   roles:
     - ce_provision
