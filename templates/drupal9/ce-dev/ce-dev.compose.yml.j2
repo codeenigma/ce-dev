@@ -12,6 +12,8 @@ x-ce_dev:
 services:
   web:
     image: codeenigma/ce-dev-1.x:latest
+    platform: linux/amd64
+    cgroup: host
     expose:
       - 443
       - 80

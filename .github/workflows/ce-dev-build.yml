@@ -37,7 +37,7 @@ jobs:
           mkdir -p ~/.config/ce-dev
           touch ~/.config/ce-dev/preferences-1.x.yml
           echo 'docker_bin: docker' > ~/.config/ce-dev/preferences-1.x.yml
-          echo 'docker_compose_bin: docker-compose' >> ~/.config/ce-dev/preferences-1.x.yml
+          echo 'docker_compose_bin: docker compose' >> ~/.config/ce-dev/preferences-1.x.yml
           echo 'mkcert_bin: mkcert' >> ~/.config/ce-dev/preferences-1.x.yml
       - name: Build and push Docker images
         run: |

@@ -34,7 +34,7 @@ export default abstract class BaseCmd extends Command {
    * @member
    * Docker-compose executable path.
    */
-  protected dockerComposeBin = 'docker-compose'
+  protected dockerComposeBin = 'docker compose'
 
   /**
    * @member
@@ -85,8 +85,8 @@ export default abstract class BaseCmd extends Command {
     docker_bin: this.config.platform === 'linux' ? 'sudo docker' : 'docker',
     docker_compose_bin:
       this.config.platform === 'linux' ?
-        'sudo docker-compose' :
-        'docker-compose',
+        'sudo docker compose' :
+        'docker compose',
     mkcert_bin: 'mkcert',
     ssh_user: process.env.USER as string,
     ssh_key: (process.env.HOME as string) + '/.ssh/id_rsa',
