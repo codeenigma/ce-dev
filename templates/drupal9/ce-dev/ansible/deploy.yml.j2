@@ -9,7 +9,7 @@
     - _env_type: dev
 {% raw %}
     - _domain_name: www.{{ project_name }}.local
-    # Path to your project root. This must match the "volume" set in the docker-compose template.
+    # Path to your project root. This must match the "volume" set in the docker compose template.
     - deploy_path: /home/ce-dev/deploy/live.local
     # This actually does not take any backup, but is needed to populate settings.php.
     - mysql_backup:
@@ -62,5 +62,5 @@
 #    - sync/database_sync # Grab database from a remote server.
     - database_apply # Run drush updb and config import.
     - _exit # Some common housekeeping.
-    - lhci_run
+#    - lhci_run # removing for now as something in D9 HTML breaks LHCI
 {% endraw %}

@@ -57,21 +57,21 @@ _See code: [src/commands/browse.ts](https://github.com/codeenigma/ce-dev/blob/v1
 
 ## `ce-dev build`
 
-Commit the existing containers as new docker images, and create a new docker-compose file referencing them.
+Commit the existing containers as new docker images, and create a new docker compose file referencing them.
 
 ```
 USAGE
   $ ce-dev build
 
 OPTIONS
-  -d, --destination=destination  [default: ce-dev.compose.prebuilt.yml] Path to the output docker-compose file, relative
+  -d, --destination=destination  [default: ce-dev.compose.prebuilt.yml] Path to the output docker compose file, relative
                                  to the project ce-dev folder.
 
   -h, --help                     show CLI help
 
   -r, --registry=registry        Docker registry to use. This overrides the one defined in the source compose template.
 
-  -t, --template=template        [default: ce-dev.compose.yml] Path to a docker-compose template file, relative to the
+  -t, --template=template        [default: ce-dev.compose.yml] Path to a docker compose template file, relative to the
                                  project ce-dev folder. WARNING: this must match the original one the project was
                                  constructed with.
 
@@ -151,7 +151,7 @@ _See code: [src/commands/deploy.ts](https://github.com/codeenigma/ce-dev/blob/v1
 
 ## `ce-dev destroy`
 
-Destroy project's containers using docker-compose kill.
+Destroy project's containers using docker compose kill.
 
 ```
 USAGE
@@ -194,7 +194,7 @@ USAGE
 OPTIONS
   -h, --help               show CLI help
 
-  -t, --template=template  [default: ce-dev.compose.prebuilt.yml] path to a docker-compose template file, relative to
+  -t, --template=template  [default: ce-dev.compose.prebuilt.yml] path to a docker compose template file, relative to
                            the project root
 
 EXAMPLE
@@ -231,7 +231,7 @@ OPTIONS
 
   -r, --registry=registry  Docker registry to use. This overrides the one defined in the source compose template.
 
-  -t, --template=template  [default: ce-dev.compose.prebuilt.yml] Path to a docker-compose template file, relative to
+  -t, --template=template  [default: ce-dev.compose.prebuilt.yml] Path to a docker compose template file, relative to
                            the project root. WARNING: this must match the original one the project was constructed with.
 
   -u, --username=username  Username to use to login against the Docker registry.
@@ -259,7 +259,7 @@ OPTIONS
 
   -r, --registry=registry  Docker registry to use. This overrides the one defined in the source compose template.
 
-  -t, --template=template  [default: ce-dev.compose.prebuilt.yml] Path to a docker-compose template file, relative to
+  -t, --template=template  [default: ce-dev.compose.prebuilt.yml] Path to a docker compose template file, relative to
                            the project root. WARNING: this must match the original one the project was constructed with.
 
   -u, --username=username  Username to use to login against the Docker registry.
@@ -292,7 +292,7 @@ _See code: [src/commands/shell.ts](https://github.com/codeenigma/ce-dev/blob/v1.
 
 ## `ce-dev start`
 
-Spin up containers using docker-compose and update /etc/hosts file.
+Spin up containers using docker compose and update /etc/hosts file.
 
 ```
 USAGE
