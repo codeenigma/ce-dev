@@ -1,7 +1,2 @@
-1.1.23
-Changed credentials_handling to manual, to generate ce-dev and root as user/password instead of a random string.
-Using vendor/drush as drush instead of the phar file.
-Included lhci_run as role in the deploy step, with one tests for the homepage.
-Using full command paths to define pre/post_tasks
-Renamed the settings and drush templates inside ansible/web/site/default
-Removed the pre_tasks in provision.yml to uninstall nodejs 12.
+1.2.0
+Migrated to using docker compose v2 or higher.
