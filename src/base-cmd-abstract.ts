@@ -249,7 +249,7 @@ export default abstract class BaseCmd extends Command {
    *
    * @param file
    * Path to a file to parse
-   * @returns Parsed docker-compose declaration.
+   * @returns Parsed docker compose declaration.
    */
   protected loadComposeConfig(file: string): ComposeConfig {
     // @todo Check config is valid.

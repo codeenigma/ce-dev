@@ -9,7 +9,7 @@
     - _env_type: dev
 {% raw %}
     - _domain_name: www.{{ project_name }}.local
-    # Path to your project root. This must match the "volume" set in the docker-compose template.
+    # Path to your project root. This must match the "volume" set in the docker compose template.
     - deploy_path: /home/ce-dev/deploy/live.local
     # This actually does not take any backup, but is needed to populate settings.php.
     - mysql_backup:

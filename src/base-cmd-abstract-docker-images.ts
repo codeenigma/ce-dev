@@ -8,7 +8,7 @@ export default abstract class DockerImagesCmd extends BaseCmd {
     help: flags.help({char: 'h'}),
     template: flags.string({
       char: 't',
-      description: 'Path to a docker-compose template file, relative to the project root. WARNING: this must match the original one the project was constructed with.',
+      description: 'Path to a docker compose template file, relative to the project root. WARNING: this must match the original one the project was constructed with.',
       default: 'ce-dev.compose.prebuilt.yml',
     }),
     username: flags.string({
