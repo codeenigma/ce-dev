@@ -21,7 +21,7 @@ export default class InitCmd extends BaseCmd {
     help: flags.help({char: 'h'}),
     template: flags.string({
       char: 't',
-      description: 'path to a docker-compose template file, relative to the project root',
+      description: 'path to a docker compose template file, relative to the project root',
       default: 'ce-dev.compose.prebuilt.yml',
     }),
   }
