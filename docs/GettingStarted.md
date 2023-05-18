@@ -38,7 +38,7 @@ Next step is to start our containers.
 ce-dev start
 ```
 What happened is:
-- we called `docker-compose up`
+- we called `docker compose up`
 - ensured file permissions, ownership and uid/gid match between your user on the host and the 'ce-dev' user within the container
 - started Unison file synchronisation
 - updated the /etc/hosts file on your laptop

@@ -17,9 +17,9 @@ export default class ControllerManager {
 
   /**
    * @member
-   * Docker-compose executable path.
+   * Docker compose executable path.
    */
-  private readonly dockerComposeBin: string = 'docker-compose'
+  private readonly dockerComposeBin: string = 'docker compose'
 
   /**
    * @member
@@ -236,6 +236,8 @@ export default class ControllerManager {
         ce_dev_controller: {
           container_name: 'ce_dev_controller',
           image: 'codeenigma/ce-dev-controller-1.x:latest',
+          platform: 'linux/amd64',
+          cgroup: 'host',
           hostname: 'ce_dev_controller',
           networks: {
             ce_dev: {
@@ -248,7 +250,7 @@ export default class ControllerManager {
             'ce_dev_apt_cache:/var/cache/apt/archives',
             'ce_dev_composer_cache:/home/ce-dev/.composer/cache',
             'ce_dev_nvm_node:/home/ce-dev/.nvm/versions/node',
-            '/sys/fs/cgroup:/sys/fs/cgroup:ro',
+            '/sys/fs/cgroup:/sys/fs/cgroup:rw',
             this.config.cacheDir + ':/home/ce-dev/.ce-dev-cache',
           ],
         },
