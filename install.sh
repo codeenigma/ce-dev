@@ -14,7 +14,7 @@ if [ -n "$(which ce-dev)" ]; then
   fi
 fi
 echo "Checking for dependencies..."
-for BINARY in docker docker-compose mkcert; do
+for BINARY in docker mkcert; do
   if [ -z "$(which "$BINARY")" ]; then
     echo "Could not find $BINARY"
     echo "Ensure it is installed and in your \$PATH"

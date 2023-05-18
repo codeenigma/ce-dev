@@ -2,7 +2,7 @@ version: "3.7"
 x-ce_dev:
   registry: localhost:5000
   project_name: {{ project_name }}
-  provision: 
+  provision:
     - ce-dev/ansible/provision.yml
   deploy:
     - ce-dev/ansible/deploy.yml
@@ -11,6 +11,8 @@ x-ce_dev:
 services:
   {{ project_name }}:
     image: codeenigma/ce-dev-1.x:latest
+    platform: linux/amd64
+    cgroup: host
     cap_add:
       - NET_ADMIN
     x-ce_dev:
