@@ -4,6 +4,8 @@
     - _domain_name: www.{{ project_name }}.local
     - _env_type: dev
     - project_name: {{ project_name }}
+    - rkhunter:
+        allow_ssh_root_user: prohibit-password
     - mysql_client:
         host: {{ project_name }}-db
         user: root
