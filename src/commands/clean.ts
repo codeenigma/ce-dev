@@ -44,7 +44,7 @@ export default class CleanCmd extends BaseCmd {
    * Prompts for user.
    */
   private containerChoice(): Array<inquirer.Question> {
-    const containers = execSync(this.dockerBin + ' ps -a --quiet --format={{.Names}}').toString()
+    const containers = execSync(this.dockerBin + ' ps -a --format={{.Names}}').toString()
     const containerNames = containers.split('\n').filter(item => {
       return (item.length > 0)
     })
