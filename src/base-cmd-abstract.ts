@@ -272,7 +272,7 @@ export default abstract class BaseCmd extends Command {
         projectContainers.push(service.container_name as string)
       }
     }
-    const running = execSync(this.dockerBin + ' ps --quiet --format={{.Names}}').toString()
+    const running = execSync(this.dockerBin + ' ps --format={{.Names}}').toString()
     const runningContainers = running.split('\n').filter(item => {
       if (item.length === 0) {
         return false
