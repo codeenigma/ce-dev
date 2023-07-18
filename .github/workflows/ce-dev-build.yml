@@ -5,10 +5,13 @@ on:
   push:
     tags:
     - 1.*
+  workflow_dispatch:
+    tags:
+    - 1.*
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - name: Install modules
@@ -34,7 +37,7 @@ jobs:
           mkdir -p ~/.config/ce-dev
           touch ~/.config/ce-dev/preferences-1.x.yml
           echo 'docker_bin: docker' > ~/.config/ce-dev/preferences-1.x.yml
-          echo 'docker_compose_bin: docker-compose' >> ~/.config/ce-dev/preferences-1.x.yml
+          echo 'docker_compose_bin: docker compose' >> ~/.config/ce-dev/preferences-1.x.yml
           echo 'mkcert_bin: mkcert' >> ~/.config/ce-dev/preferences-1.x.yml
       - name: Build and push Docker images
         run: |

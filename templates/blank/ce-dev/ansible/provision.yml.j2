@@ -6,6 +6,8 @@
     - project_name: {{ project_name }}
     - _domain_name: www.{{ project_name }}.local
     - _env_type: dev
+    - rkhunter:
+        allow_ssh_root_user: prohibit-password
     - lhci:
         enable_vnc: true
     - nodejs:

@@ -1,2 +1,2 @@
-1.1.22
-Drupal 9 template building.
+1.2.1
+Fix docker ps --quiet and --format use (#120)

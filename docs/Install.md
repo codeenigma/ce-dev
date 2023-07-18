@@ -13,17 +13,17 @@ We also assume common utilities are present:
 
 #### Docker
 
-Follow the installation instructions for your distro from https://docs.docker.com/engine/install/. It is generally straightforward, except for users of [Fedora 31 and above](https://duckduckgo.com/?q=docker+fedora+32).
+Follow the installation instructions for your distro from https://docs.docker.com/engine/install/. It is generally straightforward, except for users of [Fedora - more information here](https://fedoramagazine.org/docker-and-fedora-35/).
 
 **_Shall I `sudo docker` or `docker`?_**
 Most setup instructions you will find online instruct you to [add your user to the "docker" group](https://docs.docker.com/engine/install/linux-postinstall/) to be able to call docker as a standard user.
 There is a [non-neglectable risk](https://docs.docker.com/engine/security/security/#docker-daemon-attack-surface) with that approach, even though it is far more convenient than being prompted for your password each and every step.
 
-By default, ce-dev will assume you went the "safe" way and use `sudo docker` or `sudo docker-compose`, but you can change that in your [global configuration](userconfig).
+By default, ce-dev will assume you went the "safe" way and use `sudo docker` or `sudo docker compose`, but you can change that in your [global configuration](userconfig).
 
 #### Docker Compose
 
-Follow the installation instruction for your distro from https://docs.docker.com/compose/install/.
+You will need Docker Compose v2 or higher. Linux users should install the `docker-compose-plugin` package from the Docker repository, if you do not have `docker compose` already: https://docs.docker.com/compose/install/linux/#install-using-the-repository
 
 #### mkcert
 
@@ -92,6 +92,7 @@ Be sure to allow enough resources for it to run smoothly. There's no magic rule,
 - Be generous on RAM, but do not allocate it all for Docker. If you do not set a limit and you run a resource hungry service, everything, including processes on the hosts (think Electron apps, Chrome and the like, and by cascade the Docker processes themselves) will end up swapping and being ultra slow. 8GB or 10GB out of 16GB should be reasonable values.
 - Do not throttle CPU usage (ie, allocate them all). Or, go the other way round and allocate only one. This seems contradictory, but it looks like it behave diffently based on your hardware and/or OS version. In certain cases, containers seem to be unable to make use of more than one core anyway, so allocating more than one ends up being counter-productive as it will impede processes on the host.
 - Make sure you have enough disk space allocated for the VM Disk image. This again will vary on usage, but with a dozen of projects that have a 10GB database each, you're already well over 100GB. On the other hand, **_you can always grow the virtual disk afterward, but you can NOT shrink it without destroying all containers and volumes_**, so you can start small and grow it as needed if you encounter some "no space left on device/disk full" errors.
+- You might want to turn on the "Use Rosetta for x86/amd64 emulation on Apple Silicon" option in Docker under "Features in development". This speeds up the emulation significantly.
 
 [![Docker Desktop setting pane](uploads/docker-mac-settings.png)](uploads/docker-mac-settings.png)
 

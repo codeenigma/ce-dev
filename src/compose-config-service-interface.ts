@@ -6,6 +6,8 @@ import ComposeConfigServiceCeDev from './compose-config-service-ce-dev-interface
 export default interface ComposeConfigService {
   'container_name'?: string;
   'image'?: string;
+  'platform'?: string;
+  'cgroup'?: 'host' | 'private';
   'volumes'?: Array<string>;
   'expose'?: Array<string>;
   'ports'?: Array<string>;

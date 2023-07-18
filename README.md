@@ -16,7 +16,7 @@ A local stack based on Docker Compose and Ansible. It aims to be easy to use but
 - HTTPS support through [mkcert](https://github.com/FiloSottile/mkcert)
 - Built-in Unison sync to avoid bind mount slowness on Mac OS
 - Easily build and push ready made images from running containers for you project
-- Only defines a few simple commands, and defers to docker-compose and Ansible beyond that
+- Only defines a few simple commands, and defers to `docker compose` and Ansible beyond that
 
 ## [Documentation](https://codeenigma.github.io/ce-dev-docs/1.x/home/)
 ## [Install](https://codeenigma.github.io/ce-dev-docs/1.x/install/)
