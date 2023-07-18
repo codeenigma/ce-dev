@@ -57,6 +57,11 @@
         command: config
         arguments: allow-plugins.drupal/core-project-message true
         working_dir: "{{ deploy_path }}"
+    - name: Adding dealerdirect/phpcodesniffer-composer-installer plugin to composer config.
+      community.general.composer:
+        command: config
+        arguments: allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
+        working_dir: "{{ deploy_path }}"
     - name: Install drush.
       community.general.composer:
         command: require
