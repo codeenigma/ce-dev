@@ -5,6 +5,8 @@
     - _domain_name: ci.example.com
     - _ce_provision_build_tmp_dir: /tmp
     - _ce_provision_data_dir: /tmp
+    - _ce_provision:
+        username: ce-dev
     - is_local: true
     - _env_type: utility
     - ce_provision:
@@ -18,5 +20,8 @@
         local_dir: /home/controller/ce-provision
         groups: []
         galaxy_custom_requirements_file: ""
+        galaxy_roles_directory: "/home/{{ _ce_provision.username }}/.ansible/roles"
+        upgrade_galaxy:
+          enabled: false
   roles:
     - ce_provision

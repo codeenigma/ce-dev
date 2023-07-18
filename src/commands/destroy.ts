@@ -5,7 +5,7 @@ import {flags} from '@oclif/command'
 import ux from 'cli-ux'
 
 export default class DestroyCmd extends BaseCmd {
-  static description = 'Destroy project\'s containers using docker-compose kill.'
+  static description = 'Destroy project\'s containers using docker compose kill.'
 
   static examples = [
     '$ ce-dev destroy',
@@ -39,13 +39,13 @@ export default class DestroyCmd extends BaseCmd {
   }
 
   /**
-   * Wrapper around docker-compose.
+   * Wrapper around docker compose.
    */
   private down(): void {
-    ux.action.start('Killing containers with docker-compose kill')
+    ux.action.start('Killing containers with docker compose kill')
     execSync(this.dockerComposeBin + ' -p ' + this.activeProjectInfo.project_name + ' kill', {cwd: this.ceDevDir, stdio: 'inherit'})
     ux.action.stop()
-    ux.action.start('Remove containers and anonymous volumes with docker-compose rm')
+    ux.action.start('Remove containers and anonymous volumes with docker compose rm')
     execSync(this.dockerComposeBin + ' -p ' + this.activeProjectInfo.project_name + ' rm -v --force', {cwd: this.ceDevDir, stdio: 'inherit'})
     ux.action.stop()
   }

@@ -1,5 +1,5 @@
 ---
-# Template playbook for a local Drupal8 codebase.
+# Template playbook for a local Drupal9 codebase.
 - hosts: {{ project_name }}-web
   vars:
     - project_name: {{ project_name }}
@@ -20,7 +20,7 @@
         sites:
           - folder: "default"
             public_files: "sites/default/files"
-            install_command: "-y si"
+            install_command: "-y si localgov"
             # Toggle config import on/off. Disabled for initial passes.
             config_import_command: ""
             # config_import_command: "cim"
@@ -39,33 +39,18 @@
     # You can safely remove these steps once you have a working composer.json.
     - name: Download composer file.
       ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/drupal/recommended-project/8.9.x/composer.json
+        url: https://raw.githubusercontent.com/drupal/recommended-project/10.1.x/composer.json
         dest: "{{ deploy_path }}/composer.json"
         force: false
-    - name: Adding composer/installers plugin to composer config.
-      community.general.composer:
-        command: config
-        arguments: allow-plugins.composer/installers true
-        working_dir: "{{ deploy_path }}"
-    - name: Adding drupal/core-composer-scaffold plugin to composer config.
-      community.general.composer:
-        command: config
-        arguments: allow-plugins.drupal/core-composer-scaffold true
-        working_dir: "{{ deploy_path }}"
-    - name: Adding drupal/core-project-message plugin to composer config.
-      community.general.composer:
-        command: config
-        arguments: allow-plugins.drupal/core-project-message true
-        working_dir: "{{ deploy_path }}"
-    - name: Adding dealerdirect/phpcodesniffer-composer-installer plugin to composer config.
-      community.general.composer:
-        command: config
-        arguments: allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
-        working_dir: "{{ deploy_path }}"
     - name: Install drush.
       community.general.composer:
         command: require
-        arguments: drush/drush:10.*
+        arguments: drush/drush:11.*
+        working_dir: "{{ deploy_path }}"
+    - name: Install localgov.
+      community.general.composer:
+        command: require
+        arguments: localgovdrupal/localgov
         working_dir: "{{ deploy_path }}"
   roles:
     - _init # Sets some variables the deploy scripts rely on.
