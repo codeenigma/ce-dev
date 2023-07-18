@@ -25,6 +25,12 @@ sudo update-initramfs -c -k all
 
 They will take a while to run (about 10 minutes), but once complete reboot your machine and delete any created containers that velong to the ce_dev image. When you rebuild the ce-dev controller (by running any command) it should create fine.
 
+Another way for changing the system settings for cgroups is addind the option to the boot loader. In case you use grub with a distribution that uses the new cgroups version you can add this line into the file */etc/default/grub*
+```
+GRUB_CMDLINE_LINUX="systemd.unified_cgroup_hierarchy=0"
+```
+More information about adding parameters to the kernel if you're using other boot loader can be found at https://wiki.archlinux.org/title/kernel_parameters
+
 ## VM Networking issue
 If you're running ce-dev from within a Virtual Machine (eg. KVM/qemu), Docker container network ports are only 'exposed' to the hypervisor (ie the VM), and are not published for external access.
 In order to access sites/files deployed by ce-dev, the ports needs to be published so that the Docker containers can be accessed from your workstation.
