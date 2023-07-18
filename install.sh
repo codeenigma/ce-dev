@@ -14,7 +14,7 @@ if [ -n "$(which ce-dev)" ]; then
   fi
 fi
 echo "Checking for dependencies..."
-for BINARY in docker docker-compose mkcert; do
+for BINARY in docker mkcert; do
   if [ -z "$(which "$BINARY")" ]; then
     echo "Could not find $BINARY"
     echo "Ensure it is installed and in your \$PATH"
@@ -46,5 +46,15 @@ if [ -f /usr/local/bin/ce-dev ]; then
 fi
 sudo ln -s /opt/ce-dev/bin/ce-dev /usr/local/bin/ce-dev
 echo "done."
+
+echo "Killing deprecated running ce_dev_controller container..."
+if [ "$(docker ps -q -f name=ce_dev_controller)" ]; then
+    if [ "$(docker ps -aq -f status=running -f name=ce_dev_controller)" ]; then
+        # cleanup
+        docker kill ce_dev_controller
+    fi
+fi
+echo "done."
+
 echo
 echo "All done."

@@ -34,7 +34,7 @@ export default abstract class BaseCmd extends Command {
    * @member
    * Docker-compose executable path.
    */
-  protected dockerComposeBin = 'docker-compose'
+  protected dockerComposeBin = 'docker compose'
 
   /**
    * @member
@@ -85,8 +85,8 @@ export default abstract class BaseCmd extends Command {
     docker_bin: this.config.platform === 'linux' ? 'sudo docker' : 'docker',
     docker_compose_bin:
       this.config.platform === 'linux' ?
-        'sudo docker-compose' :
-        'docker-compose',
+        'sudo docker compose' :
+        'docker compose',
     mkcert_bin: 'mkcert',
     ssh_user: process.env.USER as string,
     ssh_key: (process.env.HOME as string) + '/.ssh/id_rsa',
@@ -249,7 +249,7 @@ export default abstract class BaseCmd extends Command {
    *
    * @param file
    * Path to a file to parse
-   * @returns Parsed docker-compose declaration.
+   * @returns Parsed docker compose declaration.
    */
   protected loadComposeConfig(file: string): ComposeConfig {
     // @todo Check config is valid.
@@ -272,7 +272,7 @@ export default abstract class BaseCmd extends Command {
         projectContainers.push(service.container_name as string)
       }
     }
-    const running = execSync(this.dockerBin + ' ps --quiet --format={{.Names}}').toString()
+    const running = execSync(this.dockerBin + ' ps --format={{.Names}}').toString()
     const runningContainers = running.split('\n').filter(item => {
       if (item.length === 0) {
         return false

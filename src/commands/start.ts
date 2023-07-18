@@ -8,7 +8,7 @@ const fs = require('fs')
 const readline = require('readline')
 
 export default class StartCmd extends BaseCmd {
-  static description = 'Spin up containers using docker-compose and update /etc/hosts file.'
+  static description = 'Spin up containers using docker compose and update /etc/hosts file.'
 
   static examples = [
     '$ ce-dev start',
@@ -143,7 +143,7 @@ export default class StartCmd extends BaseCmd {
   }
 
   /**
-   * Wrapper around docker-compose.
+   * Wrapper around docker compose.
    */
   private up(): void {
     const running = this.getProjectRunningContainers()

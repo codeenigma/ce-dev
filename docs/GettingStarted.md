@@ -1,6 +1,6 @@
 # Getting started
 
-Note: this tutorial always refers to `docker` and `docker-compose`, never to `sudo docker` and `sudo docker-compose`, for readability. Adapt the commands accordingly for your setup.
+Note: this tutorial always refers to `docker` and `docker compose`, never to `sudo docker` and `sudo docker compose`, for readability. Adapt the commands accordingly for your setup.
 We also use indifferently "host", "host machine", "laptop" or "workstation" to refer to the machine you're using ce-dev on; and "guest", "container" or "service" to refer to running containers. It will still work the same whether you actually use a laptop or not &#128521;
 
 ## Quickstart
@@ -38,7 +38,7 @@ Next step is to start our containers.
 ce-dev start
 ```
 What happened is:
-- we called `docker-compose up`
+- we called `docker compose up`
 - ensured file permissions, ownership and uid/gid match between your user on the host and the 'ce-dev' user within the container
 - started Unison file synchronisation
 - updated the /etc/hosts file on your laptop

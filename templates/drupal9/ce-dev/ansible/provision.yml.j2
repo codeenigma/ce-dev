@@ -42,10 +42,16 @@
           _env_type: dev
         fpm:
           _env_type: dev
+    - php_composer:
+        version: ''
+        version_branch: '--2'
+        keep_updated: true
     - xdebug:
         cli: true
     - lhci:
         enable_vnc: true
+    - nodejs:
+        version: 16.x
     - apt_unattended_upgrades:
         enable: false
 {% endraw %}
