@@ -46,6 +46,8 @@
         cli: true
     - lhci:
         enable_vnc: true
+    - apt_unattended_upgrades:
+        enable: false
 {% endraw %}
   tasks:
     - apt:
