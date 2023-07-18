@@ -4,10 +4,11 @@
  * Include default settings.
  */
 require __DIR__ . '/default.settings.php';
+
 /**
- * Include local dev settings.
+ * Include default local dev settings.
  */
-require DRUPAL_ROOT . '/sites/example.settings.local.php'
+require DRUPAL_ROOT . '/sites/example.settings.local.php';
 
 $databases['default']['default'] = array (
   'database' => '{{ build_databases[0].name }}',
@@ -22,8 +23,11 @@ $databases['default']['default'] = array (
 
 $settings['file_private_path'] = '{{ build_private_file_path }}';
 $settings['file_public_path'] = '{{ build_public_file_path }}';
-
-// Drupal < 8.8
-$config_directories['sync'] = '{{ build_config_sync_directory }}';
-// Drupal 8.8
 $settings['config_sync_directory'] = '{{ build_config_sync_directory }}';
+
+/**
+ * Load local development override configuration, if available.
+ */
+if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
+  include $app_root . '/' . $site_path . '/settings.local.php';
+}
