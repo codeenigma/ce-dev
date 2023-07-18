@@ -6,8 +6,14 @@
     - project_name: {{ project_name }}
     - _domain_name: www.{{ project_name }}.local
     - _env_type: dev
+    - rkhunter:
+        allow_ssh_root_user: prohibit-password
     - lhci:
         enable_vnc: true
+    - nodejs:
+        version: 14.x
+    - apt_unattended_upgrades:
+        enable: false
   tasks:
     - apt:
         update_cache: true

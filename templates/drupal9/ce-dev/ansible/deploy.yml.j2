@@ -1,5 +1,5 @@
 ---
-# Template playbook for a local Drupal8 codebase.
+# Template playbook for a local Drupal 9 codebase.
 - hosts: {{ project_name }}-web
   vars:
     - project_name: {{ project_name }}
@@ -14,7 +14,7 @@
     # This actually does not take any backup, but is needed to populate settings.php.
     - mysql_backup:
         handling: none
-        credentials_handling: static
+        credentials_handling: manual
     # A list of Drupal sites (for multisites).
     - drupal:
         sites:
@@ -35,37 +35,24 @@
         no_dev: false
         working_dir: "{{ deploy_path }}"
         apcu_autoloader: false
+    - drush:
+        use_vendor: true
+    - drush_bin: "{{ deploy_path }}/vendor/drush/drush/drush"
+    - lhci_run:
+        # Create a list of URLs to test with LHCI
+        test_urls:
+          - "https://{{ _domain_name }}"
   pre_tasks:
     # You can safely remove these steps once you have a working composer.json.
     - name: Download composer file.
       ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/drupal/recommended-project/8.9.x/composer.json
+        url: https://raw.githubusercontent.com/drupal/recommended-project/9.5.x/composer.json
         dest: "{{ deploy_path }}/composer.json"
         force: false
-    - name: Adding composer/installers plugin to composer config.
-      community.general.composer:
-        command: config
-        arguments: allow-plugins.composer/installers true
-        working_dir: "{{ deploy_path }}"
-    - name: Adding drupal/core-composer-scaffold plugin to composer config.
-      community.general.composer:
-        command: config
-        arguments: allow-plugins.drupal/core-composer-scaffold true
-        working_dir: "{{ deploy_path }}"
-    - name: Adding drupal/core-project-message plugin to composer config.
-      community.general.composer:
-        command: config
-        arguments: allow-plugins.drupal/core-project-message true
-        working_dir: "{{ deploy_path }}"
-    - name: Adding dealerdirect/phpcodesniffer-composer-installer plugin to composer config.
-      community.general.composer:
-        command: config
-        arguments: allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
-        working_dir: "{{ deploy_path }}"
     - name: Install drush.
       community.general.composer:
         command: require
-        arguments: drush/drush:10.*
+        arguments: drush/drush:11.*
         working_dir: "{{ deploy_path }}"
   roles:
     - _init # Sets some variables the deploy scripts rely on.
@@ -75,4 +62,5 @@
 #    - sync/database_sync # Grab database from a remote server.
     - database_apply # Run drush updb and config import.
     - _exit # Some common housekeeping.
+#    - lhci_run # removing for now as something in D9 HTML breaks LHCI
 {% endraw %}

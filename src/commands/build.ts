@@ -7,7 +7,7 @@ import ux from 'cli-ux'
 
 const fspath = require('path')
 export default class BuildCmd extends BaseCmd {
-  static description = 'Commit the existing containers as new docker images, and create a new docker-compose file referencing them.'
+  static description = 'Commit the existing containers as new docker images, and create a new docker compose file referencing them.'
 
   static examples = [
     '$ ce-dev build --template example.compose.yml',
@@ -17,12 +17,12 @@ export default class BuildCmd extends BaseCmd {
     help: flags.help({char: 'h'}),
     template: flags.string({
       char: 't',
-      description: 'Path to a docker-compose template file, relative to the project ce-dev folder. WARNING: this must match the original one the project was constructed with.',
+      description: 'Path to a docker compose template file, relative to the project ce-dev folder. WARNING: this must match the original one the project was constructed with.',
       default: 'ce-dev.compose.yml',
     }),
     destination: flags.string({
       char: 'd',
-      description: 'Path to the output docker-compose file, relative to the project ce-dev folder.',
+      description: 'Path to the output docker compose file, relative to the project ce-dev folder.',
       default: 'ce-dev.compose.prebuilt.yml',
     }),
     registry: flags.string({

@@ -1,2 +1,2 @@
-1.1.17
-Release to repackage ce-dev to force d8 compatible drush version.
+1.2.1
+Fix docker ps --quiet and --format use (#120)
