@@ -1,2 +1,2 @@
-1.2.0
-Migrated to using docker compose v2 or higher.
+1.2.1
+Fix docker ps --quiet and --format use (#120)
