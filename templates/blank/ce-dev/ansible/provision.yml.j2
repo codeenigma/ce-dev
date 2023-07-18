@@ -12,6 +12,8 @@
         enable_vnc: true
     - nodejs:
         version: 14.x
+    - apt_unattended_upgrades:
+        enable: false
   tasks:
     - apt:
         update_cache: true
