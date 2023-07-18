@@ -1,2 +1,2 @@
-1.1.22
-Drupal 9 template building.
+1.2.0
+Migrated to using docker compose v2 or higher.

@@ -12,6 +12,8 @@ x-ce_dev:
 services:
   web:
     image: 'codeenigma/drupal9-web:latest'
+    platform: linux/amd64
+    cgroup: host
     expose:
       - 443
       - 80
@@ -35,5 +37,6 @@ services:
       - NET_ADMIN
   db:
     image: 'codeenigma/drupal9-db:latest'
+    platform: linux/amd64
     environment:
       MYSQL_ROOT_PASSWORD: ce-dev

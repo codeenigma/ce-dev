@@ -21,7 +21,7 @@ export default class InitCmd extends BaseCmd {
     help: flags.help({char: 'h'}),
     template: flags.string({
       char: 't',
-      description: 'path to a docker-compose template file, relative to the project root',
+      description: 'path to a docker compose template file, relative to the project root',
       default: 'ce-dev.compose.prebuilt.yml',
     }),
   }
@@ -298,7 +298,7 @@ export default class InitCmd extends BaseCmd {
         if (!service.volumes) {
           service.volumes = []
         }
-        service.volumes.push('/sys/fs/cgroup:/sys/fs/cgroup:ro')
+        service.volumes.push('/sys/fs/cgroup:/sys/fs/cgroup:rw')
         service.volumes = [...new Set(service.volumes)]
         if (!service.cap_add) {
           service.cap_add = []

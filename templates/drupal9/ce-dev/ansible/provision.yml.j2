@@ -4,6 +4,8 @@
     - _domain_name: www.{{ project_name }}.local
     - _env_type: dev
     - project_name: {{ project_name }}
+    - rkhunter:
+        allow_ssh_root_user: prohibit-password
     - mysql_client:
         host: {{ project_name }}-db
         user: root
@@ -48,14 +50,9 @@
         cli: true
     - lhci:
         enable_vnc: true
+    - nodejs:
+        version: 16.x
 {% endraw %}
-  pre_tasks:
-    # Debian has nodejs 12.x installed by default.
-    - name: Remove "node" package installed by default
-      ansible.builtin.apt:
-        name: nodejs
-        state: absent
-        purge: true
   tasks:
     - apt:
         update_cache: true
