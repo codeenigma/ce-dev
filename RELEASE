@@ -1,2 +1,2 @@
-1.2.1
-Fix docker ps --quiet and --format use (#120)
+1.2.2
+Releasing new Drupal templates.
