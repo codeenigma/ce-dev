@@ -54,6 +54,13 @@
         command: require
         arguments: drush/drush:11.*
         working_dir: "{{ deploy_path }}"
+  post_tasks:
+    - name: "Symlink global Drush"
+      ansible.builtin.file:
+        src: "{{ drush_bin }}"
+        dest: "/usr/local/bin/drush"
+        state: link
+      become: yes
   roles:
     - _init # Sets some variables the deploy scripts rely on.
     - composer # Composer install step.
