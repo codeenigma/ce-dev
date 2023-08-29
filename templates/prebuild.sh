@@ -1,7 +1,7 @@
 #!/bin/sh
 # Test project creation and pre-build image.
 set -e
-PROJECTS="blank drupal8 drupal9"
+PROJECTS="blank drupal9 drupal10"
 
 # Common processing.
 OWN_DIR=$(dirname "$0")

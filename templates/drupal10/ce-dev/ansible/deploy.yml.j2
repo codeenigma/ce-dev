@@ -1,0 +1,66 @@
+---
+# Template playbook for a local Drupal 9 codebase.
+- hosts: {{ project_name }}-web
+  vars:
+    - project_name: {{ project_name }}
+    - project_type: drupal8
+    - webroot: web
+    - build_type: local
+    - _env_type: dev
+{% raw %}
+    - _domain_name: www.{{ project_name }}.local
+    # Path to your project root. This must match the "volume" set in the docker compose template.
+    - deploy_path: /home/ce-dev/deploy/live.local
+    # This actually does not take any backup, but is needed to populate settings.php.
+    - mysql_backup:
+        handling: none
+        credentials_handling: manual
+    # A list of Drupal sites (for multisites).
+    - drupal:
+        sites:
+          - folder: "default"
+            public_files: "sites/default/files"
+            install_command: "-y si"
+            # Toggle config import on/off. Disabled for initial passes.
+            config_import_command: ""
+            # config_import_command: "cim"
+            config_sync_directory: "config/sync"
+            sanitize_command: "sql-sanitize"
+            # Remove after initial pass, to avoid reinstalling Drupal.
+            force_install: true
+            base_url: "https://{{ _domain_name }}"
+    # Composer command to run.
+    - composer:
+        command: install
+        no_dev: false
+        working_dir: "{{ deploy_path }}"
+        apcu_autoloader: false
+    - drush:
+        use_vendor: true
+    - drush_bin: "{{ deploy_path }}/vendor/drush/drush/drush"
+    - lhci_run:
+        # Create a list of URLs to test with LHCI
+        test_urls:
+          - "https://{{ _domain_name }}"
+  pre_tasks:
+    # You can safely remove these steps once you have a working composer.json.
+    - name: Download composer file.
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/drupal/recommended-project/10.1.x/composer.json
+        dest: "{{ deploy_path }}/composer.json"
+        force: false
+    - name: Install drush.
+      community.general.composer:
+        command: require
+        arguments: drush/drush:12.*
+        working_dir: "{{ deploy_path }}"
+  roles:
+    - _init # Sets some variables the deploy scripts rely on.
+    - composer # Composer install step.
+    - database_backup # This is still needed to generate credentials.
+    - config_generate # Generates settings.php
+#    - sync/database_sync # Grab database from a remote server.
+    - database_apply # Run drush updb and config import.
+    - _exit # Some common housekeeping.
+#    - lhci_run # removing for now as something in D9 HTML breaks LHCI
+{% endraw %}
