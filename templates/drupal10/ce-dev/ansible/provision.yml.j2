@@ -1,0 +1,74 @@
+- hosts: {{ project_name }}-web
+  become: true
+  vars:
+    - _domain_name: www.{{ project_name }}.local
+    - _env_type: dev
+    - project_name: {{ project_name }}
+    - rkhunter:
+        allow_ssh_root_user: prohibit-password
+    - mysql_client:
+        host: {{ project_name }}-db
+        user: root
+        password: ce-dev
+  {% raw %}
+    - nginx:
+        domains:
+          - server_name: "{{ _domain_name }}"
+            access_log:  "/var/log/nginx-access.log"
+            error_log:  "/var/log/nginx-error.log"
+            error_log_level:  "notice"
+            webroot:  "/home/ce-dev/deploy/live.local/web"
+            project_type:  "drupal8"
+            ssl:
+              domain: "{{ _domain_name }}"
+              cert: "{{ _ce_dev_mkcert_base}}/{{ _domain_name }}.pem"
+              key: "{{ _ce_dev_mkcert_base}}/{{ _domain_name }}-key.pem"
+              handling: "unmanaged"
+            ratelimitingcrawlers: false
+            is_default: true
+            servers:
+              - port: 80
+                ssl: false
+                https_redirect: true
+              - port: 443
+                ssl: true
+                https_redirect: false
+            upstreams: []
+    - php:
+        version:
+          - 8.1
+        cli:
+          memory_limit: -1
+          _env_type: dev
+        fpm:
+          _env_type: dev
+    - php_composer:
+        version: ''
+        version_branch: '--2'
+        keep_updated: true
+    - xdebug:
+        cli: true
+    - lhci:
+        enable_vnc: true
+    - nodejs:
+        version: 18.x
+    - apt_unattended_upgrades:
+        enable: false
+{% endraw %}
+  tasks:
+    - apt:
+        update_cache: true
+    - import_role:
+        name: _meta/common_base
+    - import_role:
+        name: mysql_client
+    - import_role:
+        name: php-cli
+    - import_role:
+        name: php-fpm
+    - import_role:
+        name: nginx
+    - import_role:
+        name: lhci
+    - import_role:
+        name: frontail
