@@ -57,6 +57,19 @@ sudo update-initramfs -c -k all
 
 ```bash
 docker rm $(docker ps -aq)
+
+### Cgroup On Older Projects
+
+ce-dev does allow for the use of Cgroup 2, but some older projects will need upgrading to allow this to work. This means that the ce-dev controller will work fine, but some projects may fail to start some containers. This error will become apparent if you see the "unreachable" error when running the `ce-dev provision` step.
+
+If this is the case then make sure that the cgroup option is set in your ce-dev.compose.prebuilt.yml file for the services that aren't starting.
+
+```
+services:
+  web:
+    cgroup: host
+    image: 'codeenigma/drupal9-web:latest'
+    expose:
 ```
 
 ## VM Networking issue
