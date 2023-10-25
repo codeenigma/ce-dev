@@ -25,6 +25,20 @@ sudo update-initramfs -c -k all
 
 They will take a while to run (about 10 minutes), but once complete reboot your machine and delete any created containers that velong to the ce_dev image. When you rebuild the ce-dev controller (by running any command) it should create fine.
 
+### Cgroup On Older Projects
+
+ce-dev does allow for the use of Cgroup 2, but some older projects will need upgrading to allow this to work. This means that the ce-dev controller will work fine, but some projects may fail to start some containers. This error will become apparent if you see the "unreachable" error when running the `ce-dev provision` step.
+
+If this is the case then make sure that the cgroup option is set in your ce-dev.compose.prebuilt.yml file for the services that aren't starting.
+
+```
+services:
+  web:
+    cgroup: host
+    image: 'codeenigma/drupal9-web:latest'
+    expose:
+```
+
 ## VM Networking issue
 If you're running ce-dev from within a Virtual Machine (eg. KVM/qemu), Docker container network ports are only 'exposed' to the hypervisor (ie the VM), and are not published for external access.
 In order to access sites/files deployed by ce-dev, the ports needs to be published so that the Docker containers can be accessed from your workstation.
