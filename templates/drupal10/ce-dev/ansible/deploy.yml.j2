@@ -1,5 +1,5 @@
 ---
-# Template playbook for a local Drupal 9 codebase.
+# Template playbook for a local Drupal 10 codebase.
 - hosts: {{ project_name }}-web
   vars:
     - project_name: {{ project_name }}
@@ -46,13 +46,13 @@
     # You can safely remove these steps once you have a working composer.json.
     - name: Download composer file.
       ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/drupal/recommended-project/9.5.x/composer.json
+        url: https://raw.githubusercontent.com/drupal/recommended-project/10.1.x/composer.json
         dest: "{{ deploy_path }}/composer.json"
         force: false
     - name: Install drush.
       community.general.composer:
         command: require
-        arguments: drush/drush:11.*
+        arguments: drush/drush:12.*
         working_dir: "{{ deploy_path }}"
   post_tasks:
     - name: "Symlink global Drush"
@@ -61,6 +61,7 @@
         dest: "/usr/local/bin/drush"
         state: link
       become: yes
+
   roles:
     - _init # Sets some variables the deploy scripts rely on.
     - composer # Composer install step.
