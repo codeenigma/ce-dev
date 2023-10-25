@@ -1,17 +1,17 @@
-version: '3.7'
+version: "3.7"
 x-ce_dev:
   version: 1.x
-  registry: 'localhost:5000'
+  registry: localhost:5000
   project_name: {{ project_name }}
   provision:
     - ce-dev/ansible/provision.yml
   deploy:
     - ce-dev/ansible/deploy.yml
   urls:
-    - 'https://www.{{ project_name }}.local'
+    - https://www.{{ project_name }}.local
 services:
   web:
-    image: 'codeenigma/drupal9-web:latest'
+    image: codeenigma/ce-dev-1.x:latest
     platform: linux/amd64
     cgroup: host
     expose:
@@ -36,7 +36,6 @@ services:
     cap_add:
       - NET_ADMIN
   db:
-    image: 'codeenigma/drupal9-db:latest'
-    platform: linux/amd64
+    image: mariadb
     environment:
       MYSQL_ROOT_PASSWORD: ce-dev

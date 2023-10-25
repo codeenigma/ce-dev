@@ -1,4 +1,4 @@
-FROM debian:buster as unison
+FROM debian:bullseye-slim as unison
 RUN \
   set -x && \
   export DEBIAN_FRONTEND=noninteractive && \
@@ -9,12 +9,12 @@ RUN \
   wget \
   ocaml-native-compilers && \
   cd /tmp/ && \
-  wget https://github.com/bcpierce00/unison/archive/v2.51.2.tar.gz && \
-  tar -xzvf v2.51.2.tar.gz && \
-  cd /tmp/unison-2.51.2 && \
+  wget https://github.com/bcpierce00/unison/archive/v2.53.3.tar.gz && \
+  tar -xzvf v2.53.3.tar.gz && \
+  cd /tmp/unison-2.53.3 && \
   make
 
-FROM debian:buster
+FROM debian:bullseye-slim
 
 RUN \
   set -x && \
@@ -54,19 +54,6 @@ RUN \
   /var/log/* \
   /tmp/*
 
-# Temp workaround bug in system.d with kernel 5.8
-RUN \
-  echo 'deb http://deb.debian.org/debian buster-backports main' > /etc/apt/sources.list.d/backports.list && \
-  set -x && \
-  export DEBIAN_FRONTEND=noninteractive && \
-  apt-get update && \
-  apt-get -y -o Dpkg::Options::="--force-confnew" -t=buster-backports upgrade systemd && \
-  apt-get clean  && \
-  rm -rf \
-  /var/lib/apt/lists/* \
-  /var/log/* \
-  /tmp/*
-
 RUN \
   echo 'UseDNS no' >> /etc/ssh/sshd_config && \
   mkdir -p /var/run/sshd && \
@@ -89,8 +76,8 @@ RUN \
   /etc/machine-id \
   /var/lib/dbus/machine-id
 
-COPY --from=unison /tmp/unison-2.51.2/src/unison /usr/local/bin/
-COPY --from=unison /tmp/unison-2.51.2/src/unison-fsmonitor /usr/local/bin/
+COPY --from=unison /tmp/unison-2.53.3/src/unison /usr/local/bin/
+COPY --from=unison /tmp/unison-2.53.3/src/unison-fsmonitor /usr/local/bin/
 COPY ./ce-dev-ownership.sh /opt/
 COPY ./ce-dev-ssh.sh /opt/
 COPY ./unison.sh /opt/
@@ -98,7 +85,7 @@ COPY ./unison-startup.sh /opt/
 COPY ./procmailrc /etc/procmailrc
 
 RUN \
-  wget https://github.com/FiloSottile/mkcert/releases/download/v1.4.1/mkcert-v1.4.1-linux-amd64 -O /usr/local/bin/mkcert && \
+  wget https://github.com/FiloSottile/mkcert/releases/download/v1.4.4/mkcert-v1.4.4-linux-amd64 -O /usr/local/bin/mkcert && \
   mkdir -p /home/ce-dev/deploy/live.local /home/ce-dev/.composer/cache /home/ce-dev/.nvm/versions/node /home/ce-dev/.local/share/mkcert && \
   chown -R ce-dev:ce-dev /home/ce-dev && \
   chmod +x /usr/local/bin/*
