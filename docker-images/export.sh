@@ -27,7 +27,7 @@ fi
 OWN_DIR=$( cd "$( dirname "$OWN" )" && pwd -P)
 
 # Ensure we have a fresh image to start with.
-docker image pull debian:buster
+docker image pull debian:bullseye-slim
 
 # Build base image.
 echo "Building base image."
@@ -45,8 +45,8 @@ if [ "$2" = "--push" ]; then
   docker image push "codeenigma/ce-dev-controller-1.x:$1"
 fi
 
-# Build dind image.
-# echo "Building dind image"
+# Build DinD (Docker in Docker) image.
+# echo "Building DinD image"
 # sudo docker image build --compress "--label=ce-dev-dind-1.x:$1" --no-cache=true -t "codeenigma/ce-dev-dind-1.x:$1" "$OWN_DIR/dind" || exit 1
 # if [ "$2" = "--push" ]; then
 #   echo "Publishing the image with docker image push codeenigma/ce-dev-dind-1.x:$1"
