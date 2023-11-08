@@ -27,7 +27,7 @@ fi
 OWN_DIR=$( cd "$( dirname "$OWN" )" && pwd -P)
 
 # Ensure we have a fresh image to start with.
-docker image pull debian:bullseye-slim
+docker image pull debian:bookworm-slim
 
 # Build base image.
 echo "Building base image."
