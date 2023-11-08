@@ -17,7 +17,7 @@ RUN \
   /tmp/*
 
 
-RUN su - ce-dev -c "git clone --branch 1.x https://github.com/codeenigma/ce-provision.git /home/ce-dev/ce-provision"
+RUN su - ce-dev -c "git clone --branch 2.x https://github.com/codeenigma/ce-provision.git /home/ce-dev/ce-provision"
 
 COPY ./provision.yml /home/ce-dev/ce-provision/provision.yml
 
@@ -25,7 +25,7 @@ RUN \
   set -x && \
   export DEBIAN_FRONTEND=noninteractive && \  
   apt-get update && \
-  su - ce-dev -c "/usr/local/bin/ansible-playbook /home/ce-dev/ce-provision/provision.yml" && \
+  su - ce-dev -c "/usr/bin/ansible-playbook /home/ce-dev/ce-provision/provision.yml" && \
   rm /home/ce-dev/ce-provision/provision.yml && \
   apt-get clean  && \
   rm -rf \
