@@ -2,7 +2,7 @@ FROM codeenigma/ce-dev-1.x:latest
 
 RUN \
   set -x && \
-  export DEBIAN_FRONTEND=noninteractive && \  
+  export DEBIAN_FRONTEND=noninteractive && \
   apt-get update && \
   apt-get dist-upgrade -y -o Dpkg::Options::="--force-confnew" && \
   apt-get install -y -o Dpkg::Options::="--force-confnew" \
@@ -23,12 +23,12 @@ COPY ./provision.yml /home/ce-dev/ce-provision/provision.yml
 
 RUN \
   set -x && \
-  export DEBIAN_FRONTEND=noninteractive && \  
-  apt-get update && \
-  su - ce-dev -c "/usr/bin/ansible-playbook /home/ce-dev/ce-provision/provision.yml" && \
-  rm /home/ce-dev/ce-provision/provision.yml && \
-  apt-get clean  && \
-  rm -rf \
-  /var/lib/apt/lists/* \
-  /var/log/* \
-  /tmp/*
+  export DEBIAN_FRONTEND=noninteractive && \
+  /usr/bin/python3 -m venv /home/ce-dev/ansible
+  /home/ce-dev/ansible/bin/python3 -m pip install ansible
+
+RUN \
+  set -x && \
+  export DEBIAN_FRONTEND=noninteractive && \
+  su - ce-dev -c "/home/ce-dev/ansible/bin/ansible-playbook /home/ce-dev/ce-provision/provision.yml" && \
+  rm /home/ce-dev/ce-provision/provision.yml
