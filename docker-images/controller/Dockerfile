@@ -24,8 +24,8 @@ COPY ./provision.yml /home/ce-dev/ce-provision/provision.yml
 RUN \
   set -x && \
   export DEBIAN_FRONTEND=noninteractive && \
-  /usr/bin/python3 -m venv /home/ce-dev/ansible && \
-  /home/ce-dev/ansible/bin/python3 -m pip install ansible
+  su - ce-dev -c "/usr/bin/python3 -m venv /home/ce-dev/ansible" && \
+  su - ce-dev -c "/home/ce-dev/ansible/bin/python3 -m pip install ansible"
 
 RUN \
   set -x && \
