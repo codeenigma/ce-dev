@@ -10,6 +10,8 @@
     - is_local: true
     - _env_type: utility
     - ce_provision:
+        venv_path: "/home/{{ _ce_provision.username }}/ansible"
+        venv_command: /usr/bin/python3 -m venv
         own_repository: https://github.com/codeenigma/ce-provision.git
         own_repository_branch: 2.x
         own_repository_skip_checkout: false
@@ -19,6 +21,13 @@
         username: controller
         local_dir: /home/controller/ce-provision
         groups: []
+        contrib_roles:
+          - directory: wazuh
+            repo: https://github.com/wazuh/wazuh-ansible.git
+            branch: stable
+          - directory: systemd_timers
+            repo: https://github.com/vlcty/ansible-systemd-timers.git
+            branch: master
         galaxy_custom_requirements_file: ""
         galaxy_roles_directory: "/home/{{ _ce_provision.username }}/.ansible/roles"
         upgrade_galaxy:
