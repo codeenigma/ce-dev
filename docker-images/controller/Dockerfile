@@ -7,7 +7,7 @@ RUN \
   apt-get dist-upgrade -y -o Dpkg::Options::="--force-confnew" && \
   apt-get install -y -o Dpkg::Options::="--force-confnew" \
   git \
-  ansible \
+  python3-venv \
   python3-boto3 && \
   apt-get clean  && \
   update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \
