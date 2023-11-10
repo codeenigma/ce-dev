@@ -45,7 +45,7 @@ RUN \
   chmod 600 /home/controller/.ssh/id_rsa && \
   chmod 644 /home/controller/.ssh/id_rsa.pub
 
-RUN su - ce-dev -c "git clone --branch 1.x https://github.com/codeenigma/ce-provision.git /home/ce-dev/ce-provision"
+RUN su - ce-dev -c "git clone --branch 2.x https://github.com/codeenigma/ce-provision.git /home/ce-dev/ce-provision"
 
 COPY ./provision.yml /home/ce-dev/ce-provision/provision.yml
 
