@@ -40,5 +40,5 @@
         upgrade_galaxy:
           enabled: false
   roles:
-    - ce_provision
-    - ce_deploy
+    - debian/ce_provision
+    - debian/ce_deploy

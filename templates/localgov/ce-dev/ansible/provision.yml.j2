@@ -50,19 +50,19 @@
         enable: false
 {% endraw %}
   tasks:
-    - apt:
+    - ansible.builtin.apt:
         update_cache: true
-    - import_role:
+    - ansible.builtin.import_role:
         name: _meta/common_base
-    - import_role:
-        name: mysql_client
-    - import_role:
-        name: php-cli
-    - import_role:
-        name: php-fpm
-    - import_role:
-        name: nginx
-    - import_role:
-        name: lhci
-    - import_role:
-        name: frontail
+    - ansible.builtin.import_role:
+        name: debian/mysql_client
+    - ansible.builtin.import_role:
+        name: debian/php-cli
+    - ansible.builtin.import_role:
+        name: debian/php-fpm
+    - ansible.builtin.import_role:
+        name: debian/nginx
+    - ansible.builtin.import_role:
+        name: debian/lhci
+    - ansible.builtin.import_role:
+        name: debian/frontail
