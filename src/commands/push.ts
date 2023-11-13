@@ -1,6 +1,6 @@
 import DockerImagesCmd from '../base-cmd-abstract-docker-images'
 import {execSync} from 'child_process'
-import ux from 'cli-ux'
+import { ux } from '@oclif/core'
 
 export default class PushCmd extends DockerImagesCmd {
   static description = 'Push images referenced in a compose file to a remote repository.'

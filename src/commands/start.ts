@@ -2,8 +2,7 @@ import BaseCmd from '../base-cmd-abstract'
 import ComposeConfigBare from '../compose-config-bare-interface'
 import IPManager from '../ip-manager'
 import {execSync} from 'child_process'
-import {flags} from '@oclif/command'
-import ux from 'cli-ux'
+import { Flags, ux } from '@oclif/core'
 const fs = require('fs')
 const readline = require('readline')
 
@@ -15,7 +14,7 @@ export default class StartCmd extends BaseCmd {
   ]
 
   static flags = {
-    help: flags.help({char: 'h'}),
+    help: Flags.help({char: 'h'}),
   }
 
   /**

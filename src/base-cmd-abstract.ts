@@ -1,11 +1,11 @@
 import CeDevControllerManager from './controller-manager'
 import CeDevProjectConfig from './ce-dev-project-config-interface'
-import {Command} from '@oclif/command'
+import { Command } from '@oclif/core'
 import ComposeConfig from './compose-config-interface'
 import UserConfig from './user-config-interface'
 import YamlParser from './yaml-parser'
 import {execSync} from 'child_process'
-import ux from 'cli-ux'
+import { ux } from '@oclif/core'
 
 const {spawnSync} = require('child_process')
 const fs = require('fs')

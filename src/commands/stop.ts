@@ -1,7 +1,6 @@
 import BaseCmd from '../base-cmd-abstract'
 import {execSync} from 'child_process'
-import {flags} from '@oclif/command'
-import ux from 'cli-ux'
+import { Flags, ux } from '@oclif/core'
 
 export default class StopCmd extends BaseCmd {
   static description = 'Stops running containers for a project.'
@@ -11,7 +10,7 @@ export default class StopCmd extends BaseCmd {
   ]
 
   static flags = {
-    help: flags.help({char: 'h'}),
+    help: Flags.help({char: 'h'}),
   }
 
   /**

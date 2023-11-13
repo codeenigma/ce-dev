@@ -2,8 +2,7 @@ import * as inquirer from 'inquirer'
 
 import BaseCmd from '../base-cmd-abstract'
 import {execSync} from 'child_process'
-import {flags} from '@oclif/command'
-import ux from 'cli-ux'
+import { Flags, ux } from '@oclif/core'
 
 const fs = require('fs')
 const fspath = require('path')
@@ -16,16 +15,16 @@ export default class CreateCmd extends BaseCmd {
   ]
 
   static flags = {
-    help: flags.help({char: 'h'}),
-    template: flags.string({
+    help: Flags.help({char: 'h'}),
+    template: Flags.string({
       char: 't',
       description: 'Name of a template: "drupal8"',
     }),
-    project: flags.string({
+    project: Flags.string({
       char: 'p',
       description: 'A unique name for your project. Because it is used in various places (db names, url, etc), stick with lowercase alphanumeric chars.',
     }),
-    destination: flags.string({
+    destination: Flags.string({
       char: 'd',
       description: 'Path to the project destination.',
     }),

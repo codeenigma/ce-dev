@@ -1,29 +1,29 @@
 import BaseCmd from './base-cmd-abstract'
 import ComposeConfig from './compose-config-interface'
 import {execSync} from 'child_process'
-import {flags} from '@oclif/command'
+import { Flags } from '@oclif/core'
 
 export default abstract class DockerImagesCmd extends BaseCmd {
   static flags = {
-    help: flags.help({char: 'h'}),
-    template: flags.string({
+    help: Flags.help({char: 'h'}),
+    template: Flags.string({
       char: 't',
       description: 'Path to a docker compose template file, relative to the project root. WARNING: this must match the original one the project was constructed with.',
       default: 'ce-dev.compose.prebuilt.yml',
     }),
-    username: flags.string({
+    username: Flags.string({
       char: 'u',
       description: 'Username to use to login against the Docker registry.',
     }),
-    password: flags.string({
+    password: Flags.string({
       char: 'p',
       description: 'Password to use to login against the Docker registry. Warning, this will appear in your shell history in clear text.',
     }),
-    anonymous: flags.boolean({
+    anonymous: Flags.boolean({
       char: 'a',
       description: 'Do not prompt for login credentials.',
     }),
-    registry: flags.string({
+    registry: Flags.string({
       char: 'r',
       description: 'Docker registry to use. This overrides the one defined in the source compose template.',
       default: '',

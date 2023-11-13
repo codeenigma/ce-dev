@@ -2,8 +2,7 @@ import * as inquirer from 'inquirer'
 
 import BaseCmd from '../base-cmd-abstract'
 import {execSync} from 'child_process'
-import {flags} from '@oclif/command'
-import ux from 'cli-ux'
+import { Flags, ux } from '@oclif/core'
 
 export default class CleanCmd extends BaseCmd {
   static description = 'Remove unused Docker artifacts (volumes, images).'
@@ -13,7 +12,7 @@ export default class CleanCmd extends BaseCmd {
   ]
 
   static flags = {
-    quiet: flags.boolean({
+    quiet: Flags.boolean({
       char: 'q',
       description: 'Non-interactive, do not prompt for container deletion choice.',
       default: false,

@@ -1,5 +1,5 @@
 import BaseCmd from '../base-cmd-abstract'
-import ux from 'cli-ux'
+import { ux } from '@oclif/core'
 
 export default class BrowseCmd extends BaseCmd {
   static description = 'Open preset URL(s) in a browser'

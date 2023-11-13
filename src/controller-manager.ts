@@ -1,9 +1,8 @@
 import ComposeConfigBare from './compose-config-bare-interface'
-import {IConfig} from '@oclif/config'
 import IPManager from './ip-manager'
 import YamlParser from './yaml-parser'
 import {execSync} from 'child_process'
-import ux from 'cli-ux'
+import { Config, ux } from '@oclif/core'
 
 const fs = require('fs')
 const fspath = require('path')
@@ -31,7 +30,7 @@ export default class ControllerManager {
    * @member
    * Config from oclif.
    */
-  private readonly config: IConfig
+  private readonly config: Config
 
   /**
    * @member
@@ -46,7 +45,7 @@ export default class ControllerManager {
   private readonly controllerComposeFile: string
 
   public constructor(
-    config: IConfig,
+    config: Config,
     dockerBin: string,
     dockerComposeBin: string,
     mkcertBin: string,

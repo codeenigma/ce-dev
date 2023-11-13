@@ -1,6 +1,6 @@
 import DockerImagesCmd from '../base-cmd-abstract-docker-images'
 import {execSync} from 'child_process'
-import ux from 'cli-ux'
+import { ux } from '@oclif/core'
 
 export default class PullCmd extends DockerImagesCmd {
   static description = 'Pull images referenced in a compose file from a remote repository.'

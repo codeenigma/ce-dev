@@ -6,8 +6,7 @@ import ComposeConfigService from '../compose-config-service-interface'
 import IPManager from '../ip-manager'
 import UnisonVolumeContainer from '../ce-dev-project-config-unison-volume-interface'
 import YamlParser from '../yaml-parser'
-import {flags} from '@oclif/command'
-import ux from 'cli-ux'
+import { Flags, ux } from '@oclif/core'
 
 inquirer.registerPrompt('fuzzypath', require('inquirer-fuzzy-path'))
 export default class InitCmd extends BaseCmd {
@@ -18,8 +17,8 @@ export default class InitCmd extends BaseCmd {
   ]
 
   static flags = {
-    help: flags.help({char: 'h'}),
-    template: flags.string({
+    help: Flags.help({char: 'h'}),
+    template: Flags.string({
       char: 't',
       description: 'path to a docker compose template file, relative to the project root',
       default: 'ce-dev.compose.prebuilt.yml',

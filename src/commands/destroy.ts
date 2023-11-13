@@ -1,8 +1,7 @@
 import BaseCmd from '../base-cmd-abstract'
 import ComposeConfig from '../compose-config-interface'
 import {execSync} from 'child_process'
-import {flags} from '@oclif/command'
-import ux from 'cli-ux'
+import { Flags, ux } from '@oclif/core'
 
 export default class DestroyCmd extends BaseCmd {
   static description = 'Destroy project\'s containers using docker compose kill.'
@@ -12,7 +11,7 @@ export default class DestroyCmd extends BaseCmd {
   ]
 
   static flags = {
-    help: flags.help({char: 'h'}),
+    help: Flags.help({char: 'h'}),
   }
 
   /**

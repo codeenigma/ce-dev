@@ -8,48 +8,32 @@
   },
   "bugs": "https://github.com/codeenigma/ce-dev/issues",
   "dependencies": {
-    "@oclif/command": "^1.6.1",
-    "@oclif/config": "^1.15.1",
-    "@oclif/plugin-autocomplete": "^0.2.0",
-    "@oclif/plugin-help": "^2.2.3",
-    "cli-ux": "^5.4.6",
-    "inquirer": "^7.1.0",
+    "@oclif/core": "^3.10.8",
+    "@oclif/plugin-autocomplete": "^3.0.1",
+    "@oclif/plugin-help": "^6.0.6",
+    "inquirer": "^9.2.12",
     "inquirer-fuzzy-path": "^2.3.0",
-    "js-yaml": "^3.13.1",
-    "tslib": "^1.11.2"
+    "js-yaml": "^4.1.0",
+    "tslib": "^2.6.2"
   },
   "devDependencies": {
-    "@oclif/dev-cli": "^1.22.2",
-    "@types/inquirer": "^6.5.0",
-    "@types/node": "^10.17.21",
-    "@typescript-eslint/parser": "^3.6.1",
-    "eslint": "^7.4.0",
-    "eslint-config-oclif": "^3.1.0",
-    "eslint-config-oclif-typescript": "^0.2.0",
-    "eslint-plugin-jsdoc": "^29.2.0",
-    "eslint-plugin-oclif": "^0.1.0",
-    "globby": "^10.0.2",
-    "prettier": "^2.0.5",
-    "ts-node": "^8.10.1",
-    "typescript": "^3.8.3"
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.9.0",
+    "@typescript-eslint/parser": "^6.10.0",
+    "eslint": "^8.53.0",
+    "eslint-config-oclif": "^5.0.0",
+    "eslint-config-oclif-typescript": "^3.0.15",
+    "eslint-plugin-jsdoc": "^46.9.0",
+    "globby": "^14.0.0",
+    "prettier": "^3.1.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
   },
-  "engines": {
-    "node": ">=8.0.0"
-  },
-  "files": [
-    "/bin",
-    "/lib",
-    "/npm-shrinkwrap.json",
-    "/oclif.manifest.json",
-    "templates"
-  ],
-  "repository": "https://github.com/codeenigma/ce-dev",
-  "keywords": [
-    "oclif"
-  ],
-  "license": "MIT",
   "main": "lib/index.js",
   "oclif": {
+    "additionalHelpFlags": ["-h"],
+    "additionalVersionFlags": ["-v"],
+    "default": ".",
     "commands": "./lib/commands",
     "bin": "ce-dev",
     "plugins": [

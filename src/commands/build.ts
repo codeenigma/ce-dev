@@ -2,10 +2,11 @@ import BaseCmd from '../base-cmd-abstract'
 import ComposeConfig from '../compose-config-interface'
 import YamlParser from '../yaml-parser'
 import {execSync} from 'child_process'
-import {flags} from '@oclif/command'
-import ux from 'cli-ux'
+import { Flags, ux } from '@oclif/core'
 
 const fspath = require('path')
+
+
 export default class BuildCmd extends BaseCmd {
   static description = 'Commit the existing containers as new docker images, and create a new docker compose file referencing them.'
 
@@ -14,18 +15,18 @@ export default class BuildCmd extends BaseCmd {
   ]
 
   static flags = {
-    help: flags.help({char: 'h'}),
-    template: flags.string({
+    help: Flags.help({char: 'h'}),
+    template: Flags.string({
       char: 't',
       description: 'Path to a docker compose template file, relative to the project ce-dev folder. WARNING: this must match the original one the project was constructed with.',
       default: 'ce-dev.compose.yml',
     }),
-    destination: flags.string({
+    destination: Flags.string({
       char: 'd',
       description: 'Path to the output docker compose file, relative to the project ce-dev folder.',
       default: 'ce-dev.compose.prebuilt.yml',
     }),
-    registry: flags.string({
+    registry: Flags.string({
       char: 'r',
       description: 'Docker registry to use. This overrides the one defined in the source compose template.',
       default: '',

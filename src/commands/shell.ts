@@ -2,7 +2,7 @@ import * as inquirer from 'inquirer'
 
 import BaseCmd from '../base-cmd-abstract'
 import {execSync} from 'child_process'
-import {flags} from '@oclif/command'
+import { Flags} from '@oclif/core'
 
 export default class ShellCmd extends BaseCmd {
   static description = 'Open a shell session on the given container.'
@@ -12,7 +12,7 @@ export default class ShellCmd extends BaseCmd {
   ]
 
   static flags = {
-    help: flags.help({char: 'h'}),
+    help: Flags.help({char: 'h'}),
   }
 
   static args = [

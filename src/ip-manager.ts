@@ -1,8 +1,9 @@
-import {IConfig} from '@oclif/config'
+import { Config } from '@oclif/core'
 import YamlParser from './yaml-parser'
 import {execSync} from 'child_process'
 
 const fspath = require('path')
+
 /**
  * Manages static IP addressing.
  */
@@ -18,7 +19,7 @@ export default class IPManager {
    * @member
    * Config from oclif.
    */
-  private readonly config: IConfig
+  private readonly config: Config
 
   /**
    * @member
@@ -37,7 +38,7 @@ export default class IPManager {
    */
   private readonly netBase: string
 
-  public constructor(config: IConfig, dockerBin: string) {
+  public constructor(config: Config, dockerBin: string) {
     this.dockerBin = dockerBin
     this.config = config
     this.NetworkConfigFilePath = fspath.resolve(this.config.dataDir + '/ip.yml')
