@@ -5,7 +5,7 @@ on: pull_request
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Install modules
@@ -13,7 +13,7 @@ jobs:
       # Uses https://oclif.io/
       # Not strictly necessary here, but ensures the packing works
       - name: Pack the JS
-        run: yarn oclif-dev pack
+        run: yarn oclif pack
       # We build mkcert from source because releases are broken
       - name: Install test dependencies
         run: |

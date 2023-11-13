@@ -11,14 +11,14 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Install modules
         run: yarn
       # Uses https://oclif.io/
       - name: Pack the JS
-        run: yarn oclif-dev pack
+        run: yarn oclif pack
       # We build mkcert from source because releases are broken
       # The last step sets ce-dev config to NOT use sudo because this causes docker image push problems
       - name: Install build and publish dependencies
