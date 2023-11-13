@@ -35,5 +35,7 @@
     - ce_ansible:
         upgrade:
           enabled: false
+        linters:
+          enabled: true
   roles:
     - debian/ce_provision
