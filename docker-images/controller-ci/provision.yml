@@ -32,5 +32,8 @@
         galaxy_roles_directory: "/home/{{ _ce_provision.username }}/.ansible/roles"
         upgrade_galaxy:
           enabled: false
+    - ce_ansible:
+        upgrade:
+          enabled: false
   roles:
     - debian/ce_provision
