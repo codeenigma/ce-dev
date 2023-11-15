@@ -1,11 +1,13 @@
 import * as inquirer from 'inquirer'
-
-import BaseCmd from '../base-cmd-abstract'
+import BaseCmd from '../base-cmd-abstract.ts'
 import {execSync} from 'child_process'
 import { Flags, ux } from '@oclif/core'
+import * as fs from 'fs'
+import * as fspath from 'path'
 
-const fs = require('fs')
-const fspath = require('path')
+
+const prompt = inquirer.createPromptModule();
+
 
 export default class CreateCmd extends BaseCmd {
   static description = 'Generates a new project from a template'
@@ -58,10 +60,10 @@ export default class CreateCmd extends BaseCmd {
    * @inheritdoc
    */
   async run(): Promise<any> {
-    const {flags} = this.parse(CreateCmd)
+    const {flags} = await this.parse(CreateCmd)
     let project = flags.project
     if (!project) {
-      const response: any = await inquirer.prompt([{
+      const response: any = await prompt([{
         name: 'project',
         message: 'Name for the project',
         type: 'input',
@@ -72,7 +74,7 @@ export default class CreateCmd extends BaseCmd {
     let template = flags.template
     // @todo make list dynamic.
     if (!template) {
-      const response: any = await inquirer.prompt([{
+      const response: any = await prompt([{
         name: 'template',
         message: 'Template',
         type: 'list',
@@ -89,7 +91,7 @@ export default class CreateCmd extends BaseCmd {
     this.templateName = template as string
     let destination = flags.destination
     if (!destination) {
-      const response: any = await inquirer.prompt([{
+      const response: any = await prompt([{
         name: 'destination',
         message: 'Path for the project',
         type: 'input',

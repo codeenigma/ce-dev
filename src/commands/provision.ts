@@ -1,4 +1,4 @@
-import AnsibleCmd from '../base-cmd-ansible-abstract'
+import AnsibleCmd from '../base-cmd-ansible-abstract.ts'
 
 export default class ProvisionCmd extends AnsibleCmd {
   static description = 'Provision containers with Ansible playbooks.'

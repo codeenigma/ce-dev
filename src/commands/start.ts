@@ -1,10 +1,10 @@
-import BaseCmd from '../base-cmd-abstract'
-import ComposeConfigBare from '../compose-config-bare-interface'
-import IPManager from '../ip-manager'
+import BaseCmd from '../base-cmd-abstract.ts'
+import ComposeConfigBare from '../compose-config-bare-interface.ts'
+import IPManager from '../ip-manager.ts'
 import {execSync} from 'child_process'
 import { Flags, ux } from '@oclif/core'
-const fs = require('fs')
-const readline = require('readline')
+import * as fs from 'fs'
+import * as readline from 'readline'
 
 export default class StartCmd extends BaseCmd {
   static description = 'Spin up containers using docker compose and update /etc/hosts file.'
@@ -102,13 +102,10 @@ export default class StartCmd extends BaseCmd {
    * Name of a container.
    */
   private ensureOwnership(containerName: string): void {
-    const uid = process.getuid()
-    let gid = 1000
-    if (process.getgid() > 1000) {
-      gid = process.getegid()
-    }
+    const uid = process.getuid?.() ?? 1000
+    let gid = process.getgid?.() ?? 1000
     ux.action.start('Ensuring file ownership')
-    execSync(this.dockerBin + ' exec ' + containerName + ' /bin/sh /opt/ce-dev-ownership.sh ' + uid.toString() + ' ' + gid.toString(), {stdio: 'inherit'})
+    execSync(this.dockerBin + ' exec ' + containerName + ' /bin/sh /opt/ce-dev-ownership.sh ' + uid?.toString() + ' ' + gid.toString(), {stdio: 'inherit'})
     execSync(this.dockerBin + ' exec ' + containerName + ' chown -R ce-dev:ce-dev /home/ce-dev/.local', {stdio: 'inherit'})
     ux.action.stop()
   }

@@ -1,8 +1,9 @@
-import * as inquirer from 'inquirer'
-
-import BaseCmd from '../base-cmd-abstract'
+import inquirer from 'inquirer'
+import BaseCmd from '../base-cmd-abstract.ts'
 import {execSync} from 'child_process'
-import { Flags} from '@oclif/core'
+import { Flags, Args} from '@oclif/core'
+
+const prompt = inquirer.createPromptModule();
 
 export default class ShellCmd extends BaseCmd {
   static description = 'Open a shell session on the given container.'
@@ -13,20 +14,17 @@ export default class ShellCmd extends BaseCmd {
 
   static flags = {
     help: Flags.help({char: 'h'}),
-  }
-
-  static args = [
-    {
-      name: 'container',
-      required: false,
+    container: Flags.string({
       description: 'Name of the container to target. Use `docker ps` to see available containers.',
-    },
-  ]
+      required: false,
+      aliases: ['container']
+    }),
+  }
 
   async run(): Promise<any> {
     this.ensureActiveComposeFile()
-    const {args} = this.parse(ShellCmd)
-    let container = args.container
+    const { flags} = await this.parse(ShellCmd)
+    let container = flags.container
     if (!container) {
       const running = this.getProjectRunningContainersCeDev()
       if (running.length === 0) {
@@ -37,7 +35,7 @@ export default class ShellCmd extends BaseCmd {
       if (running.length === 1) {
         container = running[0]
       } else {
-        const response: any = await inquirer.prompt([{
+        const response: any = await prompt([{
           name: 'container',
           message: 'Select a container to target',
           type: 'list',

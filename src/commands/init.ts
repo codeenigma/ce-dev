@@ -1,14 +1,15 @@
 import * as inquirer from 'inquirer'
-
-import BaseCmd from '../base-cmd-abstract'
-import ComposeConfig from '../compose-config-interface'
-import ComposeConfigService from '../compose-config-service-interface'
-import IPManager from '../ip-manager'
-import UnisonVolumeContainer from '../ce-dev-project-config-unison-volume-interface'
-import YamlParser from '../yaml-parser'
+import BaseCmd from '../base-cmd-abstract.ts'
+import ComposeConfig from '../compose-config-interface.ts'
+import ComposeConfigService from '../compose-config-service-interface.ts'
+import IPManager from '../ip-manager.ts'
+import UnisonVolumeContainer from '../ce-dev-project-config-unison-volume-interface.ts'
+import YamlParser from '../yaml-parser.ts'
 import { Flags, ux } from '@oclif/core'
 
-inquirer.registerPrompt('fuzzypath', require('inquirer-fuzzy-path'))
+
+inquirer.default.registerPrompt('fuzzypath', require('inquirer-fuzzy-path'))
+
 export default class InitCmd extends BaseCmd {
   static description = 'Generates a docker-compose.yml file from a template'
 
@@ -42,8 +43,7 @@ export default class InitCmd extends BaseCmd {
    */
   public constructor(argv: string[], config: any) {
     super(argv, config)
-    const {flags} = this.parse(InitCmd)
-    this.composeTemplate = this.getPathFromRelative(flags.template)
+    this.composeTemplate = this.getPathFromRelative(this.constructor().flags.template)
     if (!this.composeTemplate) {
       this.composeTemplate = this.getPathFromRelative('ce-dev.compose.yml')
     }
@@ -110,7 +110,7 @@ export default class InitCmd extends BaseCmd {
    */
   private injectContainersHostname(): void {
     for (const [name, service] of Object.entries(this.composeConfig.services)) {
-      const fullName = this.composeConfig['x-ce_dev'].project_name + '-' + name
+      const fullName = this.composeConfig['x-ce_dev']?.project_name + '-' + name
       this.composeConfig.services[fullName] = service
       delete (this.composeConfig.services[name])
       service.container_name = fullName
@@ -133,7 +133,7 @@ export default class InitCmd extends BaseCmd {
         continue
       }
       const host_aliases: any = []
-      if (service['x-ce_dev'] && service['x-ce_dev'].host_aliases) {
+      if (service['x-ce_dev'] && service['x-ce_dev']?.host_aliases) {
         service['x-ce_dev'].host_aliases.forEach(alias => {
           host_aliases.push(alias)
           // Generate a matching SSL certificate.
@@ -190,8 +190,8 @@ export default class InitCmd extends BaseCmd {
    */
   private generateProjectInfo(): void {
     this.activeProjectInfo.provision = []
-    if (this.composeConfig['x-ce_dev'].provision) {
-      this.composeConfig['x-ce_dev'].provision.forEach(playbookPath => {
+    if (this.composeConfig['x-ce_dev']?.provision) {
+      this.composeConfig['x-ce_dev']?.provision.forEach(playbookPath => {
         const absolutePath = this.getPathFromRelative(playbookPath)
         if (absolutePath.length > 3) {
           this.activeProjectInfo.provision.push(absolutePath)
@@ -199,8 +199,8 @@ export default class InitCmd extends BaseCmd {
       })
     }
     this.activeProjectInfo.deploy = []
-    if (this.composeConfig['x-ce_dev'].deploy) {
-      this.composeConfig['x-ce_dev'].deploy.forEach(playbookPath => {
+    if (this.composeConfig['x-ce_dev']?.deploy) {
+      this.composeConfig['x-ce_dev']?.deploy.forEach(playbookPath => {
         const absolutePath = this.getPathFromRelative(playbookPath)
         if (absolutePath.length > 3) {
           this.activeProjectInfo.deploy.push(absolutePath)
@@ -208,16 +208,14 @@ export default class InitCmd extends BaseCmd {
       })
     }
     this.activeProjectInfo.urls = []
-    if (this.composeConfig['x-ce_dev'].urls) {
-      this.composeConfig['x-ce_dev'].urls.forEach(url => {
+    if (this.composeConfig['x-ce_dev']?.urls) {
+      this.composeConfig['x-ce_dev']?.urls.forEach(url => {
         this.activeProjectInfo.urls.push(url)
       })
     }
-    this.activeProjectInfo.project_name = this.composeConfig['x-ce_dev'].project_name
-    if (this.composeConfig['x-ce_dev'].registry) {
-      this.activeProjectInfo.registry = this.composeConfig['x-ce_dev'].registry
-    }
-    this.activeProjectInfo.version = this.composeConfig['x-ce_dev'].version ? this.composeConfig['x-ce_dev'].version : '1.x'
+    this.activeProjectInfo.project_name = this.composeConfig['x-ce_dev']?.project_name ?? ''
+    this.activeProjectInfo.registry = this.composeConfig['x-ce_dev']?.registry ?? ''
+    this.activeProjectInfo.version = this.composeConfig['x-ce_dev']?.version ?? '1.x'
     this.activeProjectInfo.ssh_hosts = []
     this.saveActiveProjectInfo()
     this.gatherConfig()
@@ -227,18 +225,18 @@ export default class InitCmd extends BaseCmd {
    * Gather SSH hosts information.
    */
   private gatherConfig(): void {
-    if (!this.composeConfig['x-ce_dev'].ssh_hosts) {
+    if (!this.composeConfig['x-ce_dev']?.ssh_hosts) {
       return
     }
     const prompts: Array<inquirer.Question> = []
-    this.composeConfig['x-ce_dev'].ssh_hosts.forEach((hostname, index) => {
+    this.composeConfig['x-ce_dev']?.ssh_hosts.forEach((hostname, index) => {
       prompts.push(...this.gatherHostsSSHPrompt(hostname, index))
     })
     const config = this.activeProjectInfo.ssh_hosts
-    const hosts = this.composeConfig['x-ce_dev'].ssh_hosts
-    inquirer.prompt(prompts).then(
+    const hosts = this.composeConfig['x-ce_dev']?.ssh_hosts
+    inquirer.default.prompt(prompts).then(
       response => {
-        hosts.forEach((hostname, index) => {
+        hosts?.forEach((hostname, index) => {
           config.push(
             {
               host: hostname,
@@ -267,7 +265,7 @@ export default class InitCmd extends BaseCmd {
    * @returns
    * Prompts for each hosts.
    */
-  private gatherHostsSSHPrompt(host: string, index: number): Array<inquirer.Question> {
+  private gatherHostsSSHPrompt(host: string, index: number): Array<any> {
     return [
       {
         name: 'user' + index,
@@ -353,7 +351,7 @@ export default class InitCmd extends BaseCmd {
    */
   private injectUnisonVolumes(): void {
     for (const [serviceName, service] of Object.entries(this.composeConfig.services)) {
-      if (service['x-ce_dev'] && service['x-ce_dev'].unison) {
+      if (service['x-ce_dev'] && service['x-ce_dev']?.unison) {
         this.injectUnisonVolume(serviceName, service)
       }
     }
@@ -368,9 +366,10 @@ export default class InitCmd extends BaseCmd {
    * Service definition
    */
   private injectUnisonVolume(serviceName: string, service: ComposeConfigService): void {
-    if (!service['x-ce_dev'] || !service['x-ce_dev'].unison) {
+    if (!service['x-ce_dev'] || !service['x-ce_dev']?.unison) {
       return
     }
+
     service['x-ce_dev'].unison.forEach(volume => {
       if (volume.target_platforms.indexOf(this.config.platform) >= 0) {
         if (!service.volumes) {

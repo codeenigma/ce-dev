@@ -1,6 +1,6 @@
-const fs = require('fs')
-const fspath = require('path')
-const yaml = require('js-yaml')
+import * as fs from 'fs'
+import * as fspath from 'path'
+import { load, dump } from 'js-yaml';
 
 export default class YamlParser {
   /**
@@ -22,10 +22,9 @@ export default class YamlParser {
       throw new Error('Could not find file ' + file)
     }
     try {
-      const doc = yaml.safeLoad(fs.readFileSync(file.trim(), 'utf8'))
-      return doc
+      return load(fs.readFileSync(file, 'utf-8'))
     } catch (error) {
-      throw new Error(error)
+      throw new Error('Could not read the file ' + file)
     }
   }
 
@@ -48,10 +47,10 @@ export default class YamlParser {
       }
     }
     try {
-      const content = yaml.safeDump(data, {lineWidth: 1000})
+      const content = dump(data, {lineWidth: 1000})
       fs.writeFileSync(file.trim(), content)
     } catch (error) {
-      throw new Error(error)
+      throw new Error('Could not write in the directory ' + fspath.dirname(file.trim()))
     }
   }
 }

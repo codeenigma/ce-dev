@@ -1,4 +1,4 @@
-import DockerImagesCmd from '../base-cmd-abstract-docker-images'
+import DockerImagesCmd from '../base-cmd-abstract-docker-images.ts'
 import {execSync} from 'child_process'
 import { ux } from '@oclif/core'
 
@@ -24,7 +24,7 @@ export default class PushCmd extends DockerImagesCmd {
    */
   private push(): void {
     for (const name of Object.keys(this.composeConfig.services)) {
-      const containerName = this.composeConfig['x-ce_dev'].project_name + '-' + name
+      const containerName = this.composeConfig['x-ce_dev']?.project_name + '-' + name
       ux.action.start('Pushing image ' + containerName)
       execSync(this.dockerBin + ' push ' + this.dockerRegistry + '/' + containerName + ':latest', {stdio: 'inherit'})
       ux.action.stop()

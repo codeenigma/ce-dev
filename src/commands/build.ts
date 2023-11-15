@@ -1,10 +1,9 @@
-import BaseCmd from '../base-cmd-abstract'
-import ComposeConfig from '../compose-config-interface'
-import YamlParser from '../yaml-parser'
+import BaseCmd from '../base-cmd-abstract.ts'
+import ComposeConfig from '../compose-config-interface.ts'
+import YamlParser from '../yaml-parser.ts'
 import {execSync} from 'child_process'
 import { Flags, ux } from '@oclif/core'
-
-const fspath = require('path')
+import * as fspath from 'path'
 
 
 export default class BuildCmd extends BaseCmd {
@@ -56,13 +55,12 @@ export default class BuildCmd extends BaseCmd {
    */
   public constructor(argv: string[], config: any) {
     super(argv, config)
-    const {flags} = this.parse(BuildCmd)
-    this.composeTemplate = this.getPathFromRelative(flags.template)
+    this.composeTemplate = this.getPathFromRelative(this.constructor().flags.template)
     // @todo normalize path for destination.
-    this.composeDest = fspath.join(this.ceDevDir, flags.destination)
+    this.composeDest = fspath.join(this.ceDevDir, this.constructor().flags.destination)
     this.composeConfig = this.loadComposeConfig(this.composeTemplate)
-    if (flags.registry.length > 0) {
-      this.dockerRegistry = flags.registry
+    if (this.constructor().flags.registry.length > 0) {
+      this.dockerRegistry = this.constructor().flags.registry
     }
   }
 
@@ -79,7 +77,7 @@ export default class BuildCmd extends BaseCmd {
    */
   private commit(): void {
     for (const name of Object.keys(this.composeConfig.services)) {
-      const containerName = this.composeConfig['x-ce_dev'].project_name + '-' + name
+      const containerName = this.composeConfig['x-ce_dev']?.project_name + '-' + name
       ux.action.start('Committing container ' + containerName + ' as a new image.')
       execSync(this.dockerBin + ' commit ' + containerName + ' ' + this.dockerRegistry + '/' + containerName + ':latest', {stdio: 'inherit'})
       ux.action.stop()
@@ -92,7 +90,7 @@ export default class BuildCmd extends BaseCmd {
   private generateCompose(): void {
     ux.action.start('Generating new compose file ' + this.composeDest + '.')
     for (const [name, service] of Object.entries(this.composeConfig.services)) {
-      const containerName = this.composeConfig['x-ce_dev'].project_name + '-' + name
+      const containerName = this.composeConfig['x-ce_dev']?.project_name + '-' + name
       service.image = this.dockerRegistry + '/' + containerName + ':latest'
     }
     YamlParser.writeYaml(this.composeDest, this.composeConfig)

@@ -1,5 +1,5 @@
-import BaseCmd from './base-cmd-abstract'
-import ComposeConfig from './compose-config-interface'
+import BaseCmd from './base-cmd-abstract.js'
+import ComposeConfig from './compose-config-interface.ts'
 import {execSync} from 'child_process'
 import { Flags } from '@oclif/core'
 
@@ -65,20 +65,19 @@ export default abstract class DockerImagesCmd extends BaseCmd {
    */
   public constructor(argv: string[], config: any) {
     super(argv, config)
-    const {flags} = this.parse(DockerImagesCmd)
-    this.composeTemplate = this.getPathFromRelative(flags.template)
+    this.composeTemplate = this.getPathFromRelative(this.constructor().flags.template)
     this.composeConfig = this.loadComposeConfig(this.composeTemplate)
-    if (flags.username) {
-      this.dockerUsername = flags.username
+    if (this.constructor().flags.username) {
+      this.dockerUsername = this.constructor().flags.username
     }
-    if (flags.password) {
-      this.dockerPassword = flags.password
+    if (this.constructor().flags.password) {
+      this.dockerPassword = this.constructor().flags.password
     }
-    if (flags.anonymous) {
+    if (this.constructor().flags.anonymous) {
       this.dockerLogin = false
     }
-    if (flags.registry.length > 0) {
-      this.dockerRegistry = flags.registry
+    if (this.constructor().flags.registry.length > 0) {
+      this.dockerRegistry = this.constructor().flags.registry
     }
   }
 

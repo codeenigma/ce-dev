@@ -1,8 +1,7 @@
 import { Config } from '@oclif/core'
-import YamlParser from './yaml-parser'
+import YamlParser from './yaml-parser.ts'
 import {execSync} from 'child_process'
-
-const fspath = require('path')
+import * as fspath from 'path'
 
 /**
  * Manages static IP addressing.

@@ -1,14 +1,13 @@
-import CeDevControllerManager from './controller-manager'
-import CeDevProjectConfig from './ce-dev-project-config-interface'
+import CeDevControllerManager from './controller-manager.ts'
+import CeDevProjectConfig from './ce-dev-project-config-interface.ts'
 import { Command, ux } from '@oclif/core'
-import ComposeConfig from './compose-config-interface'
-import UserConfig from './user-config-interface'
-import YamlParser from './yaml-parser'
-import {execSync} from 'child_process'
-
-const {spawnSync} = require('child_process')
-const fs = require('fs')
-const fspath = require('path')
+import ComposeConfig from './compose-config-interface.ts'
+import UserConfig from './user-config-interface.ts'
+import YamlParser from './yaml-parser.ts'
+import { execSync } from 'child_process'
+import * as fs from 'fs'
+import * as fspath from 'path'
+import { spawnSync } from "child_process";
 
 export default abstract class BaseCmd extends Command {
   /**

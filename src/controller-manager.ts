@@ -1,11 +1,10 @@
-import ComposeConfigBare from './compose-config-bare-interface'
-import IPManager from './ip-manager'
-import YamlParser from './yaml-parser'
+import ComposeConfigBare from './compose-config-bare-interface.ts'
+import IPManager from './ip-manager.ts'
+import YamlParser from './yaml-parser.ts'
 import {execSync} from 'child_process'
 import { Config, ux } from '@oclif/core'
-
-const fs = require('fs')
-const fspath = require('path')
+import * as fs from 'fs'
+import * as fspath from 'path'
 
 export default class ControllerManager {
   /**
@@ -128,15 +127,12 @@ export default class ControllerManager {
     )
     // Ensure uid/gid.
     ux.action.start('Ensure user UID match those on the host')
-    const uid = process.getuid()
-    let gid = 1000
-    if (process.getgid() > 1000) {
-      gid = process.getegid()
-    }
+    const uid = process.getuid?.()
+    let gid = process.getgid?.() ?? 1000
     execSync(
       this.dockerBin +
         ' exec ce_dev_controller /bin/sh /opt/ce-dev-ownership.sh ' +
-        uid.toString() +
+        uid?.toString() +
         ' ' +
         gid.toString(),
       {stdio: 'inherit'},

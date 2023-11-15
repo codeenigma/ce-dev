@@ -1,4 +1,4 @@
-import BaseCmd from '../base-cmd-abstract'
+import BaseCmd from '../base-cmd-abstract.ts'
 import {execSync} from 'child_process'
 import { Flags, ux } from '@oclif/core'
 

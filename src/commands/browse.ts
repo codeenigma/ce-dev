@@ -1,5 +1,5 @@
-import BaseCmd from '../base-cmd-abstract'
-import { ux } from '@oclif/core'
+import BaseCmd from '../base-cmd-abstract.ts'
+//import open from 'open'
 
 export default class BrowseCmd extends BaseCmd {
   static description = 'Open preset URL(s) in a browser'
@@ -13,7 +13,7 @@ export default class BrowseCmd extends BaseCmd {
    */
   async run(): Promise<any> {
     this.activeProjectInfo.urls.forEach(async url => {
-      await ux.open(url)
+      await open(url)
     })
   }
 }

@@ -1,8 +1,10 @@
 import * as inquirer from 'inquirer'
-
-import BaseCmd from '../base-cmd-abstract'
+import BaseCmd from '../base-cmd-abstract.ts'
 import {execSync} from 'child_process'
 import { Flags, ux } from '@oclif/core'
+
+
+const prompt = inquirer.createPromptModule();
 
 export default class CleanCmd extends BaseCmd {
   static description = 'Remove unused Docker artifacts (volumes, images).'
@@ -20,10 +22,10 @@ export default class CleanCmd extends BaseCmd {
   }
 
   async run(): Promise<any> {
-    const {flags} = this.parse(CleanCmd)
-    if (flags.quiet === false) {
+    const {flags} = await this.parse(CleanCmd)
+    if (!flags.quiet) {
       const prompts = this.containerChoice()
-      const response: inquirer.Answers = await inquirer.prompt(prompts)
+      const response = await prompt(prompts)
       response.containers.forEach((containerName: string) => {
         ux.action.start(this.dockerBin + ' stop ' + containerName)
         execSync(this.dockerBin + ' stop ' + containerName)
@@ -42,7 +44,7 @@ export default class CleanCmd extends BaseCmd {
    * @returns
    * Prompts for user.
    */
-  private containerChoice(): Array<inquirer.Question> {
+  private containerChoice(): { name: string; message: string; type: string; choices: string[] }[] {
     const containers = execSync(this.dockerBin + ' ps -a --format={{.Names}}').toString()
     const containerNames = containers.split('\n').filter(item => {
       return (item.length > 0)

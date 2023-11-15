@@ -1,9 +1,8 @@
-import BaseCmd from './base-cmd-abstract'
-import ComposeConfig from './compose-config-interface'
+import BaseCmd from './base-cmd-abstract.ts'
+import ComposeConfig from './compose-config-interface.ts'
 import {execSync} from 'child_process'
-
-const fspath = require('path')
-const fs = require('fs')
+import * as fspath from 'path'
+import * as fs from 'fs'
 
 export default abstract class AnsibleCmd extends BaseCmd {
   /**

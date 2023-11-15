@@ -1,4 +1,4 @@
-import AnsibleCmd from '../base-cmd-ansible-abstract'
+import AnsibleCmd from '../base-cmd-ansible-abstract.ts'
 
 export default class DeployCmd extends AnsibleCmd {
   static description = 'Setup an app with Ansible playbooks.'

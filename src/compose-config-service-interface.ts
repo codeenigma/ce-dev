@@ -1,4 +1,4 @@
-import ComposeConfigServiceCeDev from './compose-config-service-ce-dev-interface'
+import ComposeConfigServiceCeDev from './compose-config-service-ce-dev-interface.ts'
 /**
  * Describes a docker compose "service" element.
  */
