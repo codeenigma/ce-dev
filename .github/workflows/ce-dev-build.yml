@@ -13,12 +13,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
       - name: Install modules
         run: yarn
       # Uses https://oclif.io/
       - name: Pack the JS
-        run: yarn oclif pack
+        run: yarn oclif pack tarballs --targets=linux-arm,linux-arm64,darwin-x64,darwin-arm64,linux-x64
       # We build mkcert from source because releases are broken
       # The last step sets ce-dev config to NOT use sudo because this causes docker image push problems
       - name: Install build and publish dependencies
