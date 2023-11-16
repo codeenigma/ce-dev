@@ -1,4 +1,4 @@
-import BaseCmd from '../base-cmd-abstract.ts'
+import BaseCmd from '../base-cmd-abstract'
 import {execSync} from 'child_process'
 
 export default class UpdateCmd extends BaseCmd {

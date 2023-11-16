@@ -2,23 +2,14 @@
   "compilerOptions": {
     "declaration": true,
     "importHelpers": true,
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "commonjs",
     "outDir": "lib",
     "rootDir": "src",
     "strict": true,
-    "target": "es2015",
-    "noImplicitAny": true,
-    "removeComments": true,
-    "preserveConstEnums": true,
-    "sourceMap": true,
-    "allowImportingTsExtensions": true,
-    "noEmit": true,
+    "noImplicitAny": false,
+    "target": "ES2020"
   },
   "include": [
     "src/**/*"
-  ],
-  "ts-node": {
-    "esm": true,
-  }
+  ]
 }

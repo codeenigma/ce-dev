@@ -1,4 +1,4 @@
-import ComposeConfigService from './compose-config-service-interface.ts'
+import ComposeConfigService from './compose-config-service-interface'
 /**
  * Describes a docker compose structure.
  */

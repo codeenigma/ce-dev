@@ -1,8 +1,8 @@
-import inquirer from 'inquirer'
-import BaseCmd from '../base-cmd-abstract.ts'
+import BaseCmd from '../base-cmd-abstract'
 import {execSync} from 'child_process'
 import { Flags, Args} from '@oclif/core'
 
+const inquirer = require('inquirer')
 const prompt = inquirer.createPromptModule();
 
 export default class ShellCmd extends BaseCmd {

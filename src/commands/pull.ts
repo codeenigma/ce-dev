@@ -1,4 +1,4 @@
-import DockerImagesCmd from '../base-cmd-abstract-docker-images.ts'
+import DockerImagesCmd from '../base-cmd-abstract-docker-images'
 import {execSync} from 'child_process'
 import { ux } from '@oclif/core'
 

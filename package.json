@@ -4,7 +4,7 @@
   "version": "1.2.4",
   "author": " @pm98zz-c",
   "bin": {
-    "ce-dev": "./bin/run"
+    "ce-dev": "./bin/run.js"
   },
   "license": "MIT",
   "bugs": "https://github.com/codeenigma/ce-dev/issues",
@@ -12,7 +12,7 @@
     "@oclif/core": "^3.10.8",
     "@oclif/plugin-autocomplete": "^3.0.1",
     "@oclif/plugin-help": "^6.0.6",
-    "inquirer": "^9.2.12",
+    "inquirer": "^8.2.6",
     "inquirer-fuzzy-path": "^2.3.0",
     "node-fetch": "^2.7.0",
     "oclif": "^4.0.3",
@@ -21,9 +21,9 @@
   },
   "devDependencies": {
     "@types/inquirer": "^9.0.7",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.9.0",
     "@typescript-eslint/parser": "^6.10.0",
-    "@types/js-yaml": "^4.0.9",
     "eslint": "^8.53.0",
     "eslint-config-oclif": "^5.0.0",
     "eslint-config-oclif-typescript": "^3.0.15",
@@ -42,7 +42,6 @@
     "additionalVersionFlags": [
       "-v"
     ],
-    "default": ".",
     "commands": "./lib/commands",
     "bin": "ce-dev",
     "plugins": [
@@ -70,6 +69,5 @@
   "types": "lib/index.d.ts",
   "engines": {
     "node": ">=18.0.0"
-  },
-  "type": "module"
+  }
 }

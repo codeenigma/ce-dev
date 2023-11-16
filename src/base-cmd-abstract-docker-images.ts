@@ -1,5 +1,5 @@
 import BaseCmd from './base-cmd-abstract.js'
-import ComposeConfig from './compose-config-interface.ts'
+import ComposeConfig from './compose-config-interface'
 import {execSync} from 'child_process'
 import { Flags } from '@oclif/core'
 

@@ -1,8 +1,8 @@
-import ComposeConfigCeDev from './compose-config-ce-dev-interface.ts'
+import ComposeConfigCeDev from './compose-config-ce-dev-interface'
 /**
  * Describes a docker compose structure.
  */
-import ComposeConfigService from './compose-config-service-interface.ts'
+import ComposeConfigService from './compose-config-service-interface'
 
 export default interface ComposeConfig {
   'version': string;

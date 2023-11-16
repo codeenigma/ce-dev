@@ -1,4 +1,4 @@
-import BaseCmd from '../base-cmd-abstract.ts'
+import BaseCmd from '../base-cmd-abstract'
 //import open from 'open'
 
 export default class BrowseCmd extends BaseCmd {

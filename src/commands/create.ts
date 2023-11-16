@@ -1,11 +1,10 @@
-import * as inquirer from 'inquirer'
-import BaseCmd from '../base-cmd-abstract.ts'
+import BaseCmd from '../base-cmd-abstract'
 import {execSync} from 'child_process'
 import { Flags, ux } from '@oclif/core'
 import * as fs from 'fs'
 import * as fspath from 'path'
 
-
+const inquirer = require('inquirer')
 const prompt = inquirer.createPromptModule();
 
 

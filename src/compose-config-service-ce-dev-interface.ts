@@ -1,4 +1,4 @@
-import ComposeConfigServiceUnisonVolume from './compose-config-service-unison-volume-interface.ts'
+import ComposeConfigServiceUnisonVolume from './compose-config-service-unison-volume-interface'
 /**
  * Describes a docker compose "service" ce-dev element.
  */

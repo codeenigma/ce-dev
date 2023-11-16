@@ -1,5 +1,5 @@
-import BaseCmd from '../base-cmd-abstract.ts'
-import ComposeConfig from '../compose-config-interface.ts'
+import BaseCmd from '../base-cmd-abstract'
+import ComposeConfig from '../compose-config-interface'
 import {execSync} from 'child_process'
 import { Flags, ux } from '@oclif/core'
 

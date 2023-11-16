@@ -1,14 +1,13 @@
-import * as inquirer from 'inquirer'
-import BaseCmd from '../base-cmd-abstract.ts'
-import ComposeConfig from '../compose-config-interface.ts'
-import ComposeConfigService from '../compose-config-service-interface.ts'
-import IPManager from '../ip-manager.ts'
-import UnisonVolumeContainer from '../ce-dev-project-config-unison-volume-interface.ts'
-import YamlParser from '../yaml-parser.ts'
+import BaseCmd from '../base-cmd-abstract'
+import ComposeConfig from '../compose-config-interface'
+import ComposeConfigService from '../compose-config-service-interface'
+import IPManager from '../ip-manager'
+import UnisonVolumeContainer from '../ce-dev-project-config-unison-volume-interface'
+import YamlParser from '../yaml-parser'
 import { Flags, ux } from '@oclif/core'
 
-
-inquirer.default.registerPrompt('fuzzypath', require('inquirer-fuzzy-path'))
+const inquirer = require('inquirer')
+inquirer.registerPrompt('fuzzypath', require('inquirer-fuzzy-path'))
 
 export default class InitCmd extends BaseCmd {
   static description = 'Generates a docker-compose.yml file from a template'
@@ -228,13 +227,13 @@ export default class InitCmd extends BaseCmd {
     if (!this.composeConfig['x-ce_dev']?.ssh_hosts) {
       return
     }
-    const prompts: Array<inquirer.Question> = []
+    const prompts: Array<any> = []
     this.composeConfig['x-ce_dev']?.ssh_hosts.forEach((hostname, index) => {
       prompts.push(...this.gatherHostsSSHPrompt(hostname, index))
     })
     const config = this.activeProjectInfo.ssh_hosts
     const hosts = this.composeConfig['x-ce_dev']?.ssh_hosts
-    inquirer.default.prompt(prompts).then(
+    inquirer.prompt(prompts).then(
       response => {
         hosts?.forEach((hostname, index) => {
           config.push(

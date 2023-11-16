@@ -1,8 +1,12 @@
-import * as inquirer from 'inquirer'
-import BaseCmd from '../base-cmd-abstract.ts'
+import BaseCmd from '../base-cmd-abstract'
 
 
-inquirer.default.registerPrompt('fuzzypath', require('inquirer-fuzzy-path'))
+const inquirer = require('inquirer')
+const prompt = inquirer.createPromptModule();
+
+
+inquirer.registerPrompt('fuzzypath', require('inquirer-fuzzy-path'))
+
 export default class ConfigCmd extends BaseCmd {
   static description = 'Configure global user preferences.'
 
@@ -12,7 +16,7 @@ export default class ConfigCmd extends BaseCmd {
 
   async run(): Promise<any> {
     const prompts = this.globalConfig()
-    const response: inquirer.Answers = await inquirer.default.prompt(prompts)
+    const response = await prompt(prompts)
     for (const key of Object.keys(this.UserConfig)) {
       // @todo
       // @ts-ignore

@@ -1,8 +1,5 @@
 #!/usr/bin/env node
 
-import { Command, flush, handle} from '@oclif/core'
-
-
-Command.run()
-  .then(flush)
-  .catch(handle)
+require('@oclif/command').run()
+  .then(require('@oclif/command/flush'))
+  .catch(require('@oclif/errors/handle'))
