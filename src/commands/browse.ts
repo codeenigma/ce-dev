@@ -1,5 +1,7 @@
 import BaseCmd from '../base-cmd-abstract'
-//import open from 'open'
+
+
+const open = require ('open')
 
 export default class BrowseCmd extends BaseCmd {
   static description = 'Open preset URL(s) in a browser'
