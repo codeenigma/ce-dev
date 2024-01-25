@@ -3,10 +3,8 @@
 # (Re)build a Docker base box for ce-dev.
 #
 
-set -eu
-
 usage(){
-  echo 'export.sh [OPTIONS] --version <version tag> --push'
+  echo 'export.sh [OPTIONS] --version <version tag> --image-name <final image name> --push'
   echo 'Export a base Code Enigma image, optionally pushing it to your Docker repository.'
   echo ''
   echo 'Mandatory arguments:'
@@ -61,18 +59,21 @@ parse_options(){
   done
 }
 
-# Quick check we have args.
-if [ -z "$1" ]; then
-  usage
-  exit 1;
-fi
-
 # Default variables.
 DOCKERFILE_PATH="base"
 PUSH="no"
 BASE_IMAGE="debian:bullseye-slim"
 DOCKER_REPO="codeenigma"
 CE_DEV_VERSION="1.x"
+VERSION=""
+IMAGE_NAME=""
+
+# Keep current dir in mind to know where to move back when done.
+OWN=$(readlink "$0")
+if [ -z "$OWN" ]; then
+ OWN="$0"
+fi
+OWN_DIR=$( cd "$( dirname "$OWN" )" && pwd -P)
 
 # Parse options.
 parse_options "$@"
@@ -82,13 +83,6 @@ if [ -z "$VERSION" ] || [ -z "$IMAGE_NAME" ]; then
  usage
  exit 1
 fi
-
-# Keep current dir in mind to know where to move back when done.
-OWN=$(readlink "$0");
-if [ -z "$OWN" ]; then
- OWN="$0"
-fi
-OWN_DIR=$( cd "$( dirname "$OWN" )" && pwd -P)
 
 # Ensure we have a fresh image to start with.
 docker image pull "$BASE_IMAGE"
