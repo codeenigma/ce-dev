@@ -14,7 +14,7 @@ RUN \
   cd /tmp/unison-2.53.3 && \
   make
 
-FROM debian:bullseye-slim
+FROM unison
 
 RUN \
   set -x && \
