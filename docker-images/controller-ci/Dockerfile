@@ -14,9 +14,8 @@ RUN \
   apt-get update && \
   apt-get dist-upgrade -y -o Dpkg::Options::="--force-confnew" && \
   apt-get install -y -o Dpkg::Options::="--force-confnew" \
-  git ca-certificates git-lfs && \
+  git ca-certificates git-lfs ansible python3-boto3 && \
   apt-get clean  && \
-  pip3 install ansible boto3 && \
   git lfs install --skip-repo && \
   update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \
   useradd -m controller && \
@@ -54,7 +53,7 @@ RUN \
   set -x && \
   export DEBIAN_FRONTEND=noninteractive && \
   apt-get update && \
-  su - ce-dev -c "/usr/local/bin/ansible-playbook --extra-vars=\"{ansible_common_remote_group: controller}\" /home/ce-dev/ce-provision/provision.yml" && \
+  su - ce-dev -c "/usr/bin/ansible-playbook --extra-vars=\"{ansible_common_remote_group: controller}\" /home/ce-dev/ce-provision/provision.yml" && \
   rm /home/ce-dev/ce-provision/provision.yml && \
   apt-get clean  && \
   rm -rf \
