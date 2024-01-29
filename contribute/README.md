@@ -1,5 +1,8 @@
 # Contribute to ce-dev
 
+## Using test images
+See [the GitHub Actions README](https://github.com/codeenigma/ce-dev/blob/1.x/.github/workflows/README.md) for information on using `devel` tagged images pushed by the CI.
+
 ## Release instructions
 
 1. [Create a pull request](https://github.com/codeenigma/ce-dev/compare) to the `1.x` branch.
@@ -21,7 +24,6 @@
 [GitHub Actions](https://github.com/codeenigma/ce-dev/actions) should now take care of the release for you.
 
 ## Rolling back a release
-
 If you need to pull a release, follow these instructions:
 
 1. Locally in your terminal on the `1.x` branch update the tags, e.g. `git pull --tags`
