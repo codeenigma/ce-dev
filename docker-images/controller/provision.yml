@@ -56,5 +56,5 @@
         linters:
           enabled: true
   roles:
-    - debian/ce_provision
-    - debian/ce_deploy
+    - ce_provision
+    - ce_deploy
