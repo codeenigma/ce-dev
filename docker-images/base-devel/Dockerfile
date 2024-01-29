@@ -14,7 +14,7 @@ RUN \
   cd /tmp/unison-2.53.3 && \
   make
 
-FROM unison
+FROM debian:bookworm-slim
 
 RUN \
   set -x && \
