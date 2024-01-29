@@ -1,4 +1,4 @@
-FROM debian:bookworm-slim as unison
+FROM debian:bullseye-slim as unison
 RUN \
   set -x && \
   export DEBIAN_FRONTEND=noninteractive && \
@@ -14,7 +14,7 @@ RUN \
   cd /tmp/unison-2.53.3 && \
   make
 
-FROM debian:bookworm-slim
+FROM unison
 
 RUN \
   set -x && \
