@@ -5,7 +5,7 @@ export default class ProvisionCmd extends AnsibleCmd {
   static description = 'Provision containers with Ansible playbooks.'
 
   static examples = [
-    '$ ce-dev provision --branch 1.x --config 1.x',
+    '$ ce-dev provision --branch 1.x --config 1.x --verbose',
   ]
 
   static flags = {
@@ -20,6 +20,10 @@ export default class ProvisionCmd extends AnsibleCmd {
       description: 'The branch of the ce-provision-config repository. See https://github.com/codeenigma/ce-dev-ce-provision-config for options.',
       default: '1.x',
     }),
+    verbose: flags.boolean({
+      char: 'v',
+      description: 'Enable verbose output in Ansible.',
+    }),
   }
 
   protected ansibleProjectPlaybooksPath = '/home/ce-dev/projects-playbooks/provision'
@@ -32,6 +36,8 @@ export default class ProvisionCmd extends AnsibleCmd {
 
   protected configBranch = '1.x'
 
+  protected verbose = false
+
   /**
    * @inheritdoc
    */
@@ -41,12 +47,14 @@ export default class ProvisionCmd extends AnsibleCmd {
     this.ansiblePaths = this.activeProjectInfo.provision
     this.ownBranch = flags.branch
     this.configBranch = flags.config
+    if (flags.verbose) this.verbose = true
   }
 
   protected getCommandParameters(ansiblePath: string): string {
     const workspace = this.ansibleProjectPlaybooksPath
     const repo = this.activeProjectInfo.project_name
     let cmd = '--own-branch ' + this.ownBranch
+    if (this.verbose) cmd += ' --verbose'
     cmd += ' --config-branch ' + this.configBranch
     cmd += ' --workspace ' + workspace
     cmd += ' --repo ' + repo
