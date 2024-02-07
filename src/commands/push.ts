@@ -1,6 +1,7 @@
-import DockerImagesCmd from '../base-cmd-abstract-docker-images'
-import {execSync} from 'child_process'
-import ux from 'cli-ux'
+import { ux } from '@oclif/core'
+import {execSync} from 'node:child_process'
+
+import DockerImagesCmd from '../abstracts/base-cmd-abstract-docker-images.js'
 
 export default class PushCmd extends DockerImagesCmd {
   static description = 'Push images referenced in a compose file to a remote repository.'
@@ -12,15 +13,38 @@ export default class PushCmd extends DockerImagesCmd {
   /**
    * @inheritdoc
    */
-  async run(): Promise<any> {
+  async run(): Promise<void> {
+    const { flags } = await this.parse(PushCmd)
+    this.composeTemplate = this.getPathFromRelative(flags.template)
+    this.composeConfig = this.loadComposeConfig(this.composeTemplate)
+
+    if (flags.username) {
+      this.dockerUsername = flags.username
+    }
+
+    if (flags.password) {
+      this.dockerPassword = flags.password
+    }
+
+    if (flags.anonymous) {
+      this.dockerLogin = false
+    }
+
+    if (flags.registry.length > 0) {
+      this.dockerRegistry = flags.registry
+    }
+
     if (this.dockerLogin) {
       this.login()
     }
+
     this.push()
   }
 
   /**
    * Push generated images.
+   *
+   * @return void
    */
   private push(): void {
     for (const name of Object.keys(this.composeConfig.services)) {

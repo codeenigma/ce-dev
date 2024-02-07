@@ -2,12 +2,12 @@
  * Describes our vendor-specific configuration for the compose file.
  */
 
-export default interface ComposeConfigCeDev {
-  project_name: string;
-  registry: string;
-  provision: Array<string>;
+export default interface DockerComposeConfigCeDevInterface {
   deploy: Array<string>;
-  urls: Array<string>;
+  project_name: string;
+  provision: Array<string>;
+  registry: string;
   ssh_hosts: Array<string>;
+  urls: Array<string>;
   version: string;
 }

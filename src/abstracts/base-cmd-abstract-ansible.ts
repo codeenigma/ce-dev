@@ -1,9 +1,10 @@
-import BaseCmd from './base-cmd-abstract'
-import ComposeConfig from './compose-config-interface'
-import {execSync} from 'child_process'
+import { Config } from '@oclif/core'
+import {execSync} from 'node:child_process'
+import fs from "node:fs"
+import fspath from "node:path";
 
-const fspath = require('path')
-const fs = require('fs')
+import ComposeConfig from '../interfaces/docker-compose-config-interface.js'
+import BaseCmd from './base-cmd-abstract.js'
 
 export default abstract class AnsibleCmd extends BaseCmd {
   /**
@@ -11,12 +12,6 @@ export default abstract class AnsibleCmd extends BaseCmd {
    * Operation to perform, either provision or deploy.
    */
   protected ansiblePaths: Array<string> = []
-
-  /**
-   * @member
-   * Path on the container to main scripts.
-   */
-  protected ansibleScriptsPath = ''
 
   /**
    * @member
@@ -29,6 +24,12 @@ export default abstract class AnsibleCmd extends BaseCmd {
    * Relative path to the script to call.
    */
   protected ansibleScript = ''
+
+  /**
+   * @member
+   * Path on the container to main scripts.
+   */
+  protected ansibleScriptsPath = ''
 
   /**
    * @member
@@ -45,26 +46,23 @@ export default abstract class AnsibleCmd extends BaseCmd {
   /**
    * @inheritdoc
    */
-  public constructor(argv: string[], config: any) {
+  public constructor(argv: string[], config: Config) {
     super(argv, config)
     this.composeConfig = this.loadComposeConfig(this.activeComposeFilePath)
     this.tmpHostsFile = this.config.cacheDir + '/AnsibleHosts'
   }
 
-  /**
-   * @inheritdoc
-   */
-  async run(): Promise<any> {
-    this.ensureActiveComposeFile()
-    this.populateAnsibleHosts()
-    this.play()
+  protected getCommandParameters(ansiblePath: string): string {
+    return ansiblePath
   }
 
   /**
+   * Copy ansible configuration
    *
+   * @return void
    */
   protected play(): void {
-    this.ansiblePaths.forEach(ansiblePath => {
+    for (const ansiblePath of this.ansiblePaths) {
       const src = fspath.dirname(ansiblePath)
       const dest = this.ansibleProjectPlaybooksPath + fspath.dirname(src)
       this.log('Copy Ansible configuration')
@@ -73,15 +71,13 @@ export default abstract class AnsibleCmd extends BaseCmd {
       const script = fspath.join(this.ansibleScriptsPath, this.ansibleScript)
       const cmd = script + ' ' + this.getCommandParameters(ansiblePath)
       execSync(this.dockerBin + ' exec -t --workdir ' + this.ansibleScriptsPath + ' --user ce-dev ce_dev_controller ' + cmd, {stdio: 'inherit'})
-    })
-  }
-
-  protected getCommandParameters(ansiblePath: string): string {
-    return ansiblePath
+    }
   }
 
   /**
    * Inject Ansible hosts file onto the controller.
+   *
+   * @return void
    */
   protected populateAnsibleHosts(): void {
     this.log('Rebuilding Ansible hosts information on the controller.')
@@ -91,5 +87,14 @@ export default abstract class AnsibleCmd extends BaseCmd {
       execSync(this.dockerBin + ' cp ' + this.tmpHostsFile + ' ce_dev_controller:' + this.ansibleScriptsPath + '/hosts/hosts')
       execSync(this.dockerBin + ' exec -t ce_dev_controller chown -R ce-dev:ce-dev ' + this.ansibleScriptsPath + '/hosts/hosts')
     }
+  }
+
+  /**
+   * @inheritdoc
+   */
+  async run(): Promise<void> {
+    this.ensureActiveComposeFile()
+    this.populateAnsibleHosts()
+    this.play()
   }
 }

@@ -1,31 +1,37 @@
-name: Test image builds nightly
+name: '2.x: Test image builds'
 
-# Run this workflow at 6:30 every day and on each PR
+# Run this workflow at 3:30 and a part of a PR.
 on:
   schedule:
     - cron: '30 3 * * *'
 
+  pull_request:
+    branches:
+      - '2.x'
+
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: '1.x'
+          ref: '2.x'
       - name: Install modules
         run: yarn
       # Uses https://oclif.io/
       # Not strictly necessary here, but ensures the packing works
       - name: Pack the JS
-        run: yarn oclif-dev pack
+        run: yarn oclif pack tarballs --targets=linux-arm,linux-x64,darwin-x64 --no-xz
+      - name: Rename the dist/* files
+        run: yarn renamedist
       # We build mkcert from source because releases are broken
       - name: Install test dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y p7zip-full libnss3-tools wget
           cd /tmp
-          wget https://golang.org/dl/go1.16.3.linux-amd64.tar.gz
-          sudo tar -C /usr/local -xzf go1.16.3.linux-amd64.tar.gz
+          wget https://golang.org/dl/go1.25.1.linux-amd64.tar.gz
+          sudo tar -C /usr/local -xzf go1.25.1.linux-amd64.tar.gz
           export PATH=$PATH:/usr/local/go/bin
           git clone https://github.com/FiloSottile/mkcert && cd mkcert
           go build -ldflags "-X main.Version=$(git describe --tags)"
@@ -34,5 +40,6 @@ jobs:
           rm -Rf mkcert
       - name: Build and test
         run: |
-          /bin/sh docker-images/export.sh latest
+          /bin/sh docker-images/export.sh --version latest --image-name ce-dev --dockerfile-path base
+          /bin/sh docker-images/export.sh --version latest --image-name ce-dev-controller --dockerfile-path controller
           /bin/sh templates/prebuild.sh

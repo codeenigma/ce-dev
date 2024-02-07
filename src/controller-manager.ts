@@ -1,14 +1,25 @@
-import ComposeConfigBare from './compose-config-bare-interface'
-import {IConfig} from '@oclif/config'
-import IPManager from './ip-manager'
-import YamlParser from './yaml-parser'
-import {execSync} from 'child_process'
-import ux from 'cli-ux'
+import { Config, ux } from '@oclif/core'
+import {execSync} from 'node:child_process'
+import fs from 'node:fs'
+import fspath from "node:path";
 
-const fs = require('fs')
-const fspath = require('path')
+import DockerComposeConfigBare from './interfaces/docker-compose-config-bare-interface.js'
+import IPManager from './ip-manager.js'
+import YamlParser from './yaml-parser.js'
 
 export default class ControllerManager {
+  /**
+   * @member
+   * Config from oclif.
+   */
+  private readonly config: Config
+
+  /**
+   * @member
+   * Compose file path for our controller definition.
+   */
+  private readonly controllerComposeFile: string
+
   /**
    * @member
    * Docker executable path.
@@ -29,24 +40,12 @@ export default class ControllerManager {
 
   /**
    * @member
-   * Config from oclif.
-   */
-  private readonly config: IConfig
-
-  /**
-   * @member
    * Compose file path for our network definition.
    */
   private readonly networkComposeFile: string
 
-  /**
-   * @member
-   * Compose file path for our controller definition.
-   */
-  private readonly controllerComposeFile: string
-
   public constructor(
-    config: IConfig,
+    config: Config,
     dockerBin: string,
     dockerComposeBin: string,
     mkcertBin: string,
@@ -66,38 +65,6 @@ export default class ControllerManager {
   }
 
   /**
-   * Check if our network is up and running.
-   *
-   * @returns
-   * True if network exists, else false.
-   */
-  public networkExists(): boolean {
-    const existing = execSync(
-      this.dockerBin + ' network ls | grep -w ce_dev | wc -l',
-    )
-    .toString()
-    .trim()
-    if (existing === '0') {
-      return false
-    }
-    return true
-  }
-
-  /**
-   * Start our network.
-   */
-  public networkStart(): void {
-    const ipManager = new IPManager(this.config, this.dockerBin)
-    const base = ipManager.getNetBase()
-    const gw = base + '.1'
-    const subnet = base + '.0/24'
-    execSync(this.dockerBin + ' network create ce_dev --attachable --gateway ' + gw + ' --subnet ' + subnet, {
-      cwd: this.config.dataDir,
-      stdio: 'inherit',
-    })
-  }
-
-  /**
    * Check if our controller is up and running.
    *
    * @returns
@@ -107,39 +74,47 @@ export default class ControllerManager {
     const existing = execSync(
       this.dockerBin + ' ps | grep -w ce_dev_controller | wc -l',
     )
-    .toString()
-    .trim()
+      .toString()
+      .trim()
     if (existing === '0') {
       return false
     }
+
     return true
   }
 
   /**
    * Start our controller.
+   *
+   * @return void
    */
   public controllerStart(): void {
     YamlParser.writeYaml(this.controllerComposeFile, this.getControllerConfig())
     execSync(
       this.dockerComposeBin +
-        ' -f ' +
-        this.controllerComposeFile +
-        ' -p ce_dev_controller up -d',
+      ' -f ' +
+      this.controllerComposeFile +
+      ' -p ce_dev_controller up -d',
       {cwd: this.config.dataDir, stdio: 'inherit'},
     )
     // Ensure uid/gid.
     ux.action.start('Ensure user UID match those on the host')
-    const uid = process.getuid()
+    let uid = 1000
     let gid = 1000
-    if (process.getgid() > 1000) {
+    if (process.getuid) {
+      uid = process.getuid()
+    }
+
+    if (process.getgid && process.getegid && process.getgid() > 1000) {
       gid = process.getegid()
     }
+
     execSync(
       this.dockerBin +
-        ' exec ce_dev_controller /bin/sh /opt/ce-dev-ownership.sh ' +
-        uid.toString() +
-        ' ' +
-        gid.toString(),
+      ' exec ce_dev_controller /bin/sh /opt/ce-dev-ownership.sh ' +
+      uid.toString() +
+      ' ' +
+      gid.toString(),
       {stdio: 'inherit'},
     )
     ux.action.stop()
@@ -166,13 +141,15 @@ export default class ControllerManager {
 
   /**
    * Stop our controller.
+   *
+   * @return void
    */
   public controllerStop(): void {
     const existing = execSync(
       this.dockerBin + ' ps | grep -w ce_dev_controller | wc -l',
     )
-    .toString()
-    .trim()
+      .toString()
+      .trim()
     if (existing !== '0') {
       execSync(this.dockerBin + ' stop ce_dev_controller')
     }
@@ -183,6 +160,8 @@ export default class ControllerManager {
    *
    * @param domain
    * Domain/host name.
+   *
+   * @return void
    */
   public generateCertificate(domain: string): void {
     execSync(
@@ -193,6 +172,8 @@ export default class ControllerManager {
 
   /**
    * Installs CA for mkcerts on the host.
+   *
+   * @return void
    */
   public installCertificateAuth(): void {
     const currentCert = fspath.resolve(this.config.cacheDir + '/rootCA.pem')
@@ -209,6 +190,7 @@ export default class ControllerManager {
         return
       }
     }
+
     // New/changed certs.
     ux.action.start('Install mkcert CA on the host.')
     fs.renameSync(currentCert, existingCert)
@@ -220,7 +202,43 @@ export default class ControllerManager {
   }
 
   /**
+   * Check if our network is up and running.
+   *
+   * @returns
+   * True if network exists, else false.
+   */
+  public networkExists(): boolean {
+    const existing = execSync(
+      this.dockerBin + ' network ls | grep -w ce_dev | wc -l',
+    ).toString().trim();
+
+    if (existing === '0') {
+      return false
+    }
+
+    return true
+  }
+
+  /**
+   * Start our network.
+   *
+   * @return void
+   */
+  public networkStart(): void {
+    const ipManager = new IPManager(this.config, this.dockerBin)
+    const base = ipManager.getNetBase()
+    const gw = base + '.1'
+    const subnet = base + '.0/24'
+    execSync(this.dockerBin + ' network create ce_dev --attachable --gateway ' + gw + ' --subnet ' + subnet, {
+      cwd: this.config.dataDir,
+      stdio: 'inherit',
+    })
+  }
+
+  /**
    * Pull our controller image.
+   *
+   * @return void
    */
   public pullImage(): void {
     execSync(this.dockerBin + ' pull codeenigma/ce-dev-controller-1.x:latest', {
@@ -228,22 +246,27 @@ export default class ControllerManager {
     })
   }
 
-  private getControllerConfig(): ComposeConfigBare {
+  private getControllerConfig(): DockerComposeConfigBare {
     const ipManager = new IPManager(this.config, this.dockerBin)
     return {
-      version: '3.7',
+      networks: {
+        ce_dev: {
+          external: true,
+          name: 'ce_dev',
+        },
+      },
       services: {
         ce_dev_controller: {
-          container_name: 'ce_dev_controller',
-          image: 'codeenigma/ce-dev-controller-1.x:latest',
-          platform: 'linux/amd64',
           cgroup: 'host',
+          container_name: 'ce_dev_controller',
           hostname: 'ce_dev_controller',
+          image: 'codeenigma/ce-dev-controller-1.x:latest',
           networks: {
             ce_dev: {
               ipv4_address: ipManager.getControllerIP(),
             },
           },
+          platform: 'linux/amd64',
           volumes: [
             'ce_dev_ssh:/home/ce-dev/.ssh',
             'ce_dev_mkcert:/home/ce-dev/.local/share/mkcert',
@@ -255,27 +278,22 @@ export default class ControllerManager {
           ],
         },
       },
-      networks: {
-        ce_dev: {
-          external: true,
-          name: 'ce_dev',
-        },
-      },
+      version: '3.7',
       volumes: {
-        ce_dev_ssh: {
-          name: 'ce_dev_ssh',
-        },
-        ce_dev_mkcert: {
-          name: 'ce_dev_mkcert',
-        },
         ce_dev_apt_cache: {
           name: 'ce_dev_apt_cache',
         },
         ce_dev_composer_cache: {
           name: 'ce_dev_composer_cache',
         },
+        ce_dev_mkcert: {
+          name: 'ce_dev_mkcert',
+        },
         ce_dev_nvm_node: {
           name: 'ce_dev_nvm_node',
+        },
+        ce_dev_ssh: {
+          name: 'ce_dev_ssh',
         },
       },
     }

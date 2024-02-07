@@ -1,16 +1,11 @@
 {
-  "extends": [
-    "oclif",
-    "oclif-typescript",
-    "plugin:jsdoc/recommended"
-  ],
+  "extends": ["oclif", "oclif-typescript", "prettier"],
   "rules": {
-    "valid-jsdoc": 0,
-    "jsdoc/require-param-type": 0,
-    "jsdoc/require-returns-type": 0,
-    "sort-imports": 1,
-    "@typescript-eslint/explicit-function-return-type": 1,
-    "@typescript-eslint/ban-ts-ignore": 0,
-    "no-console": 1
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "camelcase": "off",
+    "unicorn/prefer-logical-operator-over-ternary": "off",
+    "unicorn/no-array-for-each": "off",
+    "perfectionist/sort-classes": "off"
   }
 }

@@ -1,51 +1,53 @@
-import {IConfig} from '@oclif/config'
-import YamlParser from './yaml-parser'
-import {execSync} from 'child_process'
+import { Config } from '@oclif/core'
+import {execSync} from 'node:child_process'
 
-const fspath = require('path')
 /**
  * Manages static IP addressing.
  */
 
 export default class IPManager {
+
   /**
    * @member
-   * Docker executable path.
+   *   Config from oclif.
+   */
+  private readonly config: Config
+
+  /**
+   * @member
+   *   Docker executable path.
    */
   private readonly dockerBin: string = 'docker'
 
   /**
    * @member
-   * Config from oclif.
-   */
-  private readonly config: IConfig
-
-  /**
-   * @member
-   * Path to our data file.
-   */
-  private readonly NetworkConfigFilePath: string
-
-  /**
-   * @member
-   * Last assigned IP.
+   *   Last assigned IP.
    */
   private lastAssignedIP = 10
 
   /**
-   * Network base subnet.
+   * @member
+   *   Network base subnet.
    */
   private readonly netBase: string
 
-  public constructor(config: IConfig, dockerBin: string) {
+  public constructor(config: Config, dockerBin: string) {
     this.dockerBin = dockerBin
     this.config = config
-    this.NetworkConfigFilePath = fspath.resolve(this.config.dataDir + '/ip.yml')
     this.netBase = this.getNetBase()
-    const stored = YamlParser.parseYaml(this.NetworkConfigFilePath, true)
-    if (stored && stored < 200) {
-      this.lastAssignedIP = stored
-    }
+  }
+
+  /**
+   * Mac OS only. Creates a loopback alias.
+   *
+   * @param ip
+   * IP to create the alias with.
+   *
+   * @returns void
+   */
+  public createInterfaceAlias(ip: string): void {
+    // @todo check for existing.
+    execSync('sudo ifconfig lo0 alias ' + ip)
   }
 
   /**
@@ -55,22 +57,14 @@ export default class IPManager {
    * An IP address
    */
   public getAvailableIP(): string {
-    while (this.lastAssignedIP < 200) {
+    while (this.lastAssignedIP < IPManager.maxIP()) {
       this.lastAssignedIP++
-      const existing = execSync(this.dockerBin + ' ps -a -q --filter network=ce_dev').toString()
-      const filtered = existing.split('\n').filter(item => {
-        return item.length
-      })
-      const assigned: Array<string> = []
-      filtered.forEach(containerID => {
-        assigned.push(execSync(this.dockerBin + ' inspect --format "{{.NetworkSettings.Networks.ce_dev.IPAMConfig.IPv4Address}}" ' + containerID).toString().trim())
-      })
-      const ip = this.netBase + '.' + this.lastAssignedIP
-      if (assigned.indexOf(ip) === -1) {
-        YamlParser.writeYaml(this.NetworkConfigFilePath, this.lastAssignedIP)
-        return ip
+      const ip = this.netBase + '.' + this.lastAssignedIP;
+      if (this.isAvailableIP(ip)) {
+        return ip;
       }
     }
+
     throw new Error('Could not assign an available IP')
   }
 
@@ -85,28 +79,46 @@ export default class IPManager {
   }
 
   /**
-   * Mac OS only. Creates a loopback alias.
+   * Gather max IP we can assign.
    *
-   * @param ip
-   * IP to create the alias with.
+   * @return int
+   *   The max IP.
    */
-  public createInterfaceAlias(ip: string): void {
-    // @todo check for existing.
-    execSync('sudo ifconfig lo0 alias ' + ip)
-  }
+  public static maxIP() { return 200 }
 
   /**
    * Gather base subnet.
    *
    * @returns
-   * Base subnet.
+   *   Base subnet.
    */
   public getNetBase(): string {
     if (this.networkExists()) {
       const gw = execSync(this.dockerBin + ' network inspect ce_dev --format "{{range.IPAM.Config}}{{.Gateway}}{{end}}"').toString().trim()
-      return gw.substr(0, gw.length - 2)
+      return gw.slice(0, - 2)
     }
+
     return this.getAvailableSubnet()
+  }
+
+
+  /**
+   * Constructs a newly incremented subnet base.
+   *
+   * @returns
+   * A base subnet string.
+   */
+  private getAvailableSubnet(): string {
+    const ifconfigCommand = this.config.platform === 'darwin' ? 'ifconfig' : 'ip a'
+    for (let i = 18; i <= 31; i++) {
+      const subnet = '172.' + i + '.0'
+      const existing = execSync('sudo ' + ifconfigCommand + ' | grep ' + subnet + ' | wc -l').toString().trim()
+      if (existing === '0') {
+        return subnet
+      }
+    }
+
+    throw new Error('Could not assign an available Subnet range.')
   }
 
   /**
@@ -119,29 +131,30 @@ export default class IPManager {
     const existing = execSync(
       this.dockerBin + ' network ls | grep -w ce_dev | wc -l',
     )
-    .toString()
-    .trim()
-    if (existing === '0') {
-      return false
-    }
-    return true
+      .toString()
+      .trim()
+
+    return existing !== '0';
   }
 
   /**
-   * Constructs an newly incremented subnet base.
+   *  Check if an IP is available or not.
    *
-   * @returns
-   * A base subnet string.
+   * @param ip
+   *   The IP to check as string.
+   * @return boolean
+   *   TRUE is IP is available, otherwise FALSE.
    */
-  private getAvailableSubnet(): string {
-    const ifconfig_command = this.config.platform === 'darwin' ? 'ifconfig' : 'ip a'
-    for (let i = 18; i <= 31; i++) {
-      const subnet = '172.' + i + '.0'
-      const existing = execSync('sudo ' + ifconfig_command + ' | grep ' + subnet + ' | wc -l').toString().trim()
-      if (existing === '0') {
-        return subnet
-      }
+  private isAvailableIP(ip: string): boolean {
+    const existing = execSync(this.dockerBin + ' ps -a -q --filter network=ce_dev').toString();
+    const filtered = existing.split('\n').filter(item => item.length);
+    const assigned = [];
+
+    for (const containerID of filtered) {
+      assigned.push(execSync(this.dockerBin + ' inspect --format "{{.NetworkSettings.Networks.ce_dev.IPAMConfig.IPv4Address}}" ' + containerID).toString().trim());
     }
-    throw new Error('Could not assign an available Subnet range.')
+
+    return !assigned.includes(ip);
   }
+
 }

@@ -1,11 +1,11 @@
-import BaseCmd from '../base-cmd-abstract'
-import ComposeConfigBare from '../compose-config-bare-interface'
-import IPManager from '../ip-manager'
-import {execSync} from 'child_process'
-import {flags} from '@oclif/command'
-import ux from 'cli-ux'
-const fs = require('fs')
-const readline = require('readline')
+import {Config, Flags, ux} from '@oclif/core'
+import {execSync} from 'node:child_process'
+import fs from 'node:fs'
+import readline from 'node:readline'
+
+import BaseCmd from '../abstracts/base-cmd-abstract.js'
+import ComposeConfigBare from '../interfaces/docker-compose-config-bare-interface.js'
+import IPManager from '../ip-manager.js'
 
 export default class StartCmd extends BaseCmd {
   static description = 'Spin up containers using docker compose and update /etc/hosts file.'
@@ -15,20 +15,38 @@ export default class StartCmd extends BaseCmd {
   ]
 
   static flags = {
-    help: flags.help({char: 'h'}),
+    help: Flags.help({char: 'h'}),
   }
 
   /**
    * @member
-   * Pairs of Hostnames/IP.
+   * Docker compose content parsed from yaml.
    */
-  private readonly runningHosts: Map<string, string> = new Map()
+  private readonly composeConfig: ComposeConfigBare
+
+  /**
+   * @member
+   * Delimiter marker for managed entries.
+   */
+  private readonly delimiterEnd = '######### CE-DEV ### END ### DO NOT EDIT MANUALLY ABOVE'
+
+  /**
+   * @member
+   * Delimiter marker for managed entries.
+   */
+  private readonly delimiterStart = '######### CE-DEV ### START ### DO NOT EDIT MANUALLY BELOW'
 
   /**
    * @member
    * File path to host file.
    */
   private readonly hostsFile = '/etc/hosts'
+
+  /**
+   * @member
+   * Pairs of Hostnames/IP.
+   */
+  private readonly runningHosts: Map<string, string> = new Map()
 
   /**
    * @member
@@ -43,27 +61,9 @@ export default class StartCmd extends BaseCmd {
   private readonly tmpSSHConfigFile: string = this.config.cacheDir + '/sshConfig'
 
   /**
-   * @member
-   * Delimiter marker for managed entries.
-   */
-  private readonly delimiterStart = '######### CE-DEV ### START ### DO NOT EDIT MANUALLY BELOW'
-
-  /**
-   * @member
-   * Delimiter marker for managed entries.
-   */
-  private readonly delimiterEnd = '######### CE-DEV ### END ### DO NOT EDIT MANUALLY ABOVE'
-
-  /**
-   * @member
-   * Docker compose content parsed from yaml.
-   */
-  private readonly composeConfig: ComposeConfigBare
-
-  /**
    * @inheritdoc
    */
-  public constructor(argv: string[], config: any) {
+  public constructor(argv: string[], config: Config) {
     super(argv, config)
     this.ensureActiveComposeFile()
     this.composeConfig = this.loadComposeConfig(this.activeComposeFilePath)
@@ -72,7 +72,7 @@ export default class StartCmd extends BaseCmd {
   /**
    * @inheritdoc
    */
-  async run(): Promise<any> {
+  async run(): Promise<void> {
     this.ensureAliases()
     this.up()
     this.updateHostsFile()
@@ -83,9 +83,11 @@ export default class StartCmd extends BaseCmd {
     if (this.config.platform !== 'darwin') {
       return
     }
+
     if (!this.composeConfig.services) {
       return
     }
+
     const ipManager = new IPManager(this.config, this.dockerBin)
     for (const service of Object.values(this.composeConfig.services)) {
       if (service.networks && Object.prototype.hasOwnProperty.call(service.networks, 'ce_dev')) {
@@ -101,13 +103,21 @@ export default class StartCmd extends BaseCmd {
    *
    * @param containerName
    * Name of a container.
+   *
+   * @return void
    */
   private ensureOwnership(containerName: string): void {
-    const uid = process.getuid()
     let gid = 1000
-    if (process.getgid() > 1000) {
+    let uid = 1000
+
+    if (process.getuid) {
+      uid = process.getuid()
+    }
+
+    if (process.getegid && process.getgid && process.getgid() > 1000) {
       gid = process.getegid()
     }
+
     ux.action.start('Ensuring file ownership')
     execSync(this.dockerBin + ' exec ' + containerName + ' /bin/sh /opt/ce-dev-ownership.sh ' + uid.toString() + ' ' + gid.toString(), {stdio: 'inherit'})
     execSync(this.dockerBin + ' exec ' + containerName + ' chown -R ce-dev:ce-dev /home/ce-dev/.local', {stdio: 'inherit'})
@@ -115,17 +125,76 @@ export default class StartCmd extends BaseCmd {
   }
 
   /**
+   * Gather running containers.
+   *
+   * @return void
+   */
+  private gatherRunningContainers(): void {
+    const running = execSync(this.dockerBin + ' ps -q --filter network=ce_dev').toString()
+    const runningContainers = running.split('\n').filter(item => (item.length))
+    for (const containerName of runningContainers) {
+      const ip = execSync(this.dockerBin + ' inspect ' + containerName + ' --format {{.NetworkSettings.Networks.ce_dev.IPAddress}}').toString().trim()
+      const aliasesString = execSync(this.dockerBin + ' inspect ' + containerName + ' --format={{.NetworkSettings.Networks.ce_dev.Aliases}}').toString().trim()
+      const aliases = aliasesString.split(/[ [\]]/).filter(Boolean)
+
+      for (const alias of aliases) {
+        this.runningHosts.set(alias.toString(), ip)
+      }
+    }
+  }
+
+  /**
+   * Write hosts information.
+   *
+   * @return void
+   */
+  private generateHostsFile(): void {
+    let write = true
+    const lines: Array<string> = []
+    const lineReader = readline.createInterface({
+      crlfDelay: Number.POSITIVE_INFINITY,
+      input: fs.createReadStream(this.hostsFile),
+    })
+    lineReader.on('line', (line: string) => {
+      if (line.indexOf(this.delimiterStart) === 0) {
+        write = false
+      }
+
+      if (write) {
+        lines.push(line)
+      }
+
+      if (line.indexOf(this.delimiterEnd) === 0) {
+        write = true
+      }
+    })
+    lineReader.on('close', () => {
+      lines.push(this.delimiterStart)
+      for (const [ip, host] of this.runningHosts.entries()) {
+        lines.push(host + '    ' + ip)
+      }
+
+      lines.push(this.delimiterEnd)
+      fs.writeFile(this.tmpHostsFile, lines.join('\n') + '\n', () => {
+        execSync('sudo mv ' + this.tmpHostsFile + ' ' + this.hostsFile)
+      })
+    })
+  }
+
+  /**
    * Generate SSH Config.
    *
    * @param containerName
-   * Container name.
+   *   Container name.
+   *
+   * @return void
    */
   private generateSSHConfig(containerName: string): void {
     ux.action.start('Generate SSH config')
     // Grab back existing file.
     const existing = execSync(this.dockerBin + ' exec ' + containerName + ' cat /home/ce-dev/.ssh/config').toString()
     const config: Array<string> = []
-    this.activeProjectInfo.ssh_hosts.forEach(host => {
+    for (const host of this.activeProjectInfo.ssh_hosts) {
       const dest = '/home/ce-dev/.ssh/' + host.host
       const entry = [
         'Host ' + host.host,
@@ -135,15 +204,42 @@ export default class StartCmd extends BaseCmd {
       ]
       config.push(...entry)
       execSync(this.dockerBin + ' cp ' + host.src_key + ' ' + containerName + ':' + dest, {stdio: 'inherit'})
-    })
+    }
+
     fs.writeFile(this.tmpSSHConfigFile, existing + config.join('\n') + '\n', () => {
       execSync(this.dockerBin + ' cp ' + this.tmpSSHConfigFile + ' ' + containerName + ':/home/ce-dev/.ssh/config', {stdio: 'inherit'})
     })
     ux.action.stop()
   }
 
+  private performStartTasks(): void {
+    const running = this.getProjectRunningContainersCeDev()
+    if (running.length === 0) {
+      return
+    }
+
+    for (const containerName of running) {
+      this.ensureOwnership(containerName)
+      this.triggerUnison(containerName)
+      this.generateSSHConfig(containerName)
+    }
+  }
+
+  private triggerUnison(containerName: string): void {
+    if (this.activeProjectInfo.unison[containerName]) {
+      ux.action.start('Trigger Unison file synchronisation')
+      for (const volume of this.activeProjectInfo.unison[containerName]) {
+        execSync(this.dockerBin + ' exec ' + containerName + ' /bin/sh /opt/unison-startup.sh ' + volume.src + ' ' + volume.dest + ' ' + volume.ignore, {stdio: 'inherit'})
+      }
+
+      ux.action.stop()
+    }
+  }
+
   /**
    * Wrapper around docker compose.
+   *
+   * @return void
    */
   private up(): void {
     const running = this.getProjectRunningContainers()
@@ -152,6 +248,7 @@ export default class StartCmd extends BaseCmd {
       execSync(this.dockerComposeBin + ' -p ' + this.activeProjectInfo.project_name + ' stop', {cwd: this.ceDevDir, stdio: 'inherit'})
       ux.action.stop()
     }
+
     ux.action.start('Starting project containers')
     execSync(this.dockerComposeBin + ' -p ' + this.activeProjectInfo.project_name + ' up -d', {cwd: this.ceDevDir, stdio: 'inherit'})
     ux.action.stop()
@@ -159,85 +256,13 @@ export default class StartCmd extends BaseCmd {
 
   /**
    * Update the /etc/hosts file with container informations.
+   *
+   * @return void
    */
   private updateHostsFile(): void {
     ux.action.start('Updating /etc/hosts file')
     this.gatherRunningContainers()
     this.generateHostsFile()
     ux.action.stop()
-  }
-
-  /**
-   * Gather running containers.
-   */
-  private gatherRunningContainers(): void {
-    const running = execSync(this.dockerBin + ' ps -q --filter network=ce_dev').toString()
-    const runningContainers = running.split('\n').filter(item => {
-      return (item.length)
-    })
-    runningContainers.forEach(containerName => {
-      const ip = execSync(this.dockerBin + ' inspect ' + containerName + ' --format {{.NetworkSettings.Networks.ce_dev.IPAddress}}').toString().trim()
-      const aliasesString = execSync(this.dockerBin + ' inspect ' + containerName + ' --format={{.NetworkSettings.Networks.ce_dev.Aliases}}').toString().trim()
-      const aliases = aliasesString.split(/[[\] ]/).filter(Boolean)
-
-      aliases.forEach(alias => {
-        this.runningHosts.set(alias.toString(), ip)
-      })
-    })
-  }
-
-  /**
-   * Write hosts information.
-   */
-  private generateHostsFile(): void {
-    let write = true
-    const lines: Array<string> = []
-    const lineReader = readline.createInterface({
-      input: fs.createReadStream(this.hostsFile),
-      crlfDelay: Infinity,
-    })
-    lineReader.on('line', (line: string) => {
-      if (line.indexOf(this.delimiterStart) === 0) {
-        write = false
-      }
-      if (write) {
-        lines.push(line)
-      }
-      if (line.indexOf(this.delimiterEnd) === 0) {
-        write = true
-      }
-    })
-    lineReader.on('close', () => {
-      lines.push(this.delimiterStart)
-      this.runningHosts.forEach((host, ip) => {
-        lines.push(host + '    ' + ip)
-      })
-      lines.push(this.delimiterEnd)
-      fs.writeFile(this.tmpHostsFile, lines.join('\n') + '\n', () => {
-        execSync('sudo mv ' + this.tmpHostsFile + ' ' + this.hostsFile)
-      })
-    })
-  }
-
-  private performStartTasks(): void {
-    const running = this.getProjectRunningContainersCeDev()
-    if (running.length === 0) {
-      return
-    }
-    running.forEach(containerName => {
-      this.ensureOwnership(containerName)
-      this.triggerUnison(containerName)
-      this.generateSSHConfig(containerName)
-    })
-  }
-
-  private triggerUnison(containerName: string): void {
-    if (this.activeProjectInfo.unison[containerName]) {
-      ux.action.start('Trigger Unison file synchronisation')
-      this.activeProjectInfo.unison[containerName].forEach(volume => {
-        execSync(this.dockerBin + ' exec ' + containerName + ' /bin/sh /opt/unison-startup.sh ' + volume.src + ' ' + volume.dest + ' ' + volume.ignore, {stdio: 'inherit'})
-      })
-      ux.action.stop()
-    }
   }
 }

@@ -2,8 +2,8 @@
  * Describes SSH host config element.
  */
 
-export default interface CeDevProjectConfigHostSSH {
+export default interface CeDevConfigHostSSH {
   'host': string;
-  'user': string;
   'src_key': string;
+  'user': string;
 }

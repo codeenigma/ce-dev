@@ -1,12 +1,10 @@
-import * as inquirer from 'inquirer'
+import { Flags, ux } from '@oclif/core'
+import inquirer from 'inquirer'
+import {execSync} from 'node:child_process'
+import fs from 'node:fs'
+import fspath from "node:path";
 
-import BaseCmd from '../base-cmd-abstract'
-import {execSync} from 'child_process'
-import {flags} from '@oclif/command'
-import ux from 'cli-ux'
-
-const fs = require('fs')
-const fspath = require('path')
+import BaseCmd from '../abstracts/base-cmd-abstract.js'
 
 export default class CreateCmd extends BaseCmd {
   static description = 'Generates a new project from a template'
@@ -16,32 +14,26 @@ export default class CreateCmd extends BaseCmd {
   ]
 
   static flags = {
-    help: flags.help({char: 'h'}),
-    template: flags.string({
-      char: 't',
-      description: 'Name of a template: "drupal8"',
+    destination: Flags.string({
+      char: 'd',
+      description: 'Path to the project destination.',
     }),
-    project: flags.string({
+    help: Flags.help({char: 'h'}),
+    project: Flags.string({
       char: 'p',
       description: 'A unique name for your project. Because it is used in various places (db names, url, etc), stick with lowercase alphanumeric chars.',
     }),
-    destination: flags.string({
-      char: 'd',
-      description: 'Path to the project destination.',
+    template: Flags.string({
+      char: 't',
+      description: 'Name of a template: "drupal8"',
     }),
   }
 
   /**
    * @member
-   * Template dir.
+   * Destination for the new project.
    */
-  private readonly templatesDir: string = fspath.join(this.config.root, 'templates')
-
-  /**
-   * @member
-   * Template name.
-   */
-  private templateName = ''
+  private projectDestination = ''
 
   /**
    * @member
@@ -51,32 +43,36 @@ export default class CreateCmd extends BaseCmd {
 
   /**
    * @member
-   * Destination for the new project.
+   * Template name.
    */
-  private projectDestination = ''
+  private templateName = ''
+
+  /**
+   * @member
+   * Template dir.
+   */
+  private readonly templatesDir: string = fspath.join(this.config.root, 'templates')
 
   /**
    * @inheritdoc
    */
-  async run(): Promise<any> {
-    const {flags} = this.parse(CreateCmd)
-    let project = flags.project
+  async run(): Promise<void> {
+    const {flags} = await this.parse(CreateCmd)
+    let {project} = flags
     if (!project) {
-      const response: any = await inquirer.prompt([{
-        name: 'project',
+      const response = await inquirer.prompt([{
         message: 'Name for the project',
+        name: 'project',
         type: 'input',
       }])
       project = response.project
     }
+
     this.projectName = project as string
-    let template = flags.template
+    let {template} = flags
     // @todo make list dynamic.
     if (!template) {
-      const response: any = await inquirer.prompt([{
-        name: 'template',
-        message: 'Template',
-        type: 'list',
+      const response = await inquirer.prompt([{
         choices: [
           'drupal8',
           'drupal9',
@@ -84,26 +80,35 @@ export default class CreateCmd extends BaseCmd {
           'localgov',
           'blank',
         ],
+        message: 'Template',
+        name: 'template',
+        type: 'list',
       }])
       template = response.template
     }
+
     this.templateName = template as string
-    let destination = flags.destination
+    let {destination} = flags
     if (!destination) {
-      const response: any = await inquirer.prompt([{
-        name: 'destination',
-        message: 'Path for the project',
-        type: 'input',
+      const response = await inquirer.prompt([{
         default: fspath.resolve(process.cwd() + '/' + project),
+        message: 'Path for the project',
+        name: 'destination',
+        type: 'input',
       }])
       destination = response.destination
     }
+
     this.projectDestination = destination as string
     ux.action.start('Generating project from template')
     this.copyTemplates()
     this.play()
     this.copyProject()
     ux.action.stop('Project ' + this.projectName + ' created at ' + this.projectDestination)
+  }
+
+  private copyProject(): void {
+    fs.renameSync(fspath.join(this.config.cacheDir, this.projectName), this.projectDestination)
   }
 
   private copyTemplates(): void {
@@ -113,9 +118,5 @@ export default class CreateCmd extends BaseCmd {
   private play(): void {
     const vars = '\'{"project_name":"' + this.projectName + '","project_type":"' + this.templateName + '"}\''
     execSync(this.dockerBin + ' exec -t --user ce-dev ce_dev_controller ansible-playbook /home/ce-dev/templates/create.yml --extra-vars=' + vars)
-  }
-
-  private copyProject(): void {
-    fs.renameSync(fspath.join(this.config.cacheDir, this.projectName), this.projectDestination)
   }
 }

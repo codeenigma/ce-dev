@@ -2,8 +2,8 @@
  * Describes unison mount element.
  */
 
-export default interface CeDevProjectConfigUnisonVolume {
-  'src': string;
+export default interface CeDevConfigUnisonVolume {
   'dest': string;
   'ignore': string;
+  'src': string;
 }

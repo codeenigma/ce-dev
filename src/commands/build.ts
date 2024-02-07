@@ -1,11 +1,11 @@
-import BaseCmd from '../base-cmd-abstract'
-import ComposeConfig from '../compose-config-interface'
-import YamlParser from '../yaml-parser'
-import {execSync} from 'child_process'
-import {flags} from '@oclif/command'
-import ux from 'cli-ux'
+import { Flags, ux } from '@oclif/core'
+import {execSync} from 'node:child_process'
+import fspath from "node:path";
 
-const fspath = require('path')
+import BaseCmd from '../abstracts/base-cmd-abstract.js'
+import ComposeConfig from '../interfaces/docker-compose-config-interface.js'
+import YamlParser from '../yaml-parser.js'
+
 export default class BuildCmd extends BaseCmd {
   static description = 'Commit the existing containers as new docker images, and create a new docker compose file referencing them.'
 
@@ -14,48 +14,47 @@ export default class BuildCmd extends BaseCmd {
   ]
 
   static flags = {
-    help: flags.help({char: 'h'}),
-    template: flags.string({
-      char: 't',
-      description: 'Path to a docker compose template file, relative to the project ce-dev folder. WARNING: this must match the original one the project was constructed with.',
-      default: 'ce-dev.compose.yml',
-    }),
-    destination: flags.string({
+    destination: Flags.string({
       char: 'd',
-      description: 'Path to the output docker compose file, relative to the project ce-dev folder.',
       default: 'ce-dev.compose.prebuilt.yml',
+      description: 'Path to the output docker compose file, relative to the project ce-dev folder.',
     }),
-    registry: flags.string({
+    help: Flags.help({char: 'h'}),
+    registry: Flags.string({
       char: 'r',
-      description: 'Docker registry to use. This overrides the one defined in the source compose template.',
       default: '',
+      description: 'Docker registry to use. This overrides the one defined in the source compose template.',
+    }),
+    template: Flags.string({
+      char: 't',
+      default: 'ce-dev.compose.yml',
+      description: 'Path to a docker compose template file, relative to the project ce-dev folder. WARNING: this must match the original one the project was constructed with.',
     }),
   }
 
   /**
    * @member
-   * Absolute path to the Compose file template.
+   * Docker compose content parsed from yaml.
    */
-  private readonly composeTemplate: string
+  private composeConfig: ComposeConfig
 
   /**
    * @member
    * Absolute path to the Compose file output.
    */
-  private readonly composeDest: string
+  private composeDest: string = ''
 
   /**
    * @member
-   * Docker compose content parsed from yaml.
+   * Absolute path to the Compose file template.
    */
-  private readonly composeConfig: ComposeConfig
+  private composeTemplate: string = ''
 
   /**
    * @inheritdoc
    */
-  public constructor(argv: string[], config: any) {
-    super(argv, config)
-    const {flags} = this.parse(BuildCmd)
+  async run(): Promise<void> {
+    const {flags} = await this.parse(BuildCmd)
     this.composeTemplate = this.getPathFromRelative(flags.template)
     // @todo normalize path for destination.
     this.composeDest = fspath.join(this.ceDevDir, flags.destination)
@@ -63,22 +62,23 @@ export default class BuildCmd extends BaseCmd {
     if (flags.registry.length > 0) {
       this.dockerRegistry = flags.registry
     }
-  }
 
-  /**
-   * @inheritdoc
-   */
-  async run(): Promise<any> {
     this.commit()
     this.generateCompose()
   }
 
   /**
    * Commit containers as base images.
+   *
+   * @return void
    */
   private commit(): void {
-    for (const name of Object.keys(this.composeConfig.services)) {
-      const containerName = this.composeConfig['x-ce_dev'].project_name + '-' + name
+    for (const name of Object.keys(this.composeConfig?.services)) {
+      let containerName = name;
+      if (this.composeConfig['x-ce_dev']) {
+        containerName = this.composeConfig['x-ce_dev'].project_name + '-' + name
+      }
+
       ux.action.start('Committing container ' + containerName + ' as a new image.')
       execSync(this.dockerBin + ' commit ' + containerName + ' ' + this.dockerRegistry + '/' + containerName + ':latest', {stdio: 'inherit'})
       ux.action.stop()
@@ -87,6 +87,8 @@ export default class BuildCmd extends BaseCmd {
 
   /**
    * Generate derivative compose file.
+   *
+   * @return void
    */
   private generateCompose(): void {
     ux.action.start('Generating new compose file ' + this.composeDest + '.')
@@ -94,6 +96,7 @@ export default class BuildCmd extends BaseCmd {
       const containerName = this.composeConfig['x-ce_dev'].project_name + '-' + name
       service.image = this.dockerRegistry + '/' + containerName + ':latest'
     }
+
     YamlParser.writeYaml(this.composeDest, this.composeConfig)
     ux.action.stop()
   }

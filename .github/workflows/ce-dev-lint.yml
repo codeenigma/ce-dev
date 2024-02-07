@@ -1,7 +1,11 @@
-name: Lint the codebase
+name: '2.x: Lint the codebase'
 
 # Run this workflow every time a new PR is created
-on: pull_request
+on:
+  pull_request:
+    branches:
+      - 2.x-devel
+      - 2-x
 
 jobs:
   # See https://github.com/marketplace/actions/run-eslint
@@ -13,4 +17,4 @@ jobs:
       - name: Install modules
         run: yarn
       - name: Run ESLint
-        run: yarn run eslint ./src
+        run: yarn lint

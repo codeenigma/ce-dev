@@ -1,8 +1,9 @@
-import * as inquirer from 'inquirer'
+import inquirer from "inquirer";
+import inquirerFuzzyPath from "inquirer-fuzzy-path"
 
-import BaseCmd from '../base-cmd-abstract'
+import BaseCmd from '../abstracts/base-cmd-abstract.js'
 
-inquirer.registerPrompt('fuzzypath', require('inquirer-fuzzy-path'))
+inquirer.registerPrompt('fuzzypath', <inquirer.prompts.PromptConstructor>inquirerFuzzyPath)
 export default class ConfigCmd extends BaseCmd {
   static description = 'Configure global user preferences.'
 
@@ -10,14 +11,13 @@ export default class ConfigCmd extends BaseCmd {
     '$ ce-dev config ',
   ]
 
-  async run(): Promise<any> {
+  async run(): Promise<void> {
     const prompts = this.globalConfig()
-    const response: inquirer.Answers = await inquirer.prompt(prompts)
+    const response = await inquirer.prompt(prompts)
     for (const key of Object.keys(this.UserConfig)) {
-      // @todo
-      // @ts-ignore
-      this.UserConfig[key] = response[key]
+      this.UserConfig[key as keyof typeof this.UserConfig] = response[key]
     }
+
     this.saveUserConfig()
   }
 
@@ -27,41 +27,40 @@ export default class ConfigCmd extends BaseCmd {
    * @returns
    * Prompts for user.
    */
-  private globalConfig(): Array<inquirer.Question> {
+  private globalConfig(): Array<object> {
     return [
       {
-        name: 'docker_bin',
-        message: 'Docker command/binary',
-        type: 'input',
         default: this.UserConfig.docker_bin,
+        message: 'Docker command/binary',
+        name: 'docker_bin',
+        type: 'input',
       },
       {
-        name: 'docker_compose_bin',
-        message: 'Docker Compose command/binary',
-        type: 'input',
         default: this.UserConfig.docker_compose_bin,
+        message: 'Docker Compose command/binary',
+        name: 'docker_compose_bin',
+        type: 'input',
       },
       {
-        name: 'mkcert_bin',
-        message: 'MKCert command/binary',
-        type: 'input',
         default: this.UserConfig.mkcert_bin,
-      },
-      {
-        name: 'ssh_user',
-        message: 'Default SSH username for external hosts',
+        message: 'MKCert command/binary',
+        name: 'mkcert_bin',
         type: 'input',
-        default: this.UserConfig.ssh_user,
       },
       {
-        name: 'ssh_key',
-        message: 'Default SSH private key for external hosts',
-        type: 'fuzzypath',
-        // @ts-ignore
+        default: this.UserConfig.ssh_user,
+        message: 'Default SSH username for external hosts',
+        name: 'ssh_user',
+        type: 'input',
+      },
+      {
+        default: this.UserConfig.ssh_key,
         // Can not autoregister plugins yet.
         itemType: 'file',
+        message: 'Default SSH private key for external hosts',
+        name: 'ssh_key',
         rootPath: process.env.HOME + '/.ssh',
-        default: this.UserConfig.ssh_key,
+        type: 'fuzzypath',
       },
     ]
   }

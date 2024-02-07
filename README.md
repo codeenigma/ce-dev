@@ -2,7 +2,7 @@ ce-dev
 ======
 Local Stack wrapper tool
 
-[![Build Status](https://api.travis-ci.com/codeenigma/ce-dev.svg?branch=1.x)](https://api.travis-ci.com/codeenigma/ce-dev.svg?branch=1.x)
+[![Build status](https://github.com/codeenigma/ce-dev/actions/workflows/ce-dev-build.yml/badge.svg)](https://github.com/codeenigma/ce-dev/actions/workflows/ce-dev-build.yml)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=codeenigma_ce-dev&metric=security_rating)](https://sonarcloud.io/dashboard?id=codeenigma_ce-dev)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=codeenigma_ce-dev&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=codeenigma_ce-dev)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=codeenigma_ce-dev&metric=bugs)](https://sonarcloud.io/dashboard?id=codeenigma_ce-dev)

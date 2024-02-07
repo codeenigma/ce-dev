@@ -1,5 +1,6 @@
-import BaseCmd from '../base-cmd-abstract'
-import {execSync} from 'child_process'
+import {execSync} from 'node:child_process'
+
+import BaseCmd from '../abstracts/base-cmd-abstract.js'
 
 export default class UpdateCmd extends BaseCmd {
   static description = 'Update base images and ce-dev cli.'
@@ -8,7 +9,7 @@ export default class UpdateCmd extends BaseCmd {
     '$ ce-dev update',
   ]
 
-  async run(): Promise<any> {
+  async run(): Promise<void> {
     this.pullControllerContainer()
     execSync('curl -sL https://raw.githubusercontent.com/codeenigma/ce-dev/1.x/install.sh | /bin/sh -s -- ' + this.config.platform, {stdio: 'inherit'})
   }

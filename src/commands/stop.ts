@@ -1,7 +1,7 @@
-import BaseCmd from '../base-cmd-abstract'
-import {execSync} from 'child_process'
-import {flags} from '@oclif/command'
-import ux from 'cli-ux'
+import { Flags, ux } from '@oclif/core'
+import {execSync} from 'node:child_process'
+
+import BaseCmd from '../abstracts/base-cmd-abstract.js'
 
 export default class StopCmd extends BaseCmd {
   static description = 'Stops running containers for a project.'
@@ -11,13 +11,13 @@ export default class StopCmd extends BaseCmd {
   ]
 
   static flags = {
-    help: flags.help({char: 'h'}),
+    help: Flags.help({char: 'h'}),
   }
 
   /**
    * @inheritdoc
    */
-  async run(): Promise<any> {
+  async run(): Promise<void> {
     this.ensureActiveComposeFile()
     ux.action.start('Stopping running containers with docker compose stop')
     execSync(this.dockerComposeBin + ' -p ' + this.activeProjectInfo.project_name + ' stop', {cwd: this.ceDevDir})

@@ -1,9 +1,8 @@
-import * as inquirer from 'inquirer'
+import { Flags, ux } from '@oclif/core'
+import inquirer from 'inquirer';
+import {execSync} from 'node:child_process'
 
-import BaseCmd from '../base-cmd-abstract'
-import {execSync} from 'child_process'
-import {flags} from '@oclif/command'
-import ux from 'cli-ux'
+import BaseCmd from '../abstracts/base-cmd-abstract.js'
 
 export default class CleanCmd extends BaseCmd {
   static description = 'Remove unused Docker artifacts (volumes, images).'
@@ -13,18 +12,18 @@ export default class CleanCmd extends BaseCmd {
   ]
 
   static flags = {
-    quiet: flags.boolean({
+    quiet: Flags.boolean({
       char: 'q',
-      description: 'Non-interactive, do not prompt for container deletion choice.',
       default: false,
+      description: 'Non-interactive, do not prompt for container deletion choice.',
     }),
   }
 
-  async run(): Promise<any> {
-    const {flags} = this.parse(CleanCmd)
-    if (flags.quiet === false) {
+  async run(): Promise<void> {
+    const {flags} = await this.parse(CleanCmd)
+    if (!flags.quiet) {
       const prompts = this.containerChoice()
-      const response: inquirer.Answers = await inquirer.prompt(prompts)
+      const response = await inquirer.prompt(prompts)
       response.containers.forEach((containerName: string) => {
         ux.action.start(this.dockerBin + ' stop ' + containerName)
         execSync(this.dockerBin + ' stop ' + containerName)
@@ -34,34 +33,14 @@ export default class CleanCmd extends BaseCmd {
         ux.action.stop()
       })
     }
-    this.cleanUp()
-  }
 
-  /**
-   * Global container deletion prompts.
-   *
-   * @returns
-   * Prompts for user.
-   */
-  private containerChoice(): Array<inquirer.Question> {
-    const containers = execSync(this.dockerBin + ' ps -a --format={{.Names}}').toString()
-    const containerNames = containers.split('\n').filter(item => {
-      return (item.length > 0)
-    })
-    return [
-      {
-        name: 'containers',
-        message: 'Select containers you want to delete (if any)',
-        type: 'checkbox',
-        // @ts-ignore
-        choices: containerNames,
-      },
-    ]
+    this.cleanUp()
   }
 
   /**
    * Clean up docker images/volumes.
    *
+   * @return void
    */
   private cleanUp(): void {
     this.log('Remove all custom networks not used by at least one container.')
@@ -73,5 +52,25 @@ export default class CleanCmd extends BaseCmd {
     this.log('Remove all unused local volumes.')
     this.log(this.dockerBin + ' volume prune')
     execSync(this.dockerBin + ' volume prune --force', {stdio: 'inherit'})
+  }
+
+  /**
+   * Global container deletion prompts.
+   *
+   * @returns
+   * Prompts for user.
+   */
+  private containerChoice(): Array<object> {
+    const containers = execSync(this.dockerBin + ' ps -a --format={{.Names}}').toString()
+    const containerNames = containers.split('\n').filter(item => (item.length > 0))
+    return [
+      {
+        // @ts-ignore
+        choices: containerNames,
+        message: 'Select containers you want to delete (if any)',
+        name: 'containers',
+        type: 'checkbox',
+      },
+    ]
   }
 }

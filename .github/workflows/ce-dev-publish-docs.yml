@@ -1,10 +1,8 @@
-name: Publish docs
+name: '2.x: Publish docs'
 
-# Run this workflow on push to 1.x (e.g. on merge of PR to 1.x)
+# Run this workflow on push
 on:
-  push:
-    branches:
-      - 1.x
+  workflow_dispatch:
 
 jobs:
   # Set the job key. The key is displayed as the job name
@@ -13,7 +11,7 @@ jobs:
     # Name the Job
     name: Publish documentation
     # Set the type of machine to run on
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
       # Configures global Git variables for committing
@@ -25,22 +23,22 @@ jobs:
       - name: Install ce-dev
         run: |
           cd /tmp
-          wget https://golang.org/dl/go1.15.8.linux-amd64.tar.gz
-          sudo tar -C /usr/local -xzf go1.15.8.linux-amd64.tar.gz
+          wget https://golang.org/dl/go1.25.1.linux-amd64.tar.gz
+          sudo tar -C /usr/local -xzf go1.25.1.linux-amd64.tar.gz
           export PATH=$PATH:/usr/local/go/bin
           git clone https://github.com/FiloSottile/mkcert && cd mkcert
           go build -ldflags "-X main.Version=$(git describe --tags)"
           sudo mv ./mkcert /usr/local/bin && cd ../
           sudo chmod +x /usr/local/bin/mkcert
           rm -Rf mkcert
-          curl -sL https://raw.githubusercontent.com/codeenigma/ce-dev/1.x/install.sh | /bin/sh -s -- linux
+          curl -sL https://raw.githubusercontent.com/codeenigma/ce-dev/2.x/install.sh | /bin/sh -s -- linux
       # Uses the ce-dev stack to run Hugo to format and deploy the docs
       - name: Publish documentation
         run: |
           cd
           git clone https://github.com/codeenigma/wikis2pages.git
           cd wikis2pages
-          /bin/bash init.sh https://${{ secrets.GITHUB_TOKEN }}@github.com/codeenigma/ce-dev.git 1.x
+          /bin/bash init.sh https://${{ secrets.GITHUB_TOKEN }}@github.com/codeenigma/ce-dev.git 2.x
           /bin/sh set-current.sh ce-dev-local
           docker exec --user ce-dev --workdir /home/ce-dev/deploy/live.local wikis2pages-hugo hugo
           /bin/sh .github-actions-push.sh
