@@ -95,7 +95,7 @@ export default abstract class BaseCmd extends Command {
    * Path to the user config file.
    */
   protected userConfigFilePath = fspath.resolve(
-    this.config.configDir + '/preferences-1.x.yml',
+    this.config.configDir + '/preferences-2.x.yml',
   )
 
   /**
