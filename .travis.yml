@@ -75,7 +75,7 @@ jobs:
           tags: true
           repo: codeenigma/ce-dev
     - name: Documentation.
-      if: branch = '1.x'
+      if: branch = '2.x'
       addons:
         apt:
           packages:
@@ -86,12 +86,12 @@ jobs:
         - wget https://github.com/FiloSottile/mkcert/releases/download/v1.4.1/mkcert-v1.4.1-linux-amd64 -O /tmp/mkcert
         - sudo mv /tmp/mkcert /usr/local/bin
         - sudo chmod +x /usr/local/bin/mkcert
-        - curl -sL https://raw.githubusercontent.com/codeenigma/ce-dev/1.x/install.sh | /bin/sh -s -- linux
+        - curl -sL https://raw.githubusercontent.com/codeenigma/ce-dev/2.x/install.sh | /bin/sh -s -- linux
       script:
         - cd
         - git clone https://github.com/codeenigma/wikis2pages.git
         - cd wikis2pages
-        - /bin/sh init.sh https://$GITHUB_TOKEN@github.com/codeenigma/ce-dev.git 1.x
+        - /bin/sh init.sh https://$GITHUB_TOKEN@github.com/codeenigma/ce-dev.git 2.x
         - /bin/sh set-current.sh ce-dev-travis
         - docker exec --user ce-dev --workdir /home/ce-dev/deploy/live.local wikis2pages-hugo hugo
         - /bin/sh .travis-push.sh

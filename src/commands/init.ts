@@ -8,6 +8,7 @@ import ComposeConfig from '../interfaces/docker-compose-config-interface.js'
 import ComposeConfigService from '../interfaces/docker-compose-config-service-interface.js'
 import IPManager from '../ip-manager.js'
 import YamlParser from '../yaml-parser.js'
+import {AppSettings} from "../AppSettings.js";
 
 inquirer.registerPrompt('fuzzypath', (<inquirer.prompts.PromptConstructor>inquirerFuzzyPath))
 export default class InitCmd extends BaseCmd {
@@ -203,7 +204,7 @@ export default class InitCmd extends BaseCmd {
       this.activeProjectInfo.registry = this.composeConfig['x-ce_dev'].registry
     }
 
-    this.activeProjectInfo.version = this.composeConfig['x-ce_dev'].version ? this.composeConfig['x-ce_dev'].version : '1.x'
+    this.activeProjectInfo.version = this.composeConfig['x-ce_dev'].version ? this.composeConfig['x-ce_dev'].version : AppSettings.ceDevVersion + '.x'
     this.activeProjectInfo.ssh_hosts = []
     this.saveActiveProjectInfo()
     this.gatherConfig()

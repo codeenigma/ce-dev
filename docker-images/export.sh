@@ -16,7 +16,7 @@ usage(){
   echo '--base-image: Name of the base image to use, IMPORTANT: must match your Dockerfile - defaults to "debian:bullseye-slim".'
   echo '--dockerfile-path: Pass the path within docker-images to your Dockerfile and other build assets - defaults to "base".'
   echo '--docker-repo: Pass the Docker repository name - defaults to "codeenigma".'
-  echo '--ce-dev-version: The version to append to the image name - defaults to "1.x".'
+  echo '--ce-dev-version: The version to append to the image name - defaults to "2.x".'
 }
 
 # Parse options arguments.

@@ -7,7 +7,7 @@ Every organisation wanting to run `ce-provision` in a container must necessarily
 As such any generated CI container *must* be private in the container registry, never make them public.
 
 The Dockerfile within is a mix of `ce-dev`'s controller image:
-* https://github.com/codeenigma/ce-dev/tree/1.x/docker-images/controller
+* https://github.com/codeenigma/ce-dev/tree/2.x/docker-images/controller
 
 And a GitLab Runner controller based on this project:
 * https://gitlab.com/tmaczukin-test-projects/fargate-driver-debian/-/blob/master/Dockerfile

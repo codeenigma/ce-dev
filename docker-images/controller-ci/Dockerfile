@@ -1,5 +1,5 @@
 # This Dockerfile is a mix of ce-dev's controller image
-# https://github.com/codeenigma/ce-dev/tree/1.x/docker-images/controller
+# https://github.com/codeenigma/ce-dev/tree/2.x/docker-images/controller
 #
 # And a GitLab Runner controller based on
 # https://gitlab.com/tmaczukin-test-projects/fargate-driver-debian/-/blob/master/Dockerfile

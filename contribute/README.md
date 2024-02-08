@@ -9,11 +9,11 @@ See [the GitHub Actions README](https://github.com/codeenigma/ce-dev/blob/2.x/.g
 
 2. Once it is accepted, `git pull` your local `2.x` branch so it is up to date.
 
-3. Working on `2.x` directly, edit [`package.json`](https://github.com/codeenigma/ce-dev/blob/1.x/package.json) in the repository root.
+3. Working on `2.x` directly, edit [`package.json`](https://github.com/codeenigma/ce-dev/blob/2.x/package.json) in the repository root.
 
 4. Bump the version on line 4 to the number you want. If you are at version 2.0.0 you would bump it to 2.0.1 for a minor release or 2.1.0 for a major release. If you are introducing breaking change that will not be backward compatible you should use 3.0.0.
 
-5. Then edit the [`RELEASE`](https://github.com/codeenigma/ce-dev/blob/1.x/RELEASE) text file and describe the contents of this release (it will appear on the tag page in GitHub).
+5. Then edit the [`RELEASE`](https://github.com/codeenigma/ce-dev/blob/2.x/RELEASE) text file and describe the contents of this release (it will appear on the tag page in GitHub).
 
 6. Commit your changes.
 

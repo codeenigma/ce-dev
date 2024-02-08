@@ -8,13 +8,13 @@ Builds base and controller images using the contents of the `devel` branch on pu
 To test a `devel` container on a project, firstly fetch the container image:
 
 ```
-docker pull codeenigma/ce-dev-controller-1.x:devel
+docker pull codeenigma/ce-dev-controller-2.x:devel
 ```
 
 Then edit your project's `ce-dev.compose.yml` file, changing the image for each applicable service to use the `devel` tag instead of the `latest` tag, for example:
 
 ```yaml
-    image: codeenigma/ce-dev-1.x:devel
+    image: codeenigma/ce-dev-2.x:devel
 ```
 
 Finally, destroy and recreate your `docker compose` file and containers:
@@ -40,7 +40,7 @@ ce-dev start
 ce-dev provision
 ```
 
-If you need to hop branches of `ce-provision` or `ce-deploy` on the controller to try things you can hop on to the container and merge the test branch into `1.x` like so:
+If you need to hop branches of `ce-provision` or `ce-deploy` on the controller to try things you can hop on to the container and merge the test branch into `2.x` like so:
 
 ```bash
 docker exec -it ce_dev_controller_2 bash
@@ -56,7 +56,7 @@ Then use `ce-dev provision` and `ce-dev deploy` in the usual way.
 * `mkcert` is built from source, initially because of a bad release but now it's like that we might as well keep it that way
 
 ## ce-dev-build
-This builds the images and binaries, pushes the Docker containers to Docker Hub, pushes the binaries to a GitHub release and builds and commits the ce-dev documentation. It runs when someone accepts a PR for or pushes to the `1.x` branch and has added a valid tag in the format `1.*`. These images are tagged `latest` in the Docker repository.
+This builds the images and binaries, pushes the Docker containers to Docker Hub, pushes the binaries to a GitHub release and builds and commits the ce-dev documentation. It runs when someone accepts a PR for or pushes to the `2.x` branch and has added a valid tag in the format `2.*`. These images are tagged `latest` in the Docker repository.
 
 ### Known issues
 * The golang release needs keeping up to date (there's no 'latest' download we can use)

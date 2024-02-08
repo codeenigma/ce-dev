@@ -8,6 +8,7 @@ import CeDevConfig from '../interfaces/ce-dev-config-interface.js'
 import ComposeConfig from '../interfaces/docker-compose-config-interface.js'
 import UserConfig from '../interfaces/user-config-interface.js'
 import YamlParser from '../yaml-parser.js'
+import {AppSettings} from "../AppSettings.js";
 
 export default abstract class BaseCmd extends Command {
   /**
@@ -28,7 +29,7 @@ export default abstract class BaseCmd extends Command {
     ssh_hosts: [],
     unison: {},
     urls: [],
-    version: '1.x',
+    version: AppSettings.ceDevVersion + '.x',
   }
 
   /**
@@ -42,12 +43,6 @@ export default abstract class BaseCmd extends Command {
    * Inner ce-dev dir.
    */
   protected ceDevDir = ''
-
-  /**
-   * @member
-   * Ce-dev major version.
-   */
-  protected ceDevMajorVersion = '2'
 
   /**
    * @member
@@ -275,7 +270,7 @@ export default abstract class BaseCmd extends Command {
       )
         .toString()
         .trim()
-      if (labels.includes('ce-dev-1.x:')) {
+      if (labels.includes('ce-dev-' + AppSettings.ceDevVersion + '.x:')) {
         ceDev.push(containerName)
       }
     }
