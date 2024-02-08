@@ -47,11 +47,11 @@ fi
 sudo ln -s /opt/ce-dev/bin/ce-dev /usr/local/bin/ce-dev
 echo "done."
 
-echo "Killing deprecated running ce_dev_controller container..."
-if [ "$(docker ps -q -f name=ce_dev_controller)" ]; then
-    if [ "$(docker ps -aq -f status=running -f name=ce_dev_controller)" ]; then
+echo "Killing deprecated running ce_dev_controller_2 container..."
+if [ "$(docker ps -q -f name=ce_dev_controller_2)" ]; then
+    if [ "$(docker ps -aq -f status=running -f name=ce_dev_controller_2)" ]; then
         # cleanup
-        docker kill ce_dev_controller
+        docker kill ce_dev_controller_2
     fi
 fi
 echo "done."

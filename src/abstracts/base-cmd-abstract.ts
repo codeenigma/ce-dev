@@ -45,6 +45,12 @@ export default abstract class BaseCmd extends Command {
 
   /**
    * @member
+   * Ce-dev major version.
+   */
+  protected ceDevMajorVersion = '2'
+
+  /**
+   * @member
    * Docker executable path.
    */
   protected dockerBin = 'docker'

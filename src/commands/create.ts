@@ -5,6 +5,7 @@ import fs from 'node:fs'
 import fspath from "node:path";
 
 import BaseCmd from '../abstracts/base-cmd-abstract.js'
+import {AppSettings} from "../AppSettings.js";
 
 export default class CreateCmd extends BaseCmd {
   static description = 'Generates a new project from a template'
@@ -112,11 +113,11 @@ export default class CreateCmd extends BaseCmd {
   }
 
   private copyTemplates(): void {
-    execSync(this.dockerBin + ' cp ' + this.templatesDir + ' ce_dev_controller:/home/ce-dev/')
+    execSync(this.dockerBin + ' cp ' + this.templatesDir + ' ce_dev_controller_' + AppSettings.ceDevVersion + ':/home/ce-dev/')
   }
 
   private play(): void {
     const vars = '\'{"project_name":"' + this.projectName + '","project_type":"' + this.templateName + '"}\''
-    execSync(this.dockerBin + ' exec -t --user ce-dev ce_dev_controller ansible-playbook /home/ce-dev/templates/create.yml --extra-vars=' + vars)
+    execSync(this.dockerBin + ' exec -t --user ce-dev ce_dev_controller_' + AppSettings.ceDevVersion + ' ansible-playbook /home/ce-dev/templates/create.yml --extra-vars=' + vars)
   }
 }

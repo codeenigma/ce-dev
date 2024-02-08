@@ -9,7 +9,7 @@ export default class ProvisionCmd extends AnsibleCmd {
   static flags = {
     branch: Flags.string({
       char: 'b',
-      default: '1.x',
+      default: '2.x',
       description: 'The branch of ce-provision to use for provisioning your containers. See https://github.com/codeenigma/ce-provision for options.'
     }),
     config: Flags.string({

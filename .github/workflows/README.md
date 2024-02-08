@@ -31,10 +31,10 @@ ce-dev deploy
 To test the `devel` version of the `ce-dev-controller` image locally you can do the following:
 
 ```bash
-docker pull codeenigma/ce-dev-controller-1.x:devel
+docker pull codeenigma/ce-dev-controller-2.x:devel
 # Replace the 'latest' tag with your 'devel' image
-docker tag codeenigma/ce-dev-controller-1.x:devel codeenigma/ce-dev-controller-1.x:latest
-docker kill ce_dev_controller
+docker tag codeenigma/ce-dev-controller-2.x:devel codeenigma/ce-dev-controller-2.x:latest
+docker kill ce_dev_controller_2
 # Then in any ce-dev project
 ce-dev start
 ce-dev provision
@@ -43,7 +43,7 @@ ce-dev provision
 If you need to hop branches of `ce-provision` or `ce-deploy` on the controller to try things you can hop on to the container and merge the test branch into `1.x` like so:
 
 ```bash
-docker exec -it ce_dev_controller bash
+docker exec -it ce_dev_controller_2 bash
 su ce-dev
 cd ~/ce-provision # or ~/ce-deploy
 git merge origin my_test_branch

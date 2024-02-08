@@ -11,10 +11,10 @@ The way some editors behave on save means the inumber of the file does not chang
 If your ce-dev is failing to even start the controller then you'll see a response that looks like this.
 
 ```bash
-Creating ce_dev_controller ... done
+Creating ce_dev_controller_2 ... done
 Ensure user UID match those on the host...
 Ensure user UID match those on the host... !
-    Error: Command failed: sudo docker exec ce_dev_controller /bin/sh /opt/ce-dev-ownership.sh 1000 1000
+    Error: Command failed: sudo docker exec ce_dev_controller_2 /bin/sh /opt/ce-dev-ownership.sh 1000 1000
 ```
 
 There will be very little in the way of logs or errors from this. Just an indication of a problem.
