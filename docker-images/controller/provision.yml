@@ -17,6 +17,8 @@
         own_repository_branch: 1.x
         config_repository_branch: 1.x
         username: ce-dev
+        install_username: "{{ _ce_provision.username }}"
+        upgrade_timer_name: upgrade_ce_provision_ansible
         new_user: true
         key_name: id_rsa.pub
         local_dir: /home/ce-dev/ce-deploy
@@ -35,6 +37,8 @@
         config_repository_branch: 1.x
         config_repository_skip_checkout: false
         username: ce-dev
+        install_username: "{{ _ce_provision.username }}"
+        upgrade_timer_name: upgrade_ce_provision_ansible
         new_user: true
         key_name: id_rsa.pub
         local_dir: /home/ce-dev/ce-provision
@@ -56,5 +60,5 @@
         linters:
           enabled: true
   roles:
-    - ce_provision
-    - ce_deploy
+    - debian/ce_provision
+    - debian/ce_deploy
