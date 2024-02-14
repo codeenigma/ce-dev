@@ -46,16 +46,16 @@ RUN \
   chmod 600 /home/controller/.ssh/id_rsa && \
   chmod 644 /home/controller/.ssh/id_rsa.pub
 
-RUN su - ce-dev -c "git clone --branch 2.x https://github.com/codeenigma/ce-provision.git /home/ce-dev/ce-provision"
+RUN su - ce-dev -c "git clone --branch 2.x https://github.com/codeenigma/ce-provision.git /home/ce-dev/ce-provision-2"
 
-COPY ./provision.yml /home/ce-dev/ce-provision/provision.yml
+COPY ./provision.yml /home/ce-dev/ce-provision-2/provision.yml
 
 RUN \
   set -x && \
   export DEBIAN_FRONTEND=noninteractive && \
   apt-get update && \
-  su - ce-dev -c "/usr/local/bin/ansible-playbook --extra-vars=\"{ansible_common_remote_group: controller}\" /home/ce-dev/ce-provision/provision.yml" && \
-  rm /home/ce-dev/ce-provision/provision.yml && \
+  su - ce-dev -c "/home/ce-dev/ansible/bin/ansible-playbook --extra-vars=\"{ansible_common_remote_group: controller}\" /home/ce-dev/ce-provision-2/provision.yml" && \
+  rm /home/ce-dev/ce-provision-2/provision.yml && \
   apt-get clean  && \
   rm -rf \
   /var/lib/apt/lists/* \
