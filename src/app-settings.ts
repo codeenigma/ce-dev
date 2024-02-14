@@ -1,8 +1,8 @@
-export class AppSettings {
+export const AppSettings = {
 
   /**
    * @member
    * Major version of ce-dev.
    */
-  static ceDevVersion = 2
-}
+  ceDevVersion : 2,
+};

@@ -3,12 +3,12 @@ import inquirer from 'inquirer'
 import inquirerFuzzyPath from 'inquirer-fuzzy-path';
 
 import BaseCmd from '../abstracts/base-cmd-abstract.js'
+import {AppSettings} from "../app-settings.js";
 import UnisonVolumeContainer from '../interfaces/ce-dev-config-unison-volume-interface.js'
 import ComposeConfig from '../interfaces/docker-compose-config-interface.js'
 import ComposeConfigService from '../interfaces/docker-compose-config-service-interface.js'
 import IPManager from '../ip-manager.js'
 import YamlParser from '../yaml-parser.js'
-import {AppSettings} from "../AppSettings.js";
 
 inquirer.registerPrompt('fuzzypath', (<inquirer.prompts.PromptConstructor>inquirerFuzzyPath))
 export default class InitCmd extends BaseCmd {

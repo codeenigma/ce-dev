@@ -1,6 +1,7 @@
 import { Config, Flags} from '@oclif/core'
 
 import AnsibleCmd from '../abstracts/base-cmd-abstract-ansible.js'
+import {AppSettings} from "../app-settings.js";
 
 export default class ProvisionCmd extends AnsibleCmd {
 
@@ -70,6 +71,10 @@ export default class ProvisionCmd extends AnsibleCmd {
     this.ownBranch = flags.branch
     this.configBranch = flags.config
     if (flags.verbose) this.verbose = true
+
+    // Update ce-provision path if we are running version > 1.
+    if (this.ownBranch !== '1.x')
+      this.ansibleScriptsPath = this.ansibleScriptsPath + '-' + AppSettings.ceDevVersion
 
     this.ensureActiveComposeFile()
     this.populateAnsibleHosts()

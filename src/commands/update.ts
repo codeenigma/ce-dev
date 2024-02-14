@@ -1,7 +1,7 @@
 import {execSync} from 'node:child_process'
 
 import BaseCmd from '../abstracts/base-cmd-abstract.js'
-import {AppSettings} from "../AppSettings.js";
+import {AppSettings} from "../app-settings.js";
 
 export default class UpdateCmd extends BaseCmd {
   static description = 'Update base images and ce-dev cli.'

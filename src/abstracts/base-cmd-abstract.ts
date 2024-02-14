@@ -3,12 +3,12 @@ import {execSync, spawnSync} from 'node:child_process'
 import fs from 'node:fs'
 import fspath from "node:path";
 
+import {AppSettings} from "../app-settings.js";
 import CeDevControllerManager from '../controller-manager.js'
 import CeDevConfig from '../interfaces/ce-dev-config-interface.js'
 import ComposeConfig from '../interfaces/docker-compose-config-interface.js'
 import UserConfig from '../interfaces/user-config-interface.js'
 import YamlParser from '../yaml-parser.js'
-import {AppSettings} from "../AppSettings.js";
 
 export default abstract class BaseCmd extends Command {
   /**

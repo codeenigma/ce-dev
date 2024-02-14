@@ -5,7 +5,6 @@ import fspath from "node:path";
 
 import ComposeConfig from '../interfaces/docker-compose-config-interface.js'
 import BaseCmd from './base-cmd-abstract.js'
-import {AppSettings} from "../AppSettings.js";
 
 export default abstract class AnsibleCmd extends BaseCmd {
   /**
@@ -67,11 +66,11 @@ export default abstract class AnsibleCmd extends BaseCmd {
       const src = fspath.dirname(ansiblePath)
       const dest = this.ansibleProjectPlaybooksPath + fspath.dirname(src)
       this.log('Copy Ansible configuration')
-      execSync(this.dockerBin + ' exec -t --user ce-dev ce_dev_controller_' + AppSettings.ceDevVersion + ' mkdir -p ' + dest + ' && rm -rf ' + dest + '/*')
-      execSync(this.dockerBin + ' cp ' + src + ' ce_dev_controller_' + AppSettings.ceDevVersion + ':' + dest)
+      execSync(this.dockerBin + ' exec -t --user ce-dev ce_dev_controller  mkdir -p ' + dest + ' && rm -rf ' + dest + '/*')
+      execSync(this.dockerBin + ' cp ' + src + ' ce_dev_controller:' + dest)
       const script = fspath.join(this.ansibleScriptsPath, this.ansibleScript)
       const cmd = script + ' ' + this.getCommandParameters(ansiblePath)
-      execSync(this.dockerBin + ' exec -t --workdir ' + this.ansibleScriptsPath + ' --user ce-dev ce_dev_controller_' + AppSettings.ceDevVersion + ' ' + cmd, {stdio: 'inherit'})
+      execSync(this.dockerBin + ' exec -t --workdir ' + this.ansibleScriptsPath + ' --user ce-dev ce_dev_controller ' + cmd, {stdio: 'inherit'})
     }
   }
 
@@ -85,8 +84,8 @@ export default abstract class AnsibleCmd extends BaseCmd {
     if (this.composeConfig.services) {
       const hosts = Object.keys(this.composeConfig.services).join('\n')
       fs.writeFileSync(this.tmpHostsFile, hosts + '\n')
-      execSync(this.dockerBin + ' cp ' + this.tmpHostsFile + ' ce_dev_controller_' + AppSettings.ceDevVersion + ':' + this.ansibleScriptsPath + '/hosts/hosts')
-      execSync(this.dockerBin + ' exec -t ce_dev_controller_' + AppSettings.ceDevVersion + ' chown -R ce-dev:ce-dev ' + this.ansibleScriptsPath + '/hosts/hosts')
+      execSync(this.dockerBin + ' cp ' + this.tmpHostsFile + ' ce_dev_controller:' + this.ansibleScriptsPath + '/hosts/hosts')
+      execSync(this.dockerBin + ' exec -t ce_dev_controller chown -R ce-dev:ce-dev ' + this.ansibleScriptsPath + '/hosts/hosts')
     }
   }
 

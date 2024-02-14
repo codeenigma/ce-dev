@@ -3,10 +3,10 @@ import {execSync} from 'node:child_process'
 import fs from 'node:fs'
 import fspath from "node:path";
 
+import {AppSettings} from './app-settings.js'
 import DockerComposeConfigBare from './interfaces/docker-compose-config-bare-interface.js'
 import IPManager from './ip-manager.js'
 import YamlParser from './yaml-parser.js'
-import {AppSettings} from './AppSettings.js'
 
 export default class ControllerManager {
   /**
@@ -73,7 +73,7 @@ export default class ControllerManager {
    */
   public controllerExists(): boolean {
     const existing = execSync(
-      this.dockerBin + ' ps | grep -w ce_dev_controller_' + AppSettings.ceDevVersion + ' | wc -l',
+      this.dockerBin + ' ps | grep -w ce_dev_controller | wc -l',
     )
       .toString()
       .trim()
@@ -95,7 +95,7 @@ export default class ControllerManager {
       this.dockerComposeBin +
       ' -f ' +
       this.controllerComposeFile +
-      ' -p ce_dev_controller_' + AppSettings.ceDevVersion + ' up -d',
+      ' -p ce_dev_controller up -d --verbose',
       {cwd: this.config.dataDir, stdio: 'inherit'},
     )
     // Ensure uid/gid.
@@ -112,7 +112,7 @@ export default class ControllerManager {
 
     execSync(
       this.dockerBin +
-      ' exec ce_dev_controller_' + AppSettings.ceDevVersion + ' /bin/sh /opt/ce-dev-ownership.sh ' +
+      ' exec ce_dev_controller /bin/sh /opt/ce-dev-ownership.sh ' +
       uid.toString() +
       ' ' +
       gid.toString(),
@@ -122,19 +122,19 @@ export default class ControllerManager {
     // Regenerate SSH keys.
     ux.action.start('Regenerate containers SSH key')
     execSync(
-      this.dockerBin + ' exec ce_dev_controller_' + AppSettings.ceDevVersion + ' /bin/sh /opt/ce-dev-ssh.sh',
+      this.dockerBin + ' exec ce_dev_controller /bin/sh /opt/ce-dev-ssh.sh',
     )
     ux.action.stop()
     // Ensure file perms.
     ux.action.start('Ensure file ownership')
     execSync(
-      this.dockerBin + ' exec ce_dev_controller_' + AppSettings.ceDevVersion + ' chown -R ce-dev:ce-dev /home/ce-dev',
+      this.dockerBin + ' exec ce_dev_controller chown -R ce-dev:ce-dev /home/ce-dev',
     )
     ux.action.stop()
     // Ensure CA.
     ux.action.start('Generate/renew CA certificate for SSL')
     execSync(
-      this.dockerBin + ' exec --user ce-dev ce_dev_controller_' + AppSettings.ceDevVersion + ' /usr/local/bin/mkcert -install',
+      this.dockerBin + ' exec --user ce-dev ce_dev_controller /usr/local/bin/mkcert -install',
       {stdio: ['ignore', 'ignore', 'pipe']},
     )
     ux.action.stop()
@@ -147,12 +147,12 @@ export default class ControllerManager {
    */
   public controllerStop(): void {
     const existing = execSync(
-      this.dockerBin + ' ps | grep -w ce_dev_controller_' + AppSettings.ceDevVersion + ' | wc -l',
+      this.dockerBin + ' ps | grep -w ce_dev_controller | wc -l',
     )
       .toString()
       .trim()
     if (existing !== '0') {
-      execSync(this.dockerBin + ' stop ce_dev_controller_' + AppSettings.ceDevVersion)
+      execSync(this.dockerBin + ' stop ce_dev_controller')
     }
   }
 
@@ -166,7 +166,7 @@ export default class ControllerManager {
    */
   public generateCertificate(domain: string): void {
     execSync(
-      this.dockerBin + ' exec --workdir /home/ce-dev/.local/share/mkcert --user ce-dev ce_dev_controller_' + AppSettings.ceDevVersion + ' /usr/local/bin/mkcert ' + domain,
+      this.dockerBin + ' exec --workdir /home/ce-dev/.local/share/mkcert --user ce-dev ce_dev_controller /usr/local/bin/mkcert ' + domain,
       {stdio: ['ignore', 'ignore', 'pipe']},
     )
   }
@@ -181,7 +181,7 @@ export default class ControllerManager {
     const existingCert = fspath.resolve(this.config.dataDir + '/rootCA.pem')
     // Copy new (or possibly new) cert.
     execSync(
-      this.dockerBin + ' cp ce_dev_controller_' + AppSettings.ceDevVersion + ':/home/ce-dev/.local/share/mkcert/rootCA.pem ' + currentCert,
+      this.dockerBin + ' cp ce_dev_controller:/home/ce-dev/.local/share/mkcert/rootCA.pem ' + currentCert,
     )
     // Check if we have a new certs.
     if (fs.existsSync(existingCert)) {
@@ -242,7 +242,7 @@ export default class ControllerManager {
    * @return void
    */
   public pullImage(): void {
-    execSync(this.dockerBin + ' pull codeenigma/ce-dev-controller-1.x:latest', {
+    execSync(this.dockerBin + ' pull codeenigma/ce-dev-controller-' + AppSettings.ceDevVersion + '.x:latest', {
       stdio: 'inherit',
     })
   }
@@ -259,8 +259,8 @@ export default class ControllerManager {
       services: {
         ce_dev_controller: {
           cgroup: 'host',
-          container_name: 'ce_dev_controller_' + AppSettings.ceDevVersion,
-          hostname: 'ce_dev_controller_' + AppSettings.ceDevVersion,
+          container_name: 'ce_dev_controller',
+          hostname: 'ce_dev_controller',
           image: 'codeenigma/ce-dev-controller-'+ AppSettings.ceDevVersion + '.x:latest',
           networks: {
             ce_dev: {
