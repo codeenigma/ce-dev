@@ -23,8 +23,8 @@ jobs:
       - name: Install ce-dev
         run: |
           cd /tmp
-          wget https://golang.org/dl/go1.25.1.linux-amd64.tar.gz
-          sudo tar -C /usr/local -xzf go1.25.1.linux-amd64.tar.gz
+          wget https://go.dev/dl/go1.22.1.linux-amd64.tar.gz
+          sudo tar -C /usr/local -xzf go1.22.1.linux-amd64.tar.gz
           export PATH=$PATH:/usr/local/go/bin
           git clone https://github.com/FiloSottile/mkcert && cd mkcert
           go build -ldflags "-X main.Version=$(git describe --tags)"
