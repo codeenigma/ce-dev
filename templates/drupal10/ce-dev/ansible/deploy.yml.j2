@@ -38,10 +38,6 @@
     - drush:
         use_vendor: true
     - drush_bin: "{{ deploy_path }}/vendor/drush/drush/drush"
-    - lhci_run:
-        # Create a list of URLs to test with LHCI
-        test_urls:
-          - "https://{{ _domain_name }}"
   pre_tasks:
     # You can safely remove these steps once you have a working composer.json.
     - name: Download composer file.
@@ -70,5 +66,4 @@
 #    - sync/database_sync # Grab database from a remote server.
     - database_apply # Run drush updb and config import.
     - _exit # Some common housekeeping.
-#    - lhci_run # removing for now as something in D9 HTML breaks LHCI
 {% endraw %}

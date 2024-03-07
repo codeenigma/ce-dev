@@ -8,10 +8,8 @@
     - _env_type: dev
     - rkhunter:
         allow_ssh_root_user: prohibit-password
-    - lhci:
-        enable_vnc: true
     - nodejs:
-        version: 14.x
+        version: 20.x
     - apt_unattended_upgrades:
         enable: false
   tasks:
@@ -19,7 +17,3 @@
         update_cache: true
     - import_role:
         name: _meta/common_base
-    - import_role:
-        name: lhci
-    - import_role:
-        name: frontail

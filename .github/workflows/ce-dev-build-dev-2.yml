@@ -1,4 +1,4 @@
-name: '2.x: Build the devel ce-dev base and controller images'
+name: '2.x-devel: Build the devel ce-dev base and controller images'
 
 # Run this workflow only on a push/merged PR to branch devel
 on:

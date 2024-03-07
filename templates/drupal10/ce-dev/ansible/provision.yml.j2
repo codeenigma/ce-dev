@@ -48,10 +48,8 @@
         keep_updated: true
     - xdebug:
         cli: true
-    - lhci:
-        enable_vnc: true
     - nodejs:
-        version: 18.x
+        version: 20.x
     - apt_unattended_upgrades:
         enable: false
 {% endraw %}
@@ -61,14 +59,10 @@
     - import_role:
         name: _meta/common_base
     - import_role:
-        name: mysql_client
+        name: debian/mysql_client
     - import_role:
-        name: php-cli
+        name: debian/php-cli
     - import_role:
-        name: php-fpm
+        name: debian/php-fpm
     - import_role:
-        name: nginx
-    - import_role:
-        name: lhci
-    - import_role:
-        name: frontail
+        name: debian/nginx
