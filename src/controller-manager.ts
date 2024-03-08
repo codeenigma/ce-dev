@@ -45,12 +45,7 @@ export default class ControllerManager {
    */
   private readonly networkComposeFile: string
 
-  public constructor(
-    config: Config,
-    dockerBin: string,
-    dockerComposeBin: string,
-    mkcertBin: string,
-  ) {
+  public constructor(config: Config, dockerBin: string, dockerComposeBin: string, mkcertBin: string) {
     this.dockerBin = dockerBin
     this.dockerComposeBin = dockerComposeBin
     this.mkcertBin = mkcertBin

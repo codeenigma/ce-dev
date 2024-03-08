@@ -2,7 +2,12 @@ name: '2.x: Build the ce-dev binaries and images'
 
 # Run this workflow only manual.
 on:
-  workflow_dispatch:
+  push:
+    tags:
+      - 2.*
+    workflow_dispatch:
+      tags:
+        - 2.*
 
 jobs:
   build:

@@ -1,15 +1,11 @@
-name: '2.x: Test image builds'
+name: '2.x: Test image builds on PR'
 
-# Run this workflow at 3:30 and a part of a PR.
 on:
   schedule:
     - cron: '30 3 * * *'
-
   pull_request:
     branches:
       - '2.x'
-
-  workflow_dispatch:
 
 jobs:
   build:

@@ -1,15 +1,11 @@
-name: '2.x-devel: Test image builds'
+name: '2.x: Test dev image builds on PR'
 
-# Run this workflow at 3:30 and a part of a PR.
 on:
   schedule:
     - cron: '30 3 * * *'
-
   pull_request:
     branches:
       - '2.x-devel'
-
-  workflow_dispatch:
 
 jobs:
   build:
@@ -42,7 +38,7 @@ jobs:
           rm -Rf mkcert
       - name: Build and test
         run: |
-          /bin/sh docker-images/export.sh --version latest --image-name ce-dev --dockerfile-path base-devel
-          /bin/sh docker-images/export.sh --version latest --image-name ce-dev-controller --dockerfile-path controller-devel
+          /bin/sh docker-images/export.sh --version latest --image-name ce-dev --dockerfile-path base
+          /bin/sh docker-images/export.sh --version latest --image-name ce-dev-controller --dockerfile-path controller
           sudo chmod +x bin/run.js
           /bin/sh templates/prebuild.sh
