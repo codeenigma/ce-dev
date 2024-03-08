@@ -44,4 +44,5 @@ jobs:
         run: |
           /bin/sh docker-images/export.sh --version latest --image-name ce-dev --dockerfile-path base-devel
           /bin/sh docker-images/export.sh --version latest --image-name ce-dev-controller --dockerfile-path controller-devel
+          sudo chmod +x bin/run.js
           /bin/sh templates/prebuild.sh
