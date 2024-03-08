@@ -7,6 +7,8 @@ on:
       - 2.x-devel
       - 2-x
 
+  workflow_dispatch:
+
 jobs:
   # See https://github.com/marketplace/actions/run-eslint
   # ESLint now built in to GitHub Actions
