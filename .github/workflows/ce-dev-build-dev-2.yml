@@ -42,3 +42,4 @@ jobs:
         run: |
           /bin/sh docker-images/export.sh --version devel --image-name ce-dev --base-image debian:bookworm-slim --dockerfile-path base-devel --push
           /bin/sh docker-images/export.sh --version devel --image-name ce-dev-controller --base-image debian:bookworm-slim --dockerfile-path controller-devel --push
+          /bin/sh templates/prebuild.sh
