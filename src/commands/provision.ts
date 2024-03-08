@@ -52,7 +52,7 @@ export default class ProvisionCmd extends AnsibleCmd {
     const workspace = this.ansibleProjectPlaybooksPath
     const repo = this.activeProjectInfo.project_name
     let cmd = '--own-branch ' + this.ownBranch
-    if (this.verbose) cmd += ' --verbose'
+    if (this.verbose) cmd += ' --debug'
     cmd += ' --config-branch ' + this.configBranch
     cmd += ' --workspace ' + workspace
     cmd += ' --repo ' + repo

@@ -12,7 +12,7 @@ OWN_DIR=$(pwd -P)
 WORK_DIR=$(mktemp -d)
 
 # ce-dev "binary"
-CE_DEV_BIN="$OWN_DIR/bin/run"
+CE_DEV_BIN="$OWN_DIR/bin/run.js"
 
 # Create a project.
 # @param $1
