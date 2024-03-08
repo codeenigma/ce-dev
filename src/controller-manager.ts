@@ -95,7 +95,7 @@ export default class ControllerManager {
       this.dockerComposeBin +
       ' -f ' +
       this.controllerComposeFile +
-      ' -p ce_dev_controller up -d --debug',
+      ' -p ce_dev_controller up -d',
       {cwd: this.config.dataDir, stdio: 'inherit'},
     )
     // Ensure uid/gid.
