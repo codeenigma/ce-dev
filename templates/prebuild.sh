@@ -23,7 +23,7 @@ create_project(){
   rm ce-dev/ce-dev.compose.prebuilt.yml
   $CE_DEV_BIN init
   $CE_DEV_BIN start
-  $CE_DEV_BIN provision -v
+  $CE_DEV_BIN provision
   $CE_DEV_BIN deploy
 }
 
