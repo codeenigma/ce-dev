@@ -3,6 +3,8 @@
   become: true
   vars:
     - _domain_name: example.com
+    - _ce_provision_base_dir: /home/ce-dev/ce-provision-2
+    - _ce_provision_build_dir: /home/ce-dev/ce-provision-2/ce-dev/ansible/local
     - _ce_provision_build_tmp_dir: /tmp
     - _ce_provision_data_dir: /tmp
     - _ce_provision:
