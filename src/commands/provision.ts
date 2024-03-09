@@ -52,7 +52,9 @@ export default class ProvisionCmd extends AnsibleCmd {
     const workspace = this.ansibleProjectPlaybooksPath
     const repo = this.activeProjectInfo.project_name
     let cmd = '--own-branch ' + this.ownBranch
-    if (this.verbose) cmd += ' --debug'
+    if (this.verbose) {
+      cmd += ' --debug'
+    }
     cmd += ' --config-branch ' + this.configBranch
     cmd += ' --workspace ' + workspace
     cmd += ' --repo ' + repo
@@ -73,9 +75,10 @@ export default class ProvisionCmd extends AnsibleCmd {
     if (flags.verbose) this.verbose = true
 
     // Update ce-provision path if we are running version > 1.
-    if (this.ownBranch !== '1.x')
-      this.ansibleScriptsPath = this.ansibleScriptsPath + '-' + AppSettings.ceDevVersion
-
+    if (this.ownBranch !== '1.x') {
+      this.ansibleScriptsPath += '-' + AppSettings.ceDevVersion
+      this.ansibleProjectPlaybooksPath += '-' + AppSettings.ceDevVersion
+    }
     this.ensureActiveComposeFile()
     this.populateAnsibleHosts()
     this.play()

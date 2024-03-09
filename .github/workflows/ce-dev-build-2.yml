@@ -5,7 +5,7 @@ on:
   push:
     tags:
       - 2.*
-    workflow_dispatch:
+  workflow_dispatch:
       tags:
         - 2.*
 
@@ -13,7 +13,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Install modules
         run: yarn
       # Uses https://oclif.io/
