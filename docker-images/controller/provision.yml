@@ -31,7 +31,7 @@
         venv_path: "/home/{{ _ce_provision.username }}/ansible"
         venv_command: /usr/bin/python3 -m venv
         own_repository: https://github.com/codeenigma/ce-provision.git
-        own_repository_branch: 1.x
+        own_repository_branch: 2.x
         own_repository_skip_checkout: false
         config_repository: https://github.com/codeenigma/ce-dev-ce-provision-config.git
         config_repository_branch: 1.x
@@ -60,5 +60,5 @@
         linters:
           enabled: true
   roles:
-    - ce_provision
-    - ce_deploy
+    - debian/ce_provision
+    - debian/ce_deploy
