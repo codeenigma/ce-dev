@@ -23,8 +23,8 @@ jobs:
       # We build mkcert from source because releases are broken
       - name: Install test dependencies
         run: |
-          sudo brew update
-          sudo brew install -y p7zip-full libnss3-tools wget
+          brew update
+          brew install -y p7zip-full libnss3-tools wget
           cd /tmp
           wget https://go.dev/dl/go1.22.1.darwin-arm64.tar.gz
           sudo tar -C /usr/local -xzf go1.22.1.darwin-arm64.tar.gz
