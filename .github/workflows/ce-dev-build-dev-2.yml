@@ -1,10 +1,12 @@
 name: '2.x-devel: Build the devel ce-dev base and controller images'
 
-# Run this workflow only on a push/merged PR to branch devel
 on:
   push:
-    branches:
-      - 2.x-devel
+    tags:
+      - 2.*
+  workflow_dispatch:
+    tags:
+      - 2.*
 
 jobs:
   build:
