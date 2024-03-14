@@ -24,7 +24,8 @@ jobs:
       - name: Install test dependencies
         run: |
           brew update
-          brew install p7zip libnss3-tools wget
+          brew upgrade
+          brew install p7zip nss wget
           cd /tmp
           wget https://go.dev/dl/go1.22.1.darwin-arm64.tar.gz
           sudo tar -C /usr/local -xzf go1.22.1.darwin-arm64.tar.gz
