@@ -20,6 +20,20 @@ jobs:
         run: yarn oclif pack tarballs --targets=darwin-x64,darwin-arm64 --no-xz
       - name: Rename the dist/* files
         run: yarn renamedist
+      - name: Install homebrew dependencies
+        run: |
+          set -x
+          sudo chmod ugo+w /usr/local/bin
+          brew install --overwrite python@3.11
+          brew install docker docker-compose lima
+          # brew install mysql-client is failing because of existing 2to3
+          sudo rm -f /usr/local/bin/2to3*
+          brew install --overwrite mysql-client || true
+      - name: Install and start Colima
+        run: |
+          brew install colima
+          colima version
+          colima start --cpu 3 --memory 6 --disk 100 --vm-type=qemu --mount-type=sshfs --dns=1.1.1.1
       # We build mkcert from source because releases are broken
       - name: Install test dependencies
         run: |
