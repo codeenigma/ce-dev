@@ -32,10 +32,8 @@ jobs:
           brew install --overwrite mysql-client || true
       - name: Install and start Colima
         run: |
-          brew install colima
-          colima version
-          rm -rf ~/.colima/_lima/_networks/user-v2
-          colima start --cpu 3 --memory 6 --disk 100 --vm-type=qemu --mount-type=sshfs
+          brew install --HEAD colima
+          colima start --cpu 4 --memory 6 --disk 100 --arch aarch64 --vm-type=vz
       # We build mkcert from source because releases are broken
       - name: Install test dependencies
         run: |
