@@ -24,6 +24,7 @@ jobs:
         run: |
           set -x
           sudo chmod ugo+w /usr/local/bin
+          brew version
           brew install --overwrite python@3.11
           brew install docker docker-compose lima
           # brew install mysql-client is failing because of existing 2to3
