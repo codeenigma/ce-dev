@@ -33,7 +33,7 @@ jobs:
       - name: Install and start Colima
         run: |
           brew install --HEAD colima
-          colima start --cpu 4 --memory 6 --disk 100 --arch aarch64 --vm-type=vz
+          colima start --cpu 4 --memory 6 --disk 10 --arch aarch64 --vm-type=vz
       # We build mkcert from source because releases are broken
       - name: Install test dependencies
         run: |
