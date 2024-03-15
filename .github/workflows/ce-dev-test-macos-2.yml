@@ -37,7 +37,7 @@ jobs:
           rm -Rf mkcert
       - name: Install docker
         run: |
-          brew install docker
+          brew install --cask docker
       - name: Build and test
         run: |
           /bin/sh docker-images/export.sh --version latest --image-name ce-dev --dockerfile-path base
