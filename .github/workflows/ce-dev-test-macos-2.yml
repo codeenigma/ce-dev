@@ -12,6 +12,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: '2.x-devel'
+      - name: Checking disk space
+        run: df -H
       - name: Install modules
         run: yarn
       # Uses https://oclif.io/
@@ -26,14 +28,18 @@ jobs:
           sudo chmod ugo+w /usr/local/bin
           brew -v
           brew install --overwrite python@3.11
-          brew install docker docker-compose lima
           # brew install mysql-client is failing because of existing 2to3
           sudo rm -f /usr/local/bin/2to3*
           brew install --overwrite mysql-client || true
-      - name: Install and start Colima
+      - name: Install Colima and Docker
         run: |
-          brew install --HEAD colima
-          colima start --cpu 4 --memory 6 --disk 10 --arch aarch64 --vm-type=vz
+          brew install colima
+          brew install docker docker-compose
+          mkdir -p ~/.docker/cli-plugins
+          sudo ln -sfn $(brew --prefix)/opt/docker-compose/bin/docker-compose ~/.docker/cli-plugins/docker-compose
+          brew install docker-Buildx
+          sudo ln -sfn $(brew --prefix)/opt/docker-buildx/bin/docker-buildx ~/.docker/cli-plugins/docker-buildx
+          colima start
       # We build mkcert from source because releases are broken
       - name: Install test dependencies
         run: |
@@ -49,9 +55,6 @@ jobs:
           sudo mv ./mkcert /usr/local/bin && cd ../
           sudo chmod +x /usr/local/bin/mkcert
           rm -Rf mkcert
-      - name: Install docker
-        run: |
-          brew install --cask docker
       - name: Build and test
         run: |
           /bin/sh docker-images/export.sh --version latest --image-name ce-dev --dockerfile-path base
