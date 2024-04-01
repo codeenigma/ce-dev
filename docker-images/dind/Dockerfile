@@ -2,14 +2,14 @@ FROM codeenigma/ce-dev-1.x
 
 RUN \
   set -x && \
-  export DEBIAN_FRONTEND=noninteractive && \  
+  export DEBIAN_FRONTEND=noninteractive && \
   apt-get update && \
   apt-get dist-upgrade -y -o Dpkg::Options::="--force-confnew"
 
 RUN \
   set -x && \
-  export DEBIAN_FRONTEND=noninteractive && \  
-  echo 'deb [arch=amd64] https://download.docker.com/linux/debian bullseye stable' > /etc/apt/sources.list.d/docker.list && \
+  export DEBIAN_FRONTEND=noninteractive && \
+  echo 'deb [arch=amd64] https://download.docker.com/linux/debian bookworm-slim stable' > /etc/apt/sources.list.d/docker.list && \
   curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
   apt-get update && \
   apt-get dist-upgrade -y -o Dpkg::Options::="--force-confnew" && \

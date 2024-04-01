@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim as unison
+FROM debian:bookworm-slim as unison
 RUN \
   set -x && \
   export DEBIAN_FRONTEND=noninteractive && \
@@ -14,7 +14,7 @@ RUN \
   cd /tmp/unison-2.53.3 && \
   make
 
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 RUN \
   set -x && \
@@ -30,7 +30,7 @@ RUN \
   binutils \
   cron \
   curl \
-  dirmngr \ 
+  dirmngr \
   gnupg \
   rsync \
   openssh-server \
