@@ -49,20 +49,27 @@
     - apt_unattended_upgrades:
         enable: false
 {% endraw %}
+  pre_tasks:
+    # Debian has nodejs 12.x installed by default.
+    - name: Remove "node" package installed by default
+      ansible.builtin.apt:
+        name: nodejs
+        state: absent
+        purge: true
   tasks:
-    - apt:
+    - ansible.builtin.apt:
         update_cache: true
-    - import_role:
+    - ansible.builtin.import_role:
         name: _meta/common_base
-    - import_role:
+    - ansible.builtin.import_role:
         name: mysql_client
-    - import_role:
+    - ansible.builtin.import_role:
         name: php-cli
-    - import_role:
+    - ansible.builtin.import_role:
         name: php-fpm
-    - import_role:
+    - ansible.builtin.import_role:
         name: nginx
-    - import_role:
+    - ansible.builtin.import_role:
         name: lhci
-    - import_role:
+    - ansible.builtin.import_role:
         name: frontail

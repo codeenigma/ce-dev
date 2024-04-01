@@ -30,6 +30,14 @@ sudo update-initramfs -c -k all
 
 They will take a while to run (about 10 minutes), but once complete reboot your machine and delete any created containers that velong to the ce_dev image. When you rebuild the ce-dev controller (by running any command) it should create fine.
 
+Another way for changing the system settings for cgroups is addind the option to the boot loader. In case you use grub with a distribution that uses the new cgroups version you can add this line into the file */etc/default/grub*
+
+```bash
+GRUB_CMDLINE_LINUX="systemd.unified_cgroup_hierarchy=0"
+```
+
+More information about adding parameters to the kernel if you're using other boot loader can be found at https://wiki.archlinux.org/title/kernel_parameters
+
 ### Ubuntu 22.x
 
 The resolution steps are similar to the ones above for `Ubuntu:21.x`, except that `Ubuntu:22.x` doesn't use `kernelstub`, so the changes have to be made in the grub file instead:
@@ -57,6 +65,7 @@ sudo update-initramfs -c -k all
 
 ```bash
 docker rm $(docker ps -aq)
+```
 
 ### Cgroup On Older Projects
 
@@ -64,7 +73,7 @@ ce-dev does allow for the use of Cgroup 2, but some older projects will need upg
 
 If this is the case then make sure that the cgroup option is set in your ce-dev.compose.prebuilt.yml file for the services that aren't starting.
 
-```
+```yaml
 services:
   web:
     cgroup: host
@@ -78,14 +87,17 @@ In order to access sites/files deployed by ce-dev, the ports needs to be publish
 After running ```ce-dev init``` (before ```ce-dev start```) edit the ~/project/ce-dev/docker-compose.yml
 
 Replace;
-```
+
+```yaml
     expose:
       - 443
       - 80
       - '22'
 ```
+
 With;
-```
+
+```yaml
     ports:
       - '443:443'
       - '80:80'

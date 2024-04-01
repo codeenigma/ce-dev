@@ -12,6 +12,8 @@
     - ce_deploy:
         venv_path: "/home/{{ _ce_provision.username }}/ansible"
         venv_command: /usr/bin/python3 -m venv
+        install_username: "{{ _ce_provision.username }}"
+        upgrade_timer_name: upgrade_ce_deploy_ansible
         own_repository: https://github.com/codeenigma/ce-deploy.git
         config_repository: https://github.com/codeenigma/ce-dev-ce-deploy-config.git
         own_repository_branch: 1.x
@@ -28,8 +30,10 @@
     - ce_provision:
         venv_path: "/home/{{ _ce_provision.username }}/ansible"
         venv_command: /usr/bin/python3 -m venv
+        install_username: "{{ _ce_provision.username }}"
+        upgrade_timer_name: upgrade_ce_provision_ansible
         own_repository: https://github.com/codeenigma/ce-provision.git
-        own_repository_branch: 2.x
+        own_repository_branch: 1.x
         own_repository_skip_checkout: false
         config_repository: https://github.com/codeenigma/ce-dev-ce-provision-config.git
         config_repository_branch: 1.x

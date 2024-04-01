@@ -34,5 +34,6 @@ jobs:
           rm -Rf mkcert
       - name: Build and test
         run: |
-          /bin/sh docker-images/export.sh latest
+          /bin/sh docker-images/export.sh --version latest --image-name ce-dev --dockerfile-path base
+          /bin/sh docker-images/export.sh --version latest --image-name ce-dev-controller --dockerfile-path controller
           /bin/sh templates/prebuild.sh

@@ -15,11 +15,11 @@
     - apt_unattended_upgrades:
         enable: false
   tasks:
-    - apt:
+    - ansible.builtin.apt:
         update_cache: true
-    - import_role:
+    - ansible.builtin.import_role:
         name: _meta/common_base
-    - import_role:
+    - ansible.builtin.import_role:
         name: lhci
-    - import_role:
+    - ansible.builtin.import_role:
         name: frontail
