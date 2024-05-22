@@ -19,12 +19,12 @@ export default class ProvisionCmd extends AnsibleCmd {
     }),
     interpreter: Flags.string({
       char: 'i',
-      default: '/home/ce-dev/ansible/bin/python',
+      default: '/usr/bin/python',
       description: 'The path to the Python interpreter to use on the target container.'
     }),
     ansiblepath: Flags.string({
       char: 'a',
-      default: '/home/ce-dev/ansible/bin',
+      default: '/usr/bin',
       description: 'The path to the Ansible binaries on the controller container.'
     }),
     help: Flags.help({char: 'h'}),
@@ -44,9 +44,9 @@ export default class ProvisionCmd extends AnsibleCmd {
 
   protected ownBranch = '2.x'
 
-  protected ansiblePythonInterpreter = '/home/ce-dev/ansible/bin/python'
+  protected ansiblePythonInterpreter = '/usr/bin/python'
 
-  protected ansibleBinaryPath = '/home/ce-dev/ansible/bin'
+  protected ansibleBinaryPath = '/usr/bin'
 
   protected verbose = false
 
