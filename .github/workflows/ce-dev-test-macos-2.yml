@@ -44,8 +44,8 @@ jobs:
           brew upgrade
           brew install p7zip nss wget
           cd /tmp
-          wget https://go.dev/dl/go1.22.1.darwin-arm64.tar.gz
-          sudo tar -C /usr/local -xzf go1.22.1.darwin-arm64.tar.gz
+          wget https://go.dev/dl/go1.22.1.darwin-amd64.tar.gz
+          sudo tar -C /usr/local -xzf go1.22.1.darwin-amd64.tar.gz
           export PATH=$PATH:/usr/local/go/bin
           git clone https://github.com/FiloSottile/mkcert && cd mkcert
           go build -ldflags "-X main.Version=$(git describe --tags)"
