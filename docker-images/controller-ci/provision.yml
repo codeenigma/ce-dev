@@ -13,7 +13,7 @@
     is_local: true
     _env_type: utility
     ce_provision:
-      venv_path: "/home/{{ _ce_provision.username }}/ansible"
+      venv_path: "/home/{{ _ce_provision_username }}/ansible"
       venv_command: /usr/bin/python3 -m venv
       own_repository: https://github.com/codeenigma/ce-provision.git
       own_repository_branch: 2.x
@@ -32,7 +32,7 @@
           repo: https://github.com/vlcty/ansible-systemd-timers.git
           branch: master
       galaxy_custom_requirements_file: ""
-      galaxy_roles_directory: "/home/{{ _ce_provision.username }}/.ansible/roles"
+      galaxy_roles_directory: "/home/{{ _ce_provision_username }}/.ansible/roles"
       upgrade_galaxy:
         enabled: false
     ce_ansible:
