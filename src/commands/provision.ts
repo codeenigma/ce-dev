@@ -58,6 +58,7 @@ export default class ProvisionCmd extends AnsibleCmd {
     cmd += ' --workspace ' + workspace
     cmd += ' --repo ' + repo
     cmd += ' --branch ce-dev --playbook ' + ansiblePath
+    cmd += ' --python-interpreter /home/ce-dev/ansible/bin/python'
     cmd += ' --ansible-extra-vars \'{"is_local":"true","_ce_dev_mkcert_base":"/home/ce-dev/.local/share/mkcert","ce_dev_host_platform":"' + this.config.platform + '"}\''
     return cmd
   }
