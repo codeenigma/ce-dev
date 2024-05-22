@@ -5,8 +5,7 @@
     _domain_name: example.com
     _ce_provision_build_tmp_dir: /tmp
     _ce_provision_data_dir: /tmp
-    _ce_provision:
-      username: ce-dev
+    _ce_provision_username: ce-dev
     is_local: true
     _env_type: utility
     ce_deploy:
