@@ -1,15 +1,59 @@
 #!/bin/sh
 set -e
 
-LATEST=$( curl --silent "https://api.github.com/repos/codeenigma/ce-dev/releases/latest" | grep tag_name | cut -d \" -f 4)
-PLATFORM="$1"
-RELEASE=https://github.com/codeenigma/ce-dev/releases/download/$LATEST/ce-dev-v$LATEST-$PLATFORM-x64.tar.gz
+usage(){
+  echo 'install.sh linux|darwin|windows [OPTIONS]'
+  echo 'Install the latest ce-dev version, or the version specified as option'
+  echo 'Mandatory arguments:'
+  echo '--platform: linux, darwin(MacOS) or windows'
+  echo 'Available options:'
+  echo '--version: ce-dev version to use.'
+}
+
+# Parse options arguments.
+parse_options(){
+  while [ "${1:-}" ]; do
+    case "$1" in
+      "--version")
+          shift
+          VERSION="$1"
+        ;;
+      "--platform")
+          shift
+          PLATFORM="$1"
+        ;;
+        *)
+        usage
+        exit 1
+        ;;
+    esac
+    shift
+  done
+}
+
+# Parse options.
+parse_options "$@"
+
+# Platform is mandatory.
+if [ -z "$PLATFORM" ]; then
+  echo "You have to specify the platform"
+  usage
+  exit 1
+fi
+
+# Version is optional.
+if [ -z "$VERSION" ]; then
+  VERSION=$( curl --silent "https://api.github.com/repos/codeenigma/ce-dev/releases/latest" | grep tag_name | cut -d \" -f 4)
+fi
+
+RELEASE=https://github.com/codeenigma/ce-dev/releases/download/$VERSION/ce-dev-v$VERSION-$PLATFORM-x64.tar.gz
 WORK_DIR=$(mktemp -d)
+
 # Check if we are updating instead of installing.
 if [ -n "$(which ce-dev)" ]; then
-  VERSION=$(ce-dev --version | cut -d / -f 2 | cut -d " " -f 1)
-  if [ "$VERSION" = "$LATEST" ]; then
-    echo "Already using latest version $VERSION"
+  CURRENT=$(ce-dev --version | cut -d / -f 2 | cut -d " " -f 1)
+  if [ "$CURRENT" = "$VERSION" ]; then
+    echo "Already using the version $VERSION"
     exit 0
   fi
 fi

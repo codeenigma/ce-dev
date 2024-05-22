@@ -12,6 +12,6 @@ export default class UpdateCmd extends BaseCmd {
 
   async run(): Promise<void> {
     this.pullControllerContainer()
-    execSync('curl -sL https://raw.githubusercontent.com/codeenigma/ce-dev/' + AppSettings.ceDevVersion + '.x/install.sh | /bin/sh -s -- ' + this.config.platform, {stdio: 'inherit'})
+    execSync('curl -sL https://raw.githubusercontent.com/codeenigma/ce-dev/' + AppSettings.ceDevVersion + '.x/install.sh | /bin/sh -s -- --platform ' + this.config.platform, {stdio: 'inherit'})
   }
 }
