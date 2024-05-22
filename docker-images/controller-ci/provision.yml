@@ -5,8 +5,11 @@
     _domain_name: ci.example.com
     _ce_provision_build_tmp_dir: /tmp
     _ce_provision_data_dir: /tmp
-    _ce_provision:
-      username: ce-dev
+    _ce_provision_username: ce-dev
+    _venv_path: "/home/{{ _ce_provision_username }}/ansible"
+    _venv_command: /usr/bin/python3 -m venv
+    _venv_install_username: "{{ _ce_provision_username }}"
+    _ce_ansible_timer_name: upgrade_ce_provision_ansible
     is_local: true
     _env_type: utility
     ce_provision:
