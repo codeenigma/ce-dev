@@ -43,7 +43,7 @@
       install_username: "{{ _ce_provision_username }}"
       upgrade_timer_name: upgrade_ce_provision_ansible
       new_user: true
-      key_name: id_rsa.pub
+      public_key_name: id_rsa.pub
       local_dir: /home/ce-dev/ce-provision
       groups: []
       contrib_roles:
