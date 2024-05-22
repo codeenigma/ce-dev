@@ -2,42 +2,42 @@
 # Template playbook for a local Drupal 10 codebase.
 - hosts: {{ project_name }}-web
   vars:
-    - project_name: {{ project_name }}
-    - project_type: drupal8
-    - webroot: web
-    - build_type: local
-    - _env_type: dev
+    project_name: {{ project_name }}
+    project_type: drupal8
+    webroot: web
+    build_type: local
+    _env_type: dev
 {% raw %}
-    - _domain_name: www.{{ project_name }}.local
+    _domain_name: www.{{ project_name }}.local
     # Path to your project root. This must match the "volume" set in the docker compose template.
-    - deploy_path: /home/ce-dev/deploy/live.local
+    deploy_path: /home/ce-dev/deploy/live.local
     # This actually does not take any backup, but is needed to populate settings.php.
-    - mysql_backup:
-        handling: none
-        credentials_handling: manual
+    mysql_backup:
+      handling: none
+      credentials_handling: manual
     # A list of Drupal sites (for multisites).
-    - drupal:
-        sites:
-          - folder: "default"
-            public_files: "sites/default/files"
-            install_command: "-y si"
-            # Toggle config import on/off. Disabled for initial passes.
-            config_import_command: ""
-            # config_import_command: "cim"
-            config_sync_directory: "config/sync"
-            sanitize_command: "sql-sanitize"
-            # Remove after initial pass, to avoid reinstalling Drupal.
-            force_install: true
-            base_url: "https://{{ _domain_name }}"
+    drupal:
+      sites:
+        - folder: "default"
+          public_files: "sites/default/files"
+          install_command: "-y si"
+          # Toggle config import on/off. Disabled for initial passes.
+          config_import_command: ""
+          # config_import_command: "cim"
+          config_sync_directory: "config/sync"
+          sanitize_command: "sql-sanitize"
+          # Remove after initial pass, to avoid reinstalling Drupal.
+          force_install: true
+          base_url: "https://{{ _domain_name }}"
     # Composer command to run.
-    - composer:
-        command: install
-        no_dev: false
-        working_dir: "{{ deploy_path }}"
-        apcu_autoloader: false
-    - drush:
-        use_vendor: true
-    - drush_bin: "{{ deploy_path }}/vendor/drush/drush/drush"
+    composer:
+      command: install
+      no_dev: false
+      working_dir: "{{ deploy_path }}"
+      apcu_autoloader: false
+    drush:
+      use_vendor: true
+    drush_bin: "{{ deploy_path }}/vendor/drush/drush/drush"
   pre_tasks:
     # You can safely remove these steps once you have a working composer.json.
     - name: Download composer file.
