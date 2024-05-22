@@ -39,7 +39,7 @@
       config_repository: https://github.com/codeenigma/ce-dev-ce-provision-config.git
       config_repository_branch: 1.x
       config_repository_skip_checkout: false
-      username: ce-dev
+      username: "{{ _ce_provision_username }}"
       install_username: "{{ _ce_provision_username }}"
       upgrade_timer_name: upgrade_ce_provision_ansible
       new_user: true
