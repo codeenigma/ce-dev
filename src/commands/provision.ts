@@ -24,7 +24,7 @@ export default class ProvisionCmd extends AnsibleCmd {
     }),
     ansiblepath: Flags.string({
       char: 'a',
-      default: '/usr/bin',
+      default: '/home/ce-dev/ansible/bin',
       description: 'The path to the Ansible binaries on the controller container.'
     }),
     help: Flags.help({char: 'h'}),
@@ -46,7 +46,7 @@ export default class ProvisionCmd extends AnsibleCmd {
 
   protected ansiblePythonInterpreter = '/usr/bin/python'
 
-  protected ansibleBinaryPath = '/usr/bin'
+  protected ansibleBinaryPath = '/home/ce-dev/ansible/bin'
 
   protected verbose = false
 
