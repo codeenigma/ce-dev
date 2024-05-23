@@ -17,6 +17,16 @@ export default class ProvisionCmd extends AnsibleCmd {
       default: '1.x',
       description: 'The branch of the ce-provision-config repository. See https://github.com/codeenigma/ce-dev-ce-provision-config for options.'
     }),
+    interpreter: Flags.string({
+      char: 'i',
+      default: '/usr/bin/python',
+      description: 'The path to the Python interpreter to use on the target container.'
+    }),
+    ansiblepath: Flags.string({
+      char: 'a',
+      default: '/home/ce-dev/ansible/bin',
+      description: 'The path to the Ansible binaries on the controller container.'
+    }),
     help: Flags.help({char: 'h'}),
     verbose: Flags.boolean({
       char: 'v',
@@ -33,6 +43,10 @@ export default class ProvisionCmd extends AnsibleCmd {
   protected configBranch = '1.x'
 
   protected ownBranch = '2.x'
+
+  protected ansiblePythonInterpreter = '/usr/bin/python'
+
+  protected ansibleBinaryPath = '/home/ce-dev/ansible/bin'
 
   protected verbose = false
 
@@ -58,6 +72,8 @@ export default class ProvisionCmd extends AnsibleCmd {
     cmd += ' --workspace ' + workspace
     cmd += ' --repo ' + repo
     cmd += ' --branch ce-dev --playbook ' + ansiblePath
+    //cmd += ' --python-interpreter ' + this.ansiblePythonInterpreter
+    //cmd += ' --ansible-path ' + this.ansibleBinaryPath
     cmd += ' --ansible-extra-vars \'{"is_local":"true","_ce_dev_mkcert_base":"/home/ce-dev/.local/share/mkcert","ce_dev_host_platform":"' + this.config.platform + '"}\''
     return cmd
   }
@@ -71,6 +87,8 @@ export default class ProvisionCmd extends AnsibleCmd {
     const {flags} = await this.parse(ProvisionCmd)
     this.ownBranch = flags.branch
     this.configBranch = flags.config
+    this.ansiblePythonInterpreter = flags.interpreter
+    this.ansibleBinaryPath = flags.ansiblepath
     if (flags.verbose) this.verbose = true
 
     this.ensureActiveComposeFile()

@@ -40,6 +40,7 @@ RUN \
   python3-dev \
   python3-pycurl \
   python3-pip \
+  python3-debian \
   rsyslog \
   sudo \
   systemd \
