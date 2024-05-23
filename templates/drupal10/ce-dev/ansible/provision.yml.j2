@@ -3,6 +3,11 @@
   vars:
     _domain_name: www.{{ project_name }}.local
     _env_type: dev
+    _ce_provision_username: "{% if is_local is defined and is_local %}ce-dev{% else %}controller{% endif %}"
+    _venv_path: "/home/{{ _ce_provision_username }}/ansible"
+    _venv_command: /usr/bin/python3 -m venv
+    _venv_install_username: "{{ _ce_provision_username }}"
+    _ce_ansible_timer_name: upgrade_ce_provision_ansible
     project_name: {{ project_name }}
     rkhunter:
       allow_ssh_root_user: prohibit-password
