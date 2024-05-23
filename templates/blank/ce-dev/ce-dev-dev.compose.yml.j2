@@ -1,0 +1,27 @@
+version: "3.7"
+x-ce_dev:
+  registry: localhost:5000
+  project_name: {{ project_name }}
+  provision:
+    - ce-dev/ansible/provision.yml
+  deploy:
+    - ce-dev/ansible/deploy.yml
+  urls: []
+  version: 2.x
+services:
+  {{ project_name }}:
+    image: codeenigma/ce-dev-2.x:devel
+    platform: linux/amd64
+    cgroup: host
+    cap_add:
+      - NET_ADMIN
+    x-ce_dev:
+      unison:
+      - src: ../
+        dest: /home/ce-dev/deploy/live.local
+        target_platforms:
+          - darwin
+          - linux
+        ignore:
+          - Name vendor
+          - Name node_modules
