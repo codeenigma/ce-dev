@@ -36,7 +36,7 @@ jobs:
           rm -Rf mkcert
       - name: Build and test
         run: |
-          /bin/sh docker-images/export.sh --version latest --image-name ce-dev --dockerfile-path base
-          /bin/sh docker-images/export.sh --version latest --image-name ce-dev-controller --dockerfile-path controller
+          /bin/sh docker-images/export.sh --version devel --image-name ce-dev --dockerfile-path base-devel
+          /bin/sh docker-images/export.sh --version devel --image-name ce-dev-controller --dockerfile-path controller-devel
           sudo chmod +x bin/run.js
-          /bin/sh templates/prebuild.sh
+          /bin/sh templates/prebuild.sh --template ce-dev-devel.compose.yml

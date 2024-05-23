@@ -1,7 +1,39 @@
 #!/bin/sh
 # Test project creation and pre-build image.
 set -e
+
+usage(){
+  echo 'prebuild.sh [OPTIONS]'
+  echo 'Test the different templates and push the images to docker if it is required'
+  echo 'Available options:'
+  echo '--template: ce-dev template to use. By default: ce-dev.compose.yml'
+  echo '--push: if we want to push the images to docker'
+}
+# Parse options arguments.
+parse_options(){
+  while [ "${1:-}" ]; do
+    case "$1" in
+      "--template")
+          shift
+          TEMPLATE="$1"
+        ;;
+      "--push")
+          PUSH="yes"
+        ;;
+        *)
+        usage
+        exit 1
+        ;;
+    esac
+    shift
+  done
+}
+
+# Default variables.
 PROJECTS="blank drupal10"
+PUSH="no"
+TEMPLATE="ce-dev.compose.yml"
+CE_DEV_BIN="$OWN_DIR/bin/run.js"
 
 # Common processing.
 OWN_DIR=$(dirname "$0")
@@ -11,8 +43,8 @@ cd "$OWN_DIR" || exit 1
 OWN_DIR=$(pwd -P)
 WORK_DIR=$(mktemp -d)
 
-# ce-dev "binary"
-CE_DEV_BIN="$OWN_DIR/bin/run.js"
+# Parse options.
+parse_options "$@"
 
 # Create a project.
 # @param $1
@@ -20,8 +52,7 @@ CE_DEV_BIN="$OWN_DIR/bin/run.js"
 create_project(){
   $CE_DEV_BIN create --destination="$WORK_DIR/$1" --project="$1" --template="$1"
   cd "$WORK_DIR/$1"
-  rm ce-dev/ce-dev.compose.prebuilt.yml
-  $CE_DEV_BIN init
+  $CE_DEV_BIN init  --template="$TEMPLATE"
   $CE_DEV_BIN start
   $CE_DEV_BIN provision
   $CE_DEV_BIN deploy
@@ -55,7 +86,7 @@ for PROJECT in $PROJECTS; do
  create_project "$PROJECT"
  test_project "$PROJECT"
  build_project "$PROJECT"
- if [ -n "$1" ] && [ "$1" = "--push" ]; then
+ if [ $PUSH = "yes" ]; then
   push_project "$PROJECT"
  fi
 done
