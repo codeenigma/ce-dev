@@ -1,11 +1,15 @@
----
-
 - hosts: {{ project_name }}-{{ project_name }}
   become: true
   vars:
-    project_name: {{ project_name }}
     _domain_name: www.{{ project_name }}.local
     _env_type: dev
+    _ce_provision_username: ce-dev
+    _venv_path: "/home/ce-dev/ansible"
+    _venv_command: /usr/bin/python3 -m venv
+    _venv_install_username: ce-dev
+    _ce_ansible_timer_name: upgrade_ce_provision_ansible
+    project_name: {{ project_name }}
+    is_local: true
     rkhunter:
       allow_ssh_root_user: prohibit-password
     nodejs:
