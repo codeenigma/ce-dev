@@ -33,7 +33,6 @@ parse_options(){
 PROJECTS="blank drupal10"
 PUSH="no"
 TEMPLATE="ce-dev.compose.yml"
-CE_DEV_BIN="$OWN_DIR/bin/run.js"
 
 # Common processing.
 OWN_DIR=$(dirname "$0")
@@ -45,6 +44,8 @@ WORK_DIR=$(mktemp -d)
 
 # Parse options.
 parse_options "$@"
+
+CE_DEV_BIN="$OWN_DIR/bin/run.js"
 
 # Create a project.
 # @param $1
