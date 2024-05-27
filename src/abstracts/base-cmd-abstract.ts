@@ -254,28 +254,21 @@ export default abstract class BaseCmd extends Command {
    * @returns Array.
    */
   protected getProjectRunningContainersCeDev(): Array<string> {
-    const running: Array<string> = this.getProjectRunningContainers()
-    const ceDev: Array<string> = []
+    const running = this.getProjectRunningContainers();
+    const ceDev = [];
+    const regex = /^codeenigma\/.*/gm;
     for (const containerName of running) {
-      const image = execSync(
-        this.dockerBin +
+      const image = execSync(this.dockerBin +
         ' inspect ' +
         containerName +
-        ' --format={{.Config.Image}}',
-      )
+        ' --format={{.Config.Image}}')
         .toString()
-        .trim()
-      const labels = execSync(
-        this.dockerBin + ' inspect ' + image + ' --format={{.Config.Labels}}',
-      )
-        .toString()
-        .trim()
-      if (labels.includes('ce-dev-' + AppSettings.ceDevVersion + '.x:')) {
-        ceDev.push(containerName)
+        .trim();
+      if (regex.test(image)) {
+        ceDev.push(containerName);
       }
     }
-
-    return ceDev
+    return ceDev;
   }
 
   /**
