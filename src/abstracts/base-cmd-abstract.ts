@@ -95,7 +95,7 @@ export default abstract class BaseCmd extends Command {
    * Path to the user config file.
    */
   protected userConfigFilePath = fspath.resolve(
-    this.config.configDir + '/preferences-2.x.yml',
+    this.config.configDir + '/preferences.yml',
   )
 
   /**
@@ -103,6 +103,12 @@ export default abstract class BaseCmd extends Command {
    * Docker compose content.
    */
   private readonly controllerManager: CeDevControllerManager
+
+  /**
+   * @member
+   * Development mode or not.
+   */
+  protected developmentMode: boolean = false
 
   /**
    * @inheritdoc
@@ -138,6 +144,10 @@ export default abstract class BaseCmd extends Command {
 
     if (fs.existsSync(this.userConfigFilePath)) {
       this.UserConfig = this.parseYaml(this.userConfigFilePath) as UserConfig
+    }
+
+    if ((typeof process.env.NODE_ENV !== 'undefined') && (process.env.NODE_ENV === 'development')) {
+      this.developmentMode = true;
     }
 
     this.dockerBin = this.UserConfig.docker_bin
@@ -321,7 +331,7 @@ export default abstract class BaseCmd extends Command {
   }
 
   /**
-   * Pull controller latest image.
+   * Pull controller latest|devel image.
    *
    * @return void
    */

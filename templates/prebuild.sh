@@ -8,6 +8,7 @@ usage(){
   echo 'Available options:'
   echo '--template: ce-dev template to use. By default: ce-dev.compose.yml'
   echo '--push: if we want to push the images to docker'
+  echo '--devel: if we want to run the templates in devel mode'
 }
 # Parse options arguments.
 parse_options(){
@@ -19,6 +20,9 @@ parse_options(){
         ;;
       "--push")
           PUSH="yes"
+        ;;
+      "--devel")
+          DEVEL="yes"
         ;;
         *)
         usage
@@ -33,6 +37,7 @@ parse_options(){
 PROJECTS="blank drupal10"
 PUSH="no"
 TEMPLATE="ce-dev.compose.yml"
+DEVEL="no"
 
 # Common processing.
 OWN_DIR=$(dirname "$0")
@@ -46,6 +51,13 @@ WORK_DIR=$(mktemp -d)
 parse_options "$@"
 
 CE_DEV_BIN="$OWN_DIR/bin/run.js"
+
+if [ $DEVEL = "yes" ]; then
+  CE_DEV_BIN="$OWN_DIR/bin/dev.js"
+fi
+
+echo $CE_DEV_BIN
+exit 1
 
 # Create a project.
 # @param $1

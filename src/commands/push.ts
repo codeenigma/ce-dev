@@ -47,10 +47,14 @@ export default class PushCmd extends DockerImagesCmd {
    * @return void
    */
   private push(): void {
+    let version = 'latest'
+    if (this.developmentMode) {
+      version = 'devel'
+    }
     for (const name of Object.keys(this.composeConfig.services)) {
       const containerName = this.composeConfig['x-ce_dev'].project_name + '-' + name
       ux.action.start('Pushing image ' + containerName)
-      execSync(this.dockerBin + ' push ' + this.dockerRegistry + '/' + containerName + ':latest', {stdio: 'inherit'})
+      execSync(this.dockerBin + ' push ' + this.dockerRegistry + '/' + containerName + ':' + version, {stdio: 'inherit'})
       ux.action.stop()
     }
   }
