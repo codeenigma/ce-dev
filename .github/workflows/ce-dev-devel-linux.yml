@@ -1,11 +1,14 @@
-name: '2.x: Test dev image builds on PR'
+name: '2.x: Linux - Build ce_dev binaries, images and templates (test)'
 
 on:
-  schedule:
-    - cron: '30 3 * * *'
-  pull_request:
+  push:
     branches:
-      - '2.x-devel'
+      - 2.x-devel
+  pull_request:
+    types:
+      - opened
+    branches:
+      - 2.x-devel
 
 jobs:
   build:
@@ -19,7 +22,7 @@ jobs:
       # Uses https://oclif.io/
       # Not strictly necessary here, but ensures the packing works
       - name: Pack the JS
-        run: yarn oclif pack tarballs --targets=linux-arm,linux-x64,darwin-x64 --no-xz
+        run: yarn oclif pack tarballs --targets=linux-x64,linux-arm,linux-arm64 --no-xz
       - name: Rename the dist/* files
         run: yarn renamedist
       # We build mkcert from source because releases are broken
@@ -38,7 +41,7 @@ jobs:
           rm -Rf mkcert
       - name: Build and test
         run: |
-          /bin/sh docker-images/export.sh --version latest --image-name ce-dev --dockerfile-path base
-          /bin/sh docker-images/export.sh --version latest --image-name ce-dev-controller --dockerfile-path controller
+          /bin/sh docker-images/export.sh --version devel --image-name ce-dev --dockerfile-path base-devel
+          /bin/sh docker-images/export.sh --version devel --image-name ce-dev-controller --dockerfile-path controller-devel
           sudo chmod +x bin/run.js
-          /bin/sh templates/prebuild.sh
+          /bin/sh templates/prebuild.sh --template ce-dev-devel.compose.yml --devel
