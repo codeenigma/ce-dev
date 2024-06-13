@@ -74,8 +74,6 @@ export default class CreateCmd extends BaseCmd {
     if (!template) {
       const response = await inquirer.prompt([{
         choices: [
-          'drupal8',
-          'drupal9',
           'drupal10',
           'localgov',
           'blank',

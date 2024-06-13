@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: 20
       - name: Install modules
-        run: yarn
+        run: yarn install --production=false
       # Uses https://oclif.io/
       # Not strictly necessary here, but ensures the packing works
       - name: Pack the JS
