@@ -31,6 +31,7 @@
       public_key_name: id_rsa.pub
       ssh_key_bits: "4096"
       ssh_key_type: rsa
+      aws_support: true
       upgrade_galaxy:
         enabled: false
     ce_provision:
@@ -49,6 +50,7 @@
       public_key_name: id_rsa.pub
       ssh_key_bits: "4096"
       ssh_key_type: rsa
+      aws_support: true
       local_dir: /home/ce-dev/ce-provision
       groups: []
       contrib_roles:
