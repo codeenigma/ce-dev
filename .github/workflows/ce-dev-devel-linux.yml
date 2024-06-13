@@ -22,8 +22,8 @@ jobs:
           node-version: 20
       - name: Install modules
         run: yarn install --production=false
-      # Uses https://oclif.io/
-      # Not strictly necessary here, but ensures the packing works
+      - name: List modules installed
+        run: yarn list --depth=0
       - name: Pack the JS
         run: yarn oclif pack tarballs --targets=linux-x64,linux-arm,linux-arm64 --no-xz
       - name: Rename the dist/* files
