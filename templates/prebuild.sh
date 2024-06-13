@@ -56,9 +56,6 @@ if [ $DEVEL = "yes" ]; then
   CE_DEV_BIN="$OWN_DIR/bin/dev.js"
 fi
 
-echo $CE_DEV_BIN
-exit 1
-
 # Create a project.
 # @param $1
 # Project name.
