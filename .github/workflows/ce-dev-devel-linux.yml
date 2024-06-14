@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: 20
       - name: Install modules
-        run: yarn install --production=false
+        run: yarn global install --production=false
       - name: List modules installed
         run: yarn list --depth=0
       - name: Pack the JS
