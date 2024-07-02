@@ -65,6 +65,8 @@
     - apt:
         update_cache: true
     - import_role:
+        name: _init
+    - import_role:
         name: _meta/common_base
     - import_role:
         name: debian/mysql_client
@@ -74,3 +76,5 @@
         name: debian/php-fpm
     - import_role:
         name: debian/nginx
+    - import_role:
+        name: _exit
