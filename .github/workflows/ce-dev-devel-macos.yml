@@ -1,7 +1,14 @@
-name: '2.x: MacOS - Build ce_dev binaries, images and templates (test)'
+name: '2.x: MacOS - Build ce_dev binaries, images and templates (devel)'
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - 2.x-devel
+  pull_request:
+    types:
+      - opened
+    branches:
+      - 2.x-devel
 
 jobs:
   build:
