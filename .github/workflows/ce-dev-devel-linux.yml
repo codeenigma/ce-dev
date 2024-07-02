@@ -18,7 +18,7 @@ jobs:
         with:
           ref: '2.x-devel'
       - name: Install modules
-        run: yarn install --production=false
+        run: yarn install --production=false --global
       - name: Pack the JS
         run: yarn oclif pack tarballs --targets=linux-x64,linux-arm,linux-arm64 --no-xz
       - name: Rename the dist/* files
