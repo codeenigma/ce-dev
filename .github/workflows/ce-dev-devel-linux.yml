@@ -17,13 +17,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: '2.x-devel'
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
       - name: Install modules
         run: yarn install --production=false --global
-      - name: List modules installed
-        run: yarn list --depth=0
       - name: Pack the JS
         run: yarn oclif pack tarballs --targets=linux-x64,linux-arm,linux-arm64 --no-xz
       - name: Rename the dist/* files
@@ -46,8 +41,6 @@ jobs:
         run: |
           /bin/sh docker-images/export.sh --version devel --image-name ce-dev --dockerfile-path base-devel
           /bin/sh docker-images/export.sh --version devel --image-name ce-dev-controller --dockerfile-path controller-devel
-          sudo chmod +x bin/dev.js
-          /bin/sh templates/prebuild.sh --template ce-dev-devel.compose.yml --devel
       - name: Testing templates
         run: |
           sudo chmod +x bin/dev.js

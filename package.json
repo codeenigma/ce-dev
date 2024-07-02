@@ -35,6 +35,7 @@
     "renamer": "^5",
     "shx": "^0.3.4",
     "ts-node": "^10.9.1",
+    "tsx": "^4.16.0",
     "typescript": "^5.2.2"
   },
   "engines": {
