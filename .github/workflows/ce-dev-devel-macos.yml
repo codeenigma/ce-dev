@@ -62,4 +62,4 @@ jobs:
           /bin/sh docker-images/export.sh --version devel --image-name ce-dev --dockerfile-path base-devel
           /bin/sh docker-images/export.sh --version devel --image-name ce-dev-controller --dockerfile-path controller-devel
           sudo chmod +x bin/run.js
-          /bin/sh templates/prebuild.sh --template ce-dev-devel.compose.yml --version devel
+          /bin/sh templates/prebuild.sh --template ce-dev-devel.compose.yml --devel
