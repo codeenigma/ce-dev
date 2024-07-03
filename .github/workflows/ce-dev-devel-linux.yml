@@ -37,7 +37,7 @@ jobs:
           sudo mv ./mkcert /usr/local/bin && cd ../
           sudo chmod +x /usr/local/bin/mkcert
           rm -Rf mkcert
-      - name: Build and test
+      - name: Build ce-dev and ce-dev-controller
         run: |
           /bin/sh docker-images/export.sh --version devel --image-name ce-dev --dockerfile-path base-devel
           /bin/sh docker-images/export.sh --version devel --image-name ce-dev-controller --dockerfile-path controller-devel

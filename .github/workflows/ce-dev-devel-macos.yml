@@ -20,7 +20,6 @@ jobs:
       - name: Upgrade brew
         run: |
           rm -rf /usr/local/bin/2to3*
-          brew upgrade
           brew update
           brew upgrade
       - name: Install homebrew dependencies
@@ -45,9 +44,7 @@ jobs:
       # We build mkcert from source because releases are broken
       - name: Install test dependencies
         run: |
-          brew update
-          brew upgrade
-          brew install p7zip nss wget
+          brew install nss
           cd /tmp
           wget https://go.dev/dl/go1.22.1.darwin-amd64.tar.gz
           sudo tar -C /usr/local -xzf go1.22.1.darwin-amd64.tar.gz
@@ -57,9 +54,11 @@ jobs:
           sudo mv ./mkcert /usr/local/bin && cd ../
           sudo chmod +x /usr/local/bin/mkcert
           rm -Rf mkcert
-      - name: Build and test
+      - name: Build ce-dev and ce-dev-controller
         run: |
           /bin/sh docker-images/export.sh --version devel --image-name ce-dev --dockerfile-path base-devel
           /bin/sh docker-images/export.sh --version devel --image-name ce-dev-controller --dockerfile-path controller-devel
-          sudo chmod +x bin/run.js
+      - name: Testing templates
+        run: |
+          sudo chmod +x bin/dev.js
           /bin/sh templates/prebuild.sh --template ce-dev-devel.compose.yml --devel
