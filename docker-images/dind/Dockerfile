@@ -1,4 +1,4 @@
-FROM codeenigma/ce-dev-1.x
+FROM codeenigma/ce-dev-1.x:latest
 
 RUN \
   set -x && \
@@ -9,7 +9,7 @@ RUN \
 RUN \
   set -x && \
   export DEBIAN_FRONTEND=noninteractive && \  
-  echo 'deb [arch=amd64] https://download.docker.com/linux/debian buster stable' > /etc/apt/sources.list.d/docker.list && \
+  echo 'deb [arch=amd64] https://download.docker.com/linux/debian bookworm stable' > /etc/apt/sources.list.d/docker.list && \
   curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
   apt-get update && \
   apt-get dist-upgrade -y -o Dpkg::Options::="--force-confnew" && \
