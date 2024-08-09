@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-drupal9:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
@@ -39,7 +39,7 @@ jobs:
           /bin/sh templates/prebuild.sh --projects "blank drupal9"
 
   build-drupal10:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
