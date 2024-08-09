@@ -6,7 +6,7 @@ on:
     - cron: '30 3 * * *'
 
 jobs:
-  build-drupal9:
+  test-drupal9:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -38,7 +38,7 @@ jobs:
           /bin/sh docker-images/export.sh --version latest --image-name ce-dev-controller --dockerfile-path controller
           /bin/sh templates/prebuild.sh --projects "blank drupal9"
 
-  build-drupal10:
+  test-drupal10:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

@@ -9,7 +9,7 @@ on:
 jobs:
   # Set the job key. The key is displayed as the job name
   # when a job name is not provided
-  run-tests:
+  build-docs:
     # Name the Job
     name: Publish documentation
     # Set the type of machine to run on
