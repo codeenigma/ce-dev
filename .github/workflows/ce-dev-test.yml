@@ -6,8 +6,8 @@ on:
     - cron: '30 3 * * *'
 
 jobs:
-  build:
-    runs-on: ubuntu-20.04
+  build-drupal9:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
@@ -36,4 +36,36 @@ jobs:
         run: |
           /bin/sh docker-images/export.sh --version latest --image-name ce-dev --dockerfile-path base
           /bin/sh docker-images/export.sh --version latest --image-name ce-dev-controller --dockerfile-path controller
-          /bin/sh templates/prebuild.sh
+          /bin/sh templates/prebuild.sh --projects "blank drupal9"
+
+  build-drupal10:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: '1.x'
+      - name: Install modules
+        run: yarn
+      # Uses https://oclif.io/
+      # Not strictly necessary here, but ensures the packing works
+      - name: Pack the JS
+        run: yarn oclif-dev pack
+      # We build mkcert from source because releases are broken
+      - name: Install test dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y p7zip-full libnss3-tools wget
+          cd /tmp
+          wget https://golang.org/dl/go1.16.3.linux-amd64.tar.gz
+          sudo tar -C /usr/local -xzf go1.16.3.linux-amd64.tar.gz
+          export PATH=$PATH:/usr/local/go/bin
+          git clone https://github.com/FiloSottile/mkcert && cd mkcert
+          go build -ldflags "-X main.Version=$(git describe --tags)"
+          sudo mv ./mkcert /usr/local/bin && cd ../
+          sudo chmod +x /usr/local/bin/mkcert
+          rm -Rf mkcert
+      - name: Build and test
+        run: |
+          /bin/sh docker-images/export.sh --version latest --image-name ce-dev --dockerfile-path base
+          /bin/sh docker-images/export.sh --version latest --image-name ce-dev-controller --dockerfile-path controller
+          /bin/sh templates/prebuild.sh --projects drupal10
