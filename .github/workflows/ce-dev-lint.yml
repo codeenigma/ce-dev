@@ -6,7 +6,7 @@ on: pull_request
 jobs:
   # See https://github.com/marketplace/actions/run-eslint
   # ESLint now built in to GitHub Actions
-  build:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
