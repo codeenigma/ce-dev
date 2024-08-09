@@ -1,7 +1,43 @@
 #!/bin/sh
 # Test project creation and pre-build image.
 set -e
+
+usage(){
+  echo 'prebuild.sh [OPTIONS]'
+  echo 'Test project creation and pre-build Docker images.'
+  echo ''
+  echo 'Available options:'
+  echo '--projects: space separated string of project types to build, defaults to all'
+  echo '--push: push images to the Docker registry'
+  echo ''
+}
+
+# Parse options arguments.
+parse_options(){
+  while [ "${1:-}" ]; do
+    case "$1" in
+      "--projects")
+          shift
+          PROJECTS="$1"
+        ;;
+        "--push")
+          PUSH="true"
+        ;;
+        *)
+        usage
+        exit 1
+        ;;
+    esac
+    shift
+  done
+}
+
+# Set default variables.
 PROJECTS="blank drupal8 drupal9 drupal10"
+PUSH="false"
+
+# Parse options.
+parse_options "$@"
 
 # Common processing.
 OWN_DIR=$(dirname "$0")
@@ -55,7 +91,7 @@ for PROJECT in $PROJECTS; do
  create_project "$PROJECT"
  test_project "$PROJECT"
  build_project "$PROJECT"
- if [ -n "$1" ] && [ "$1" = "--push" ]; then
+ if [ "$PUSH" = "true" ]; then
   push_project "$PROJECT"
  fi
 done
