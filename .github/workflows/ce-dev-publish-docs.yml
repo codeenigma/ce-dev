@@ -13,7 +13,7 @@ jobs:
     # Name the Job
     name: Publish documentation
     # Set the type of machine to run on
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
       # Configures global Git variables for committing
