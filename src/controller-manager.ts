@@ -248,20 +248,20 @@ export default class ControllerManager {
    */
   public pullImage(): void {
     // If in development mode, we use devel version.
-    let version = 'latest'
+    let version = AppSettings.ceDevVersion + '.x';
     if (this.developmentMode) {
-      version = 'devel'
+      version = '-devel';
     }
-    execSync(this.dockerBin + ' pull codeenigma/ce-dev-controller-' + AppSettings.ceDevVersion + '.x:' + version, {
+    execSync(this.dockerBin + ' pull codeenigma/ce-dev-controller:' + version, {
       stdio: 'inherit',
     })
   }
 
   private getControllerConfig(): DockerComposeConfigBare {
     const ipManager = new IPManager(this.config, this.dockerBin)
-    let version = 'latest'
+    let version = AppSettings.ceDevVersion + '.x'
     if (this.developmentMode) {
-      version = 'devel'
+      version = '-devel'
     }
     return {
       networks: {
@@ -275,7 +275,7 @@ export default class ControllerManager {
           cgroup: 'host',
           container_name: 'ce_dev_controller',
           hostname: 'ce_dev_controller',
-          image: 'codeenigma/ce-dev-controller-'+ AppSettings.ceDevVersion + '.x:' + version,
+          image: 'codeenigma/ce-dev-controller:' + version,
           networks: {
             ce_dev: {
               ipv4_address: ipManager.getControllerIP(),

@@ -8,13 +8,13 @@ Builds base and controller images using the contents of the `devel` branch on pu
 To test a `devel` container on a project, firstly fetch the container image:
 
 ```
-docker pull codeenigma/ce-dev-controller-2.x:devel
+docker pull codeenigma/ce-dev-controller:2.x
 ```
 
 Then edit your project's `ce-dev.compose.yml` file, changing the image for each applicable service to use the `devel` tag instead of the `latest` tag, for example:
 
 ```yaml
-    image: codeenigma/ce-dev-2.x:devel
+    image: codeenigma/ce-dev:2.x
 ```
 
 Finally, destroy and recreate your `docker compose` file and containers:
@@ -31,9 +31,9 @@ ce-dev deploy
 To test the `devel` version of the `ce-dev-controller` image locally you can do the following:
 
 ```bash
-docker pull codeenigma/ce-dev-controller-2.x:devel
+docker pull codeenigma/ce-dev-controller:2.x-devel
 # Replace the 'latest' tag with your 'devel' image
-docker tag codeenigma/ce-dev-controller-2.x:devel codeenigma/ce-dev-controller-2.x:latest
+docker tag codeenigma/ce-dev-controller:2.x-devel codeenigma/ce-dev-controller:2.x
 docker kill ce_dev_controller
 # Then in any ce-dev project
 ce-dev start
