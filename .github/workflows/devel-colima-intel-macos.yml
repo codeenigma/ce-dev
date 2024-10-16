@@ -33,7 +33,7 @@ jobs:
         run: |
           brew install colima
           colima version
-          colima start --cpu 2 --memory 4 --disk 10 --vm-type=qemu --mount-type=sshfs --dns=1.1.1.1
+          colima start --cpu 2 --memory 4 --disk 10
           colima restart
       - name: Install modules
         run: yarn
