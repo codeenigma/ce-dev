@@ -17,11 +17,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: '2.x-devel'
-      - name: Upgrade brew
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+      - name: Fix Python conflicts between macOS runner and Homebrew
         run: |
-          rm -rf /usr/local/bin/2to3*
-          brew update
-          brew upgrade
+          # see https://github.com/actions/setup-python/issues/577
+          brew list -1 | grep python | while read formula; do brew unlink $formula; brew link --overwrite $formula; done
       - name: Install homebrew dependencies
         run: |
           set -x
