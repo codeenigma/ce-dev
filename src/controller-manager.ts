@@ -250,7 +250,7 @@ export default class ControllerManager {
     // If in development mode, we use devel version.
     let version = AppSettings.ceDevVersion + '.x';
     if (this.developmentMode) {
-      version = '-devel';
+      version += '-devel';
     }
     execSync(this.dockerBin + ' pull codeenigma/ce-dev-controller:' + version, {
       stdio: 'inherit',
@@ -261,7 +261,7 @@ export default class ControllerManager {
     const ipManager = new IPManager(this.config, this.dockerBin)
     let version = AppSettings.ceDevVersion + '.x'
     if (this.developmentMode) {
-      version = '-devel'
+      version += '-devel'
     }
     return {
       networks: {
