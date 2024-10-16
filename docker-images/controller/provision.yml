@@ -34,6 +34,7 @@
       aws_support: true
       upgrade_galaxy:
         enabled: false
+        on_calendar: "Mon *-*-* 04:00:00"
     ce_provision:
       venv_path: "/home/{{ _ce_provision_username }}/ansible"
       venv_command: /usr/bin/python3 -m venv
@@ -64,6 +65,7 @@
       galaxy_roles_directory: "/home/{{ _ce_provision_username }}/.ansible/roles"
       upgrade_galaxy:
         enabled: false
+        on_calendar: "Mon *-*-* 04:00:00"
     ce_ansible:
       upgrade:
         enabled: false

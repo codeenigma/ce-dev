@@ -1,4 +1,4 @@
-FROM debian:bookworm-slim as unison
+FROM debian:bookworm-slim AS unison
 RUN \
   set -x && \
   export DEBIAN_FRONTEND=noninteractive && \
@@ -96,7 +96,7 @@ RUN \
   dev-hugepages.mount \
   sys-fs-fuse-connections.mount
 
-ENV container docker
+ENV container=docker
 STOPSIGNAL SIGRTMIN+3
 VOLUME [ "/sys/fs/cgroup", "/run", "/run/lock", "/tmp" ]
 
