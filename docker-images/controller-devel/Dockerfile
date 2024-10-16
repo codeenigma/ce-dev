@@ -1,4 +1,4 @@
-FROM codeenigma/ce-dev-2.x:devel
+FROM codeenigma/ce-dev:2.x-devel
 
 RUN \
   set -x && \
