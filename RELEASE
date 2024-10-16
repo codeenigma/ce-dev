@@ -1,2 +1,12 @@
 2.0
-Upgrade ce-dev to typescript 5
+
+## Changes since 1.24
+
+* Docker images using Bookworm-slim
+* Use of latest Typescript version (5.3.x)
+* Binaries built with Emacs instead of Commonjs: Emacs can consume Commonjs modules,
+  but Commonjs can't consume Emacs modules. It means we can use more contrib modules
+* src folder has been organised a bit better.
+* Removed drupal 8 and drupal 9 templates.
+* The way to assign IPs have changed.
+* All the packages used are up to date.

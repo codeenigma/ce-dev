@@ -8,15 +8,14 @@ usage(){
   echo 'Export a base Code Enigma image, optionally pushing it to your Docker repository.'
   echo ''
   echo 'Mandatory arguments:'
-  echo '--version: Version tag to apply to the Docker image, e.g. "latest".'
+  echo '--version: Version tag to apply to the Docker image, e.g. "2.x, 2.x-devel, latest".'
   echo '--image-name: Name of the resulting Docker image, e.g. "ce-dev".'
   echo ''
   echo 'Available options:'
   echo '--push: Push the built image to the Docker repository.'
-  echo '--base-image: Name of the base image to use, IMPORTANT: must match your Dockerfile - defaults to "debian:bullseye-slim".'
+  echo '--base-image: Name of the base image to use, IMPORTANT: must match your Dockerfile - defaults to "debian:bookworm-slim".'
   echo '--dockerfile-path: Pass the path within docker-images to your Dockerfile and other build assets - defaults to "base".'
   echo '--docker-repo: Pass the Docker repository name - defaults to "codeenigma".'
-  echo '--ce-dev-version: The version to append to the image name - defaults to "2.x".'
 }
 
 # Parse options arguments.
@@ -43,10 +42,6 @@ parse_options(){
           shift
           BASE_IMAGE="$1"
         ;;
-      "--ce-dev-version")
-          shift
-          CE_DEV_VERSION="$1"
-        ;;
       "--push")
           PUSH="yes"
         ;;
@@ -64,7 +59,6 @@ DOCKERFILE_PATH="base"
 PUSH="no"
 BASE_IMAGE="debian:bookworm-slim"
 DOCKER_REPO="codeenigma"
-CE_DEV_VERSION="2.x"
 VERSION=""
 IMAGE_NAME=""
 
@@ -89,8 +83,8 @@ docker image pull "$BASE_IMAGE"
 
 # Build image.
 echo "Building $DOCKERFILE_PATH image."
-docker image build --compress "--label=$IMAGE_NAME-$CE_DEV_VERSION:$VERSION" --no-cache=true -t "$DOCKER_REPO/$IMAGE_NAME-$CE_DEV_VERSION:$VERSION" "$OWN_DIR/$DOCKERFILE_PATH" || exit 1
+docker image build --compress "--label=$IMAGE_NAME:$VERSION" --no-cache=true -t "$DOCKER_REPO/$IMAGE_NAME:$VERSION" "$OWN_DIR/$DOCKERFILE_PATH" || exit 1
 if [ $PUSH = "yes" ]; then
-  echo "Publishing the image with docker image push $DOCKER_REPO/$IMAGE_NAME-$CE_DEV_VERSION:$VERSION"
-  docker image push "$DOCKER_REPO/$IMAGE_NAME-$CE_DEV_VERSION:$VERSION"
+  echo "Publishing the image with docker image push $DOCKER_REPO/$IMAGE_NAME:$VERSION"
+  docker image push "$DOCKER_REPO/$IMAGE_NAME:$VERSION"
 fi

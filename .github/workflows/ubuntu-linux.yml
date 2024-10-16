@@ -1,14 +1,11 @@
-name: '2.x: Linux - Build ce_dev binaries, images and templates (test)'
+name: '2.x: Linux - Build ce_dev binaries, images and templates'
 
 on:
-  push:
-    branches:
-      - 2.x-devel
   pull_request:
     types:
       - opened
     branches:
-      - 2.x-devel
+      - 2.x
 
 jobs:
   build:
@@ -16,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: '2.x-devel'
+          ref: '2.x'
       - name: Install modules
         run: yarn install --production=false --global
       - name: Pack the JS
@@ -37,16 +34,24 @@ jobs:
           sudo mv ./mkcert /usr/local/bin && cd ../
           sudo chmod +x /usr/local/bin/mkcert
           rm -Rf mkcert
-          mkdir -p ~/.config/ce-dev
           touch ~/.config/ce-dev/preferences-2.x.yml
           echo 'docker_bin: docker' > ~/.config/ce-dev/preferences-2.x.yml
           echo 'docker_compose_bin: docker compose' >> ~/.config/ce-dev/preferences-2.x.yml
           echo 'mkcert_bin: mkcert' >> ~/.config/ce-dev/preferences-2.x.yml
-      - name: Build ce-dev and ce-dev-controller
+      - name: Build and push Docker images
         run: |
-          /bin/sh docker-images/export.sh --version 2.x-devel --image-name ce-dev --dockerfile-path base-devel
-          /bin/sh docker-images/export.sh --version 2.x-devel --image-name ce-dev-controller --dockerfile-path controller-devel
-      - name: Testing templates
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+          /bin/sh docker-images/export.sh --version 2.x --image-name ce-dev --dockerfile-path base --push
+          /bin/sh docker-images/export.sh --version 2.x --image-name ce-dev-controller --dockerfile-path controller --push
+      - name: Test templates and push Drupal images to Docker
         run: |
-          sudo chmod +x bin/dev.js
-          /bin/sh templates/prebuild.sh --template ce-dev-devel.compose.yml --devel
+          sudo chmod +x bin/run.js
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+          /bin/sh templates/prebuild.sh --template ce-dev.compose.yml --push
+      - name: Publish new ce-dev binaries
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/**/**
+          body_path: RELEASE
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
