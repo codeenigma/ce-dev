@@ -2,6 +2,7 @@ import { ux } from '@oclif/core'
 import {execSync} from 'node:child_process'
 
 import DockerImagesCmd from '../abstracts/base-cmd-abstract-docker-images.js'
+import {AppSettings} from "../app-settings.js";
 
 export default class PushCmd extends DockerImagesCmd {
   static description = 'Push images referenced in a compose file to a remote repository.'
@@ -47,9 +48,9 @@ export default class PushCmd extends DockerImagesCmd {
    * @return void
    */
   private push(): void {
-    let version = 'latest'
+    let version = AppSettings.ceDevVersion + '.x'
     if (this.developmentMode) {
-      version = 'devel'
+      version += '-devel'
     }
     for (const name of Object.keys(this.composeConfig.services)) {
       const containerName = this.composeConfig['x-ce_dev'].project_name + '-' + name

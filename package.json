@@ -27,7 +27,7 @@
     "@types/inquirer": "^9.0.7",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.9.1",
-    "eslint": "^9",
+    "eslint": "^8",
     "eslint-config-oclif": "^5.0.0",
     "eslint-config-oclif-typescript": "^3.0.15",
     "eslint-config-prettier": "^9.0.0",
@@ -67,8 +67,7 @@
     "lint": "eslint . --ext .ts",
     "postpack": "shx rm -f oclif.manifest.json",
     "posttest": "yarn lint",
-    "prepack": "yarn build && oclif manifest && oclif readme",
-    "prepare": "yarn build",
+    "prepack": "oclif manifest && oclif readme",
     "version": "oclif readme && git add README.md",
     "renamedist": "renamer --chain renamedist.js dist/*"
   },

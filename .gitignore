@@ -6,3 +6,5 @@ lib
 tmp
 node_modules
 oclif.manifest.json
+tsconfig.tsbuildinfo
+.idea/

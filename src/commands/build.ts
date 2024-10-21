@@ -5,6 +5,7 @@ import fspath from "node:path";
 import BaseCmd from '../abstracts/base-cmd-abstract.js'
 import ComposeConfig from '../interfaces/docker-compose-config-interface.js'
 import YamlParser from '../yaml-parser.js'
+import {AppSettings} from "../app-settings.js";
 
 export default class BuildCmd extends BaseCmd {
   static description = 'Commit the existing containers as new docker images, and create a new docker compose file referencing them.'
@@ -78,9 +79,9 @@ export default class BuildCmd extends BaseCmd {
       if (this.composeConfig['x-ce_dev']) {
         containerName = this.composeConfig['x-ce_dev'].project_name + '-' + name
       }
-      let version = 'latest'
+      let version = AppSettings.ceDevVersion + '.x'
       if (this.developmentMode) {
-        version = 'devel'
+        version += '-devel'
       }
 
       ux.action.start('Committing container ' + containerName + ' as a new image.')
@@ -95,9 +96,9 @@ export default class BuildCmd extends BaseCmd {
    * @return void
    */
   private generateCompose(): void {
-    let version = 'latest'
+    let version = AppSettings.ceDevVersion + '.x'
     if (this.developmentMode) {
-      version = 'devel'
+      version += '-devel'
     }
     ux.action.start('Generating new compose file ' + this.composeDest + '.')
     for (const [name, service] of Object.entries(this.composeConfig.services)) {
