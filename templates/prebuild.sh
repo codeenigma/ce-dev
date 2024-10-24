@@ -76,27 +76,7 @@ test_project(){
   echo "$1"
 }
 
-# Build a project.
-# @param $1
-# Project name.
-build_project(){
-  cd "$WORK_DIR/$1"
-  $CE_DEV_BIN build --registry codeenigma
-}
-
-# Build a project.
-# @param $1
-# Project name.
-push_project(){
-  cd "$WORK_DIR/$1"
-  $CE_DEV_BIN push --anonymous --registry codeenigma
-}
-
 for PROJECT in $PROJECTS; do
  create_project "$PROJECT"
  test_project "$PROJECT"
- build_project "$PROJECT"
- if [ $PUSH = "yes" ]; then
-  push_project "$PROJECT"
- fi
 done
