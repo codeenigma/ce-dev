@@ -266,7 +266,7 @@ export default abstract class BaseCmd extends Command {
   protected getProjectRunningContainersCeDev(): Array<string> {
     const running = this.getProjectRunningContainers();
     const ceDev = [];
-    const regex = /^codeenigma\/.*/gm;
+    const regex = /ce-dev:.*/gm;
     for (const containerName of running) {
       const image = execSync(this.dockerBin +
         ' inspect ' +
@@ -274,10 +274,16 @@ export default abstract class BaseCmd extends Command {
         ' --format={{.Config.Image}}')
         .toString()
         .trim();
-      if (regex.test(image)) {
+      const labels = execSync(
+        this.dockerBin + ' inspect ' + image + ' --format={{.Config.Labels}}')
+        .toString()
+        .trim()
+
+      if (regex.test(labels)) {
         ceDev.push(containerName);
       }
     }
+
     return ceDev;
   }
 
