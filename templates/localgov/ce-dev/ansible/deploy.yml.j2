@@ -2,44 +2,47 @@
 # Template playbook for a local Drupal9 codebase.
 - hosts: {{ project_name }}-web
   vars:
-    - project_name: {{ project_name }}
-    - project_type: drupal8
-    - webroot: web
-    - build_type: local
-    - _env_type: dev
+    project_name: {{ project_name }}
+    project_type: drupal8
+    webroot: web
+    build_type: local
+    _env_type: dev
 {% raw %}
-    - _domain_name: www.{{ project_name }}.local
+    _domain_name: www.{{ project_name }}.local
     # Path to your project root. This must match the "volume" set in the docker compose template.
-    - deploy_path: /home/ce-dev/deploy/live.local
+    deploy_path: /home/ce-dev/deploy/live.local
     # This actually does not take any backup, but is needed to populate settings.php.
-    - mysql_backup:
-        handling: none
-        credentials_handling: static
+    mysql_backup:
+      handling: none
+      credentials_handling: static
     # A list of Drupal sites (for multisites).
-    - drupal:
-        sites:
-          - folder: "default"
-            public_files: "sites/default/files"
-            install_command: "-y si localgov"
-            # Toggle config import on/off. Disabled for initial passes.
-            config_import_command: ""
-            # config_import_command: "cim"
-            config_sync_directory: "config/sync"
-            sanitize_command: "sql-sanitize"
-            # Remove after initial pass, to avoid reinstalling Drupal.
-            force_install: true
-            base_url: "https://{{ _domain_name }}"
+    drupal:
+      sites:
+        - folder: "default"
+          public_files: "sites/default/files"
+          install_command: "-y si localgov"
+          # Toggle config import on/off. Disabled for initial passes.
+          config_import_command: ""
+          # config_import_command: "cim"
+          config_sync_directory: "config/sync"
+          sanitize_command: "sql-sanitize"
+          # Remove after initial pass, to avoid reinstalling Drupal.
+          force_install: true
+          base_url: "https://{{ _domain_name }}"
     # Composer command to run.
-    - composer:
-        command: install
-        no_dev: false
-        working_dir: "{{ deploy_path }}"
-        apcu_autoloader: false
+    composer:
+      command: install
+      no_dev: false
+      working_dir: "{{ deploy_path }}"
+      apcu_autoloader: false
+    drush:
+      use_vendor: true
+    drush_bin: "{{ deploy_path }}/vendor/drush/drush/drush"
   pre_tasks:
     # You can safely remove these steps once you have a working composer.json.
     - name: Download composer file.
       ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/drupal/recommended-project/9.1.x/composer.json
+        url: https://raw.githubusercontent.com/drupal/recommended-project/10.3.x/composer.json
         dest: "{{ deploy_path }}/composer.json"
         force: false
     - name: Adding composer/installers plugin to composer config.
@@ -70,13 +73,20 @@
     - name: Install drush.
       community.general.composer:
         command: require
-        arguments: drush/drush:10.*
+        arguments: drush/drush:12.*
         working_dir: "{{ deploy_path }}"
     - name: Install localgov.
       community.general.composer:
         command: require
         arguments: localgovdrupal/localgov
         working_dir: "{{ deploy_path }}"
+  post_tasks:
+    - name: "Symlink global Drush"
+      ansible.builtin.file:
+        src: "{{ drush_bin }}"
+        dest: "/usr/local/bin/drush"
+        state: link
+      become: yes
   roles:
     - _init # Sets some variables the deploy scripts rely on.
     - composer # Composer install step.
