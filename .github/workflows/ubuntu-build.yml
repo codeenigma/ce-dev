@@ -1,9 +1,13 @@
 name: '2.x: Ubuntu - Build and push ce-dev and ce-dev-controller images'
 
+# Run this workflow only on a push/merged PR to branch 1.x with valid tags
 on:
   push:
-    branches:
-      - 2.x
+    tags:
+      - 2.[0-9]+.[0-9]+
+  workflow_dispatch:
+    tags:
+      - 2.[0-9]+.[0-9]+
 
 jobs:
   build:

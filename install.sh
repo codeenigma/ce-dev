@@ -43,7 +43,15 @@ fi
 
 # Version is optional.
 if [ -z "$VERSION" ]; then
-  VERSION=$( curl --silent "https://api.github.com/repos/codeenigma/ce-dev/releases/latest" | grep tag_name | cut -d \" -f 4)
+  API_URL="https://api.github.com/repos/codeenigma/ce-dev/releases"
+  VERSION=$(curl -s $API_URL | grep -Eo '"tag_name":\s*"2\.[^"]*"' | grep -Eo '2\.[^"]*' | sort -Vr | head -n 1)
+
+  # Check if we found a release
+  if [ -n "$VERSION" ]; then
+    echo "Downloading the latest 2.x version: $VERSION"
+  else
+    echo "No 2.x release found"
+  fi
 fi
 
 RELEASE=https://github.com/codeenigma/ce-dev/releases/download/$VERSION/ce-dev-v$VERSION-$PLATFORM-x64.tar.gz

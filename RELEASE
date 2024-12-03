@@ -1,9 +1,12 @@
-2.0
+2.0.0
 
-## Changes since 1.24
+## Changes since 1.2.4
 
-* Docker images using Bookworm-slim
-* Use of latest Typescript version (5.3.x)
+* Docker images based on Bookworm-slim
+* Docker image MariaDB used as database.
+* Docker image codeenigma/ce-dev:2.x image used web image
+* No more use of different predefined drupalX-web images, we rely on 'ce-dev provision'.
+* Use of latest Typescript version (5.x.x)
 * Binaries built with Emacs instead of Commonjs: Emacs can consume Commonjs modules,
   but Commonjs can't consume Emacs modules. It means we can use more contrib modules
 * src folder has been organised a bit better.

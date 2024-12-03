@@ -19,47 +19,49 @@
     ce_provision:
       local_dir: /home/ce-dev/ce-provision
   {% raw %}
-    - nginx:
-        domains:
-          - server_name: "{{ _domain_name }}"
-            access_log:  "/var/log/nginx-access.log"
-            error_log:  "/var/log/nginx-error.log"
-            error_log_level:  "notice"
-            webroot:  "/home/ce-dev/deploy/live.local/web"
-            project_type:  "drupal8"
-            ssl:
-              domain: "{{ _domain_name }}"
-              cert: "{{ _ce_dev_mkcert_base}}/{{ _domain_name }}.pem"
-              key: "{{ _ce_dev_mkcert_base}}/{{ _domain_name }}-key.pem"
-              handling: "unmanaged"
-            ratelimitingcrawlers: false
-            is_default: true
-            servers:
-              - port: 80
-                ssl: false
-                https_redirect: true
-              - port: 443
-                ssl: true
-                https_redirect: false
-            upstreams: []
-    - php:
-        version:
-          - 8.1
-        cli:
-          memory_limit: -1
-          _env_type: dev
-        fpm:
-          _env_type: dev
-    - xdebug:
-        cli: true
-    - nodejs:
-        version: 20.x
-    - apt_unattended_upgrades:
-        enable: false
+    nginx:
+      domains:
+        - server_name: "{{ _domain_name }}"
+          access_log:  "/var/log/nginx-access.log"
+          error_log:  "/var/log/nginx-error.log"
+          error_log_level:  "notice"
+          webroot:  "/home/ce-dev/deploy/live.local/web"
+          project_type:  "drupal8"
+          ssl:
+            domain: "{{ _domain_name }}"
+            cert: "{{ _ce_dev_mkcert_base}}/{{ _domain_name }}.pem"
+            key: "{{ _ce_dev_mkcert_base}}/{{ _domain_name }}-key.pem"
+            handling: "unmanaged"
+          ratelimitingcrawlers: false
+          is_default: true
+          servers:
+            - port: 80
+              ssl: false
+              https_redirect: true
+            - port: 443
+              ssl: true
+              https_redirect: false
+          upstreams: []
+    php:
+      version:
+        - 8.1
+      cli:
+        memory_limit: -1
+        _env_type: dev
+      fpm:
+        _env_type: dev
+    xdebug:
+       cli: true
+    nodejs:
+       version: 20.x
+    apt_unattended_upgrades:
+       enable: false
 {% endraw %}
   tasks:
     - apt:
         update_cache: true
+    - import_role:
+        name: _init
     - import_role:
         name: _meta/common_base
     - import_role:
@@ -70,3 +72,5 @@
         name: debian/php-fpm
     - import_role:
         name: debian/nginx
+    - import_role:
+        name: _exit
