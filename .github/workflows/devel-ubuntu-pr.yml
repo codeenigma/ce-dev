@@ -46,4 +46,4 @@ jobs:
       - name: Testing templates
         run: |
           sudo chmod +x bin/dev.js
-          /bin/sh templates/prebuild.sh --template ce-dev-devel.compose.yml --devel
+          /bin/sh templates/test.sh --template ce-dev-devel.compose.yml --devel

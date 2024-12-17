@@ -3,11 +3,10 @@
 set -e
 
 usage(){
-  echo 'prebuild.sh [OPTIONS]'
-  echo 'Test the different templates and push the images to docker if it is required'
+  echo 'test.sh [OPTIONS]'
+  echo 'Test the different templates'
   echo 'Available options:'
   echo '--template: ce-dev template to use. By default: ce-dev.compose.yml'
-  echo '--push: if we want to push the images to docker'
   echo '--devel: if we want to run the templates in devel mode'
 }
 # Parse options arguments.
@@ -17,9 +16,6 @@ parse_options(){
       "--template")
           shift
           TEMPLATE="$1"
-        ;;
-      "--push")
-          PUSH="yes"
         ;;
       "--devel")
           DEVEL="yes"
@@ -34,8 +30,7 @@ parse_options(){
 }
 
 # Default variables.
-PROJECTS="blank drupal10"
-PUSH="no"
+PROJECTS="blank drupal10 drupal11"
 TEMPLATE="ce-dev.compose.yml"
 DEVEL="no"
 

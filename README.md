@@ -95,7 +95,7 @@ If you don't have the local images, you can follow these steps:
 ```angular2html
 /bin/sh docker-images/export.sh --version 2.x --image-name ce-dev --dockerfile-path base
 /bin/sh docker-images/export.sh --version 2.x --image-name ce-dev-controller --dockerfile-path controller
-/bin/sh templates/prebuild.sh --template ce-dev.compose.yml
+/bin/sh templates/test.sh --template ce-dev.compose.yml
 ```
 
 The last step will generate the drupal10-web, drupal10-db and blank docker images. Also, it will create docker containers
