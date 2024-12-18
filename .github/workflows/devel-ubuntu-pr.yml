@@ -1,11 +1,11 @@
-name: '2.x-devel: Ubuntu - Test image builds on PR'
+name: 'devel-2.x: Ubuntu - Test image builds on PR'
 
 on:
   pull_request:
     types:
       - opened
     branches:
-      - 2.x-devel
+      - devel-2.x
 
 jobs:
   build:
@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: '2.x-devel'
+          ref: 'devel-2.x'
       - name: Install modules
         run: yarn install --production=false --global
       - name: Pack the JS
@@ -41,8 +41,8 @@ jobs:
           echo 'mkcert_bin: mkcert' >> ~/.config/ce-dev/preferences-2.x.yml
       - name: Build ce-dev and ce-dev-controller
         run: |
-          /bin/sh docker-images/export.sh --version 2.x-devel --image-name ce-dev --dockerfile-path base-devel
-          /bin/sh docker-images/export.sh --version 2.x-devel --image-name ce-dev-controller --dockerfile-path controller-devel
+          /bin/sh docker-images/export.sh --version devel-2.x --image-name ce-dev --dockerfile-path base-devel
+          /bin/sh docker-images/export.sh --version devel-2.x --image-name ce-dev-controller --dockerfile-path controller-devel
       - name: Testing templates
         run: |
           sudo chmod +x bin/dev.js
