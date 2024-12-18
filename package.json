@@ -3,9 +3,7 @@
   "description": "Local Stack wrapper tool",
   "version": "2.0.0",
   "author": "Codeenigma",
-  "bin": {
-    "ce-dev": "./bin/run.js"
-  },
+  "bin": "./bin/run.js",
   "bugs": "https://github.com/codeenigma/ce-dev/issues",
   "homepage": "https://github.com/codeenigma/ce-dev",
   "license": "MIT",
@@ -72,5 +70,6 @@
     "renamedist": "renamer --chain renamedist.js dist/*"
   },
   "types": "lib/index.d.ts",
-  "type": "module"
+  "type": "module",
+  "packageManager": "yarn@4.5.3"
 }
