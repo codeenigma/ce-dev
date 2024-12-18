@@ -22,7 +22,7 @@ jobs:
       - name: Enable Corepack
         run: corepack enable
       - name: Install modules
-        run: yarn install --production=false --global
+        run: yarn workspaces focus --all --production
       - name: Pack the JS
         run: yarn oclif pack tarballs --targets=linux-x64,linux-arm,linux-arm64,darwin-x64,darwin-arm64 --no-xz
       - name: Rename the dist/* files
