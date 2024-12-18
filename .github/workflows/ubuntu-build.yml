@@ -22,11 +22,13 @@ jobs:
       - name: Enable Corepack
         run: corepack enable
       - name: Install modules
-        run: yarn install
-      - name: Pack the JS
-        run: yarn oclif pack tarballs --targets=linux-x64,linux-arm,linux-arm64,darwin-x64,darwin-arm64 --no-xz
-      - name: Rename the dist/* files
-        run: yarn renamedist
+        run: npm install --global
+      - name: Generate distributions with oclif
+        run: |
+          npm run prepack-oclif
+          npx oclif pack tarballs --targets=linux-x64,linux-arm,linux-arm64,darwin-x64,darwin-arm64 --no-xz
+          npm run postpack-oclif
+          npm run renamedist
       - name: Install test dependencies
         run: |
           sudo apt-get update
