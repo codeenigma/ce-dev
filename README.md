@@ -2,7 +2,7 @@ ce-dev 2.x
 ======
 Local Stack wrapper tool
 
-[![2.x: Linux - Build ce_dev binaries, images and templates (test)](https://github.com/codeenigma/ce-dev/actions/workflows/ce-dev-devel-linux.yml/badge.svg?branch=2.x-devel)](https://github.com/codeenigma/ce-dev/actions/workflows/ce-dev-devel-linux.yml)
+[![2.x: Linux - Build ce_dev binaries, images and templates (test)](https://github.com/codeenigma/ce-dev/actions/workflows/ce-dev-devel-linux.yml/badge.svg?branch=devel-2.x)](https://github.com/codeenigma/ce-dev/actions/workflows/ce-dev-devel-linux.yml)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=codeenigma_ce-dev&metric=security_rating)](https://sonarcloud.io/dashboard?id=codeenigma_ce-dev)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=codeenigma_ce-dev&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=codeenigma_ce-dev)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=codeenigma_ce-dev&metric=bugs)](https://sonarcloud.io/dashboard?id=codeenigma_ce-dev)
@@ -36,7 +36,7 @@ Local Stack wrapper tool
 
 * Install Node.js in your local machine https://nodejs.org/en/download/package-manager
 * Clone this repo in your local machine.
-* Change the branch (2.x, 2.x-devel, etc...) to work on it.
+* Change the branch (2.x, devel-2.x, etc...) to work on it.
 * Run ```npm install```
 
 With these steps you will have all the packages installed.
@@ -84,7 +84,7 @@ codeenigma/ce-dev              2.x                8753195771fc   3 days ago     
 codeenigma/ce-dev-controller   2.x                5aed115a5e74   3 days ago      1.83GB
 ```
 
-if you are testing the devel version, the tag will be 2.x-devel.
+if you are testing the devel version, the tag will be devel-2.x.
 
 If you don't have the local images, you can follow these steps:
 
