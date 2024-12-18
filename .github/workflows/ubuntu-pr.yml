@@ -12,8 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: '2.x'
       - name: Install modules
         run: yarn install --production=false --global
       - name: Pack the JS
