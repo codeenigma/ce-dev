@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 'latest'
       - name: Install modules
-        run: npm install --global
+        run: npm install --global --production=false
       - name: Generate distributions with oclif
         run: |
           npm run prepack-oclif

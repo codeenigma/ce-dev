@@ -15,10 +15,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 'latest'
-      - name: Enable Corepack
-        run: corepack enable
       - name: Install modules
-        run: npm install --global
+        run: npm install --global --production=false
       - name: Generate distributions with oclif
         run: |
           npm run prepack-oclif
