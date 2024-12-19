@@ -1,25 +1,28 @@
-name: '2.x-devel: Ubuntu - Test image builds on PR'
+name: 'devel-2.x: Ubuntu - Test image builds on PR'
 
 on:
   pull_request:
     types:
       - opened
     branches:
-      - 2.x-devel
+      - devel-2.x
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          ref: '2.x-devel'
+          node-version: 'latest'
       - name: Install modules
-        run: yarn install --production=false --global
-      - name: Pack the JS
-        run: yarn oclif pack tarballs --targets=linux-x64,linux-arm,linux-arm64,darwin-x64,darwin-arm64 --no-xz
-      - name: Rename the dist/* files
-        run: yarn renamedist
+        run: npm install --production=false
+      - name: Generate distributions with oclif
+        run: |
+          npm run prepack-oclif
+          npx oclif pack tarballs --targets=linux-x64,linux-arm,linux-arm64,darwin-x64,darwin-arm64 --no-xz
+          npm run postpack-oclif
+          npm run renamedist
       # We build mkcert from source because releases are broken
       - name: Install test dependencies
         run: |
@@ -41,9 +44,9 @@ jobs:
           echo 'mkcert_bin: mkcert' >> ~/.config/ce-dev/preferences-2.x.yml
       - name: Build ce-dev and ce-dev-controller
         run: |
-          /bin/sh docker-images/export.sh --version 2.x-devel --image-name ce-dev --dockerfile-path base-devel
-          /bin/sh docker-images/export.sh --version 2.x-devel --image-name ce-dev-controller --dockerfile-path controller-devel
+          /bin/sh docker-images/export.sh --version devel-2.x --image-name ce-dev --dockerfile-path base-devel
+          /bin/sh docker-images/export.sh --version devel-2.x --image-name ce-dev-controller --dockerfile-path controller-devel
       - name: Testing templates
         run: |
           sudo chmod +x bin/dev.js
-          /bin/sh templates/prebuild.sh --template ce-dev-devel.compose.yml --devel
+          /bin/sh templates/test.sh --template ce-dev-devel.compose.yml --devel

@@ -1,17 +1,17 @@
-version: "3.7"
+version: '3.7'
 x-ce_dev:
-  version: 1.x
-  registry: localhost:5000
+  version: 2.x
+  registry: 'localhost:5000'
   project_name: {{ project_name }}
   provision:
     - ce-dev/ansible/provision.yml
   deploy:
     - ce-dev/ansible/deploy.yml
   urls:
-    - https://www.{{ project_name }}.local
+    - 'https://www.{{ project_name }}.local'
 services:
   web:
-    image: codeenigma/ce-dev:devel-2.x
+    image: 'codeenigma/ce-dev:2.x'
     platform: linux/amd64
     cgroup: host
     expose:
@@ -36,6 +36,7 @@ services:
     cap_add:
       - NET_ADMIN
   db:
-    image: mariadb
+    image: 'mariadb'
+    platform: linux/amd64
     environment:
       MYSQL_ROOT_PASSWORD: ce-dev
