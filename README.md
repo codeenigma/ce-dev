@@ -2,7 +2,10 @@ ce-dev 2.x
 ======
 Local Stack wrapper tool
 
-[![2.x: Linux - Build ce_dev binaries, images and templates (test)](https://github.com/codeenigma/ce-dev/actions/workflows/ce-dev-devel-linux.yml/badge.svg?branch=devel-2.x)](https://github.com/codeenigma/ce-dev/actions/workflows/ce-dev-devel-linux.yml)
+[![2.x: Ubuntu - Test image builds on PR](https://github.com/codeenigma/ce-dev/actions/workflows/ubuntu-pr.yml/badge.svg)](https://github.com/codeenigma/ce-dev/actions/workflows/ubuntu-pr.yml)
+
+[![devel-2.x: Ubuntu - Test image builds on PR](https://github.com/codeenigma/ce-dev/actions/workflows/devel-ubuntu-pr.yml/badge.svg)](https://github.com/codeenigma/ce-dev/actions/workflows/devel-ubuntu-pr.yml)
+
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=codeenigma_ce-dev&metric=security_rating)](https://sonarcloud.io/dashboard?id=codeenigma_ce-dev)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=codeenigma_ce-dev&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=codeenigma_ce-dev)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=codeenigma_ce-dev&metric=bugs)](https://sonarcloud.io/dashboard?id=codeenigma_ce-dev)
@@ -18,6 +21,7 @@ Local Stack wrapper tool
 * Removed drupal 8 and drupal 9 templates.
 * The way to assign IPs have changed.
 * All the packages used are up to date.
+* Removed yarn as dependency.
 
 ## Key features
 - Allows several projects (or the host) to re-use the same ports
@@ -48,8 +52,8 @@ Once you make your changes in the source dode ({root}/src folder), you need to c
 execute the following commands:
 
 ```
-yarn clean
-yarn build
+npm run clean
+npm run build
 ```
 
 This will clean and compile the new js files. A new folder {root}/lib is generated
@@ -77,9 +81,6 @@ it means you would need to have the local docker images with tag 2.x
 dioni@dionice:~/projects/wrap$ docker image ls
 [sudo] contraseña para dioni: 
 REPOSITORY                     TAG                IMAGE ID       CREATED         SIZE
-codeenigma/drupal10-db         2.x                5cae51ec65c0   3 days ago      409MB
-codeenigma/drupal10-web        2.x                83cc832fb73d   3 days ago      1.47GB
-codeenigma/blank-blank         2.x                5157934972ad   3 days ago      1.26GB
 codeenigma/ce-dev              2.x                8753195771fc   3 days ago      691MB
 codeenigma/ce-dev-controller   2.x                5aed115a5e74   3 days ago      1.83GB
 ```
@@ -95,13 +96,7 @@ If you don't have the local images, you can follow these steps:
 ```angular2html
 /bin/sh docker-images/export.sh --version 2.x --image-name ce-dev --dockerfile-path base
 /bin/sh docker-images/export.sh --version 2.x --image-name ce-dev-controller --dockerfile-path controller
-/bin/sh templates/test.sh --template ce-dev.compose.yml
 ```
-
-The last step will generate the drupal10-web, drupal10-db and blank docker images. Also, it will create docker containers
-with the same name. You can remove these containers because we only need the images.
-
-Now we can start to test our ce-dev changes as it is described in the previous point 'How to compile'
 
 
 ### Testing a new ce-dev release locally.
@@ -110,7 +105,7 @@ If you need to test the creation of releases locally, we can do it using oclif.
 
 oclif is an open source framework for building a command line interface (CLI) in Node.js and Typescript https://oclif.io/
 
-As part of the command we used ```yarn build```, a folder /lib was generated. This folder contains the javascript code
+As part of the command we used ```npm run build```, a folder /lib was generated. This folder contains the javascript code
 used by oclif.
 
 According to your system, your local ce-dev version will be different. Here the list of available targets:
@@ -127,7 +122,15 @@ Probably you will use linux-...64 or darwin-...64 version.
 
 Use oclif pack to generate a new release for your system:
   
-i.e: <code>yarn oclif pack tarballs --targets=linux-x64 --no-xz</code>
+i.e:
+<code>
+
+npm run prepack-oclif
+
+npx oclif pack tarballs --targets=linux-x64 --no-xz
+
+npm run postpack-oclif
+</code>
 
 This will generate a tar.gz file inside a new directory named /dir/ce-dev-xxxxxx
 You can un-compress and put it where you want. i.e: you can put it in /opt too (where you have the current ce-dev) 
