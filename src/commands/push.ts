@@ -50,8 +50,9 @@ export default class PushCmd extends DockerImagesCmd {
   private push(): void {
     let version = AppSettings.ceDevVersion + '.x'
     if (this.developmentMode) {
-      version += '-devel'
+      version = 'devel-' + version
     }
+
     for (const name of Object.keys(this.composeConfig.services)) {
       const containerName = this.composeConfig['x-ce_dev'].project_name + '-' + name
       ux.action.start('Pushing image ' + containerName)
