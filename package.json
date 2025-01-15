@@ -1,11 +1,9 @@
 {
   "name": "ce-dev",
   "description": "Local Stack wrapper tool",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "author": "Codeenigma",
-  "bin": {
-    "ce-dev": "./bin/run.js"
-  },
+  "bin": "./bin/run.js",
   "bugs": "https://github.com/codeenigma/ce-dev/issues",
   "homepage": "https://github.com/codeenigma/ce-dev",
   "license": "MIT",
@@ -65,11 +63,11 @@
     "clean": "shx rm -rf dist && shx rm -rf lib",
     "build": "shx rm -rf dist && tsc -b",
     "lint": "eslint . --ext .ts",
-    "postpack": "shx rm -f oclif.manifest.json",
-    "posttest": "yarn lint",
-    "prepack": "shx rm -rf lib && tsc -b && oclif manifest && oclif readme",
-    "version": "oclif readme && git add README.md",
-    "renamedist": "renamer --chain renamedist.js dist/*"
+    "postpack-oclif": "shx rm -f oclif.manifest.json",
+    "posttest": "npm run lint",
+    "prepack-oclif": "shx rm -rf lib && tsc -b && npx oclif manifest && npx oclif readme",
+    "version": "npx oclif readme && git add README.md",
+    "renamedist": "npx renamer --chain renamedist.js dist/*"
   },
   "types": "lib/index.d.ts",
   "type": "module"

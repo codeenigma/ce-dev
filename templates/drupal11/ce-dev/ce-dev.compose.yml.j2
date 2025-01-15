@@ -1,6 +1,6 @@
 version: "3.7"
 x-ce_dev:
-  version: 1.x
+  version: 2.x
   registry: localhost:5000
   project_name: {{ project_name }}
   provision:
@@ -11,7 +11,7 @@ x-ce_dev:
     - https://www.{{ project_name }}.local
 services:
   web:
-    image: codeenigma/ce-dev:devel-2.x
+    image: codeenigma/ce-dev:2.x
     platform: linux/amd64
     cgroup: host
     expose:

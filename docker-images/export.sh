@@ -8,7 +8,7 @@ usage(){
   echo 'Export a base Code Enigma image, optionally pushing it to your Docker repository.'
   echo ''
   echo 'Mandatory arguments:'
-  echo '--version: Version tag to apply to the Docker image, e.g. "2.x, 2.x-devel, latest".'
+  echo '--version: Version tag to apply to the Docker image, e.g. "2.x, devel-2.x, latest".'
   echo '--image-name: Name of the resulting Docker image, e.g. "ce-dev".'
   echo ''
   echo 'Available options:'
