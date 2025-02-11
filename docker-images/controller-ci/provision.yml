@@ -30,6 +30,7 @@
       ssh_key_type: rsa
       aws_support: true
       local_dir: /home/controller/ce-provision
+      ansible_collections_dir: "/home/ce-dev/ce-deploy/galaxy/ansible_collections"
       groups: []
       contrib_roles:
         - directory: wazuh
