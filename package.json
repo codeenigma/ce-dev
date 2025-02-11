@@ -1,7 +1,7 @@
 {
   "name": "ce-dev",
   "description": "Local Stack wrapper tool",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "author": "Codeenigma",
   "bin": "./bin/run.js",
   "bugs": "https://github.com/codeenigma/ce-dev/issues",
