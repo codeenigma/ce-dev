@@ -25,6 +25,7 @@
       new_user: true
       key_name: id_rsa.pub
       local_dir: /home/ce-dev/ce-deploy
+      ansible_collections_dir: "/home/ce-dev/ce-deploy/galaxy/ansible_collections"
       ce_provision_dir: "/home/ce-dev/ce-provision"
       groups: []
       galaxy_custom_requirements_file: ""
