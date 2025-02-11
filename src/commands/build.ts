@@ -79,9 +79,10 @@ export default class BuildCmd extends BaseCmd {
       if (this.composeConfig['x-ce_dev']) {
         containerName = this.composeConfig['x-ce_dev'].project_name + '-' + name
       }
+
       let version = AppSettings.ceDevVersion + '.x'
       if (this.developmentMode) {
-        version += '-devel'
+        version = 'devel-' + version
       }
 
       ux.action.start('Committing container ' + containerName + ' as a new image.')
@@ -98,8 +99,9 @@ export default class BuildCmd extends BaseCmd {
   private generateCompose(): void {
     let version = AppSettings.ceDevVersion + '.x'
     if (this.developmentMode) {
-      version += '-devel'
+      version = 'devel-' + version
     }
+
     ux.action.start('Generating new compose file ' + this.composeDest + '.')
     for (const [name, service] of Object.entries(this.composeConfig.services)) {
       const containerName = this.composeConfig['x-ce_dev'].project_name + '-' + name

@@ -1,6 +1,7 @@
-2.0.1
+2.0.2
 
-## Changes since 2.0.0
+## Changes since 2.0.1
 
-* Added Drupal 11 template
+* Using https://github.com/codeenigma/ce-dev-ce-provision-config 2.x
+* Removed yarn as dependency, using only npm
 * Updated references to 2.x-devel with devel-2.x
