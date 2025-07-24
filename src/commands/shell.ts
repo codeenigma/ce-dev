@@ -48,6 +48,12 @@ export default class ShellCmd extends BaseCmd {
       }
     }
 
-    execSync(this.dockerBin + ' exec -it -u ce-dev -w /home/ce-dev ' + container + ' /bin/bash || exit 0', {stdio: 'inherit'})
+    try {
+      execSync(this.dockerBin + ' exec ' + container + ' [ -d "/home/ce-dev/deploy/live.local" ]')
+      execSync(this.dockerBin + ' exec -it -u ce-dev -w /home/ce-dev/deploy/live.local ' + container + ' /bin/bash || exit 0', {stdio: 'inherit'})
+    }
+    catch (err) {
+      execSync(this.dockerBin + ' exec -it -u ce-dev -w /home/ce-dev ' + container + ' /bin/bash || exit 0', {stdio: 'inherit'})
+    }
   }
 }
