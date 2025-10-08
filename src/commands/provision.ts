@@ -10,12 +10,12 @@ export default class ProvisionCmd extends AnsibleCmd {
     branch: Flags.string({
       char: 'b',
       default: '2.x',
-      description: 'The branch of ce-provision to use for provisioning your containers. See https://github.com/codeenigma/ce-provision for options.'
+      description: 'The branch of ce-provision to use for provisioning your containers. See https://gitlab.com/code-enigma/ce-provision for options.'
     }),
     config: Flags.string({
       char: 'c',
       default: '1.x',
-      description: 'The branch of the ce-provision-config repository. See https://github.com/codeenigma/ce-dev-ce-provision-config for options.'
+      description: 'The branch of the ce-provision-config repository. See https://gitlab.com/code-enigma/ce-dev-ce-provision-config for options.'
     }),
     interpreter: Flags.string({
       char: 'i',
