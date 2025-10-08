@@ -15,10 +15,10 @@
     ce_deploy:
       venv_path: "/home/{{ _ce_provision_username }}/ansible"
       venv_command: /usr/bin/python3 -m venv
-      own_repository: https://github.com/codeenigma/ce-deploy.git
-      config_repository: https://github.com/codeenigma/ce-dev-ce-deploy-config.git
-      own_repository_branch: 1.x
-      config_repository_branch: 1.x
+      own_repository: https://gitlab.com/code-enigma/ce-deploy.git
+      config_repository: https://gitlab.com/code-enigma/ce-dev-ce-deploy-config.git
+      own_repository_branch: devel-1.x
+      config_repository_branch: devel-1.x
       username: ce-dev
       install_username: "{{ _ce_provision_username }}"
       upgrade_timer_name: upgrade_ce_provision_ansible
@@ -39,11 +39,11 @@
     ce_provision:
       venv_path: "/home/{{ _ce_provision_username }}/ansible"
       venv_command: /usr/bin/python3 -m venv
-      own_repository: https://github.com/codeenigma/ce-provision.git
-      own_repository_branch: 2.x
+      own_repository: https://gitlab.com/code-enigma/ce-provision.git
+      own_repository_branch: devel-2.x
       own_repository_skip_checkout: false
-      config_repository: https://github.com/codeenigma/ce-dev-ce-provision-config.git
-      config_repository_branch: 2.x
+      config_repository: https://gitlab.com/code-enigma/ce-dev-ce-provision-config.git
+      config_repository_branch: devel-2.x
       config_repository_skip_checkout: false
       username: "{{ _ce_provision_username }}"
       install_username: "{{ _ce_provision_username }}"

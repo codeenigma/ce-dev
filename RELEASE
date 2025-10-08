@@ -1,7 +1,6 @@
-2.0.2
+2.0.3
 
-## Changes since 2.0.1
+## Changes since 2.0.2
 
-* Using https://github.com/codeenigma/ce-dev-ce-provision-config 2.x
-* Removed yarn as dependency, using only npm
-* Updated references to 2.x-devel with devel-2.x
+* Fixed regex.test executed by the 'ce-dev shell' command.
+* Packages updated
