@@ -1,5 +1,9 @@
 ce-dev 2.x
 ======
+This project is now obsolete and has been replaced by [`ddev-deploy`](https://gitlab.com/code-enigma/ddev-deploy) and the [DDEV](https://ddev.com/) tool.
+
+-------------------------
+
 Local Stack wrapper tool
 
 [![2.x: Ubuntu - Test image builds on PR](https://github.com/codeenigma/ce-dev/actions/workflows/ubuntu-pr.yml/badge.svg)](https://github.com/codeenigma/ce-dev/actions/workflows/ubuntu-pr.yml)
