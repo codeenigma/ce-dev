@@ -8,7 +8,7 @@ The way some editors behave on save means the inumber of the file does not chang
 
 ## Cgroup Issues
 
-If your ce-dev is failing to even start the controller then you'll see a response that looks like this.
+If your ce-dev is failing to even start, or starts but then immediately exits the controller (or any container) then you might see a response that looks like this.
 
 ```bash
 Creating ce_dev_controller_2 ... done
@@ -16,6 +16,8 @@ Ensure user UID match those on the host...
 Ensure user UID match those on the host... !
     Error: Command failed: sudo docker exec ce_dev_controller_2 /bin/sh /opt/ce-dev-ownership.sh 1000 1000
 ```
+
+Alternatively, you might not see anything at all, and you'll discover your controller (or container) isn't running.
 
 There will be very little in the way of logs or errors from this. Just an indication of a problem.
 
@@ -57,6 +59,11 @@ sudo update-initramfs -c -k all
 
 ```bash
 docker rm $(docker ps -aq)
+
+### Arch Linux
+1 - Edit `/boot/loader/entries/XXXX-XX-XX_XX-XX-XX_linux.conf` and append `SYSTEMD_CGROUP_ENABLE_LEGACY_FORCE=1 systemd.unified_cgroup_hierarchy=0` to `options`
+
+2 - Reboot
 
 ### Cgroup On Older Projects
 
